@@ -1,0 +1,312 @@
+// ── ACCOUNTS ──
+App.renderAccounts = async function(container) {
+  container.innerHTML = '<div class="text-center text-muted mt-2">Loading accounts...</div>';
+  try {
+    const accounts = await API.getAccounts();
+    const totalBalance = accounts.reduce((s, a) => s + a.balance, 0);
+
+    container.innerHTML = `
+      <div class="page-header">
+        <h1>🏦 Accounts</h1>
+        <button class="btn btn-primary" id="add-account-btn">+ Add Account</button>
+      </div>
+      <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+        <div class="stat-card"><div class="label">Total Accounts</div><div class="value" style="font-size:1.2rem">${accounts.length}</div></div>
+        <div class="stat-card"><div class="label">Total Balance</div><div class="value" style="font-size:1.2rem;color:var(--accent)">${formatCurrency(totalBalance)}</div></div>
+      </div>
+      <div class="grid grid-3 gap-2" id="accounts-list">
+        ${accounts.length ? accounts.map(a => `
+          <div class="card" data-id="${a.id}">
+            <div class="flex items-center justify-between mb-2">
+              <span class="badge badge-${a.type}">${a.type.charAt(0).toUpperCase() + a.type.slice(1)}</span>
+              <div class="flex gap-1">
+                <button class="btn btn-sm btn-secondary edit-account-btn" data-id="${a.id}">✏️</button>
+                <button class="btn btn-sm btn-danger delete-account-btn" data-id="${a.id}">🗑️</button>
+              </div>
+            </div>
+            <div class="card-title">${escapeHtml(a.name)}</div>
+            <div class="card-value">${formatCurrency(a.balance, a.currency)}</div>
+            <div class="text-xs text-muted mt-1">${a.currency}</div>
+          </div>
+        `).join('') : `
+          <div class="empty-state" style="grid-column:1/-1">
+            <div class="icon">🏦</div>
+            <h3>No accounts yet</h3>
+            <p>Create your first account to start tracking</p>
+          </div>
+        `}
+      </div>
+    `;
+
+    document.getElementById('add-account-btn').addEventListener('click', () => this.showAccountModal());
+
+    $$('.edit-account-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const account = accounts.find(a => a.id === btn.dataset.id);
+        if (account) this.showAccountModal(account);
+      });
+    });
+
+    $$('.delete-account-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!confirm('Delete this account? This will also remove all its transactions.')) return;
+        try {
+          await API.deleteAccount(btn.dataset.id);
+          showToast('Account deleted');
+          this.renderAccounts(container);
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    });
+  } catch (err) {
+    container.innerHTML = `<div class="text-center text-muted mt-2">Error: ${escapeHtml(err.message)}</div>`;
+  }
+};
+
+App.showAccountModal = function(account) {
+  const isEdit = !!account;
+  const formHtml = `
+    <div class="form-group">
+      <label>Account Name</label>
+      <input type="text" id="acc-name" value="${isEdit ? escapeHtml(account.name) : ''}" required>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type</label>
+        <select id="acc-type">
+          ${['checking','savings','investment','credit','cash'].map(t =>
+            `<option value="${t}" ${isEdit && account.type === t ? 'selected' : ''}>${t.charAt(0).toUpperCase()+t.slice(1)}</option>`
+          ).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Currency</label>
+        <select id="acc-currency">
+          ${['USD','EUR','GBP','JPY','CHF','BTC','ETH'].map(c =>
+            `<option value="${c}" ${isEdit && account.currency === c ? 'selected' : ''}>${c}</option>`
+          ).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Balance</label>
+      <input type="number" step="0.01" id="acc-balance" value="${isEdit ? account.balance : 0}">
+    </div>
+  `;
+
+  this.showModal(isEdit ? 'Edit Account' : 'New Account', formHtml, async () => {
+    const data = {
+      name: document.getElementById('acc-name').value,
+      type: document.getElementById('acc-type').value,
+      currency: document.getElementById('acc-currency').value,
+      balance: parseFloat(document.getElementById('acc-balance').value) || 0,
+    };
+    if (isEdit) {
+      await API.updateAccount(account.id, data);
+      showToast('Account updated');
+    } else {
+      await API.createAccount(data);
+      showToast('Account created');
+    }
+    this.renderAccounts(document.getElementById('page-content'));
+  });
+};
+
+// ── TRANSACTIONS ──
+App.renderTransactions = async function(container) {
+  container.innerHTML = '<div class="text-center text-muted mt-2">Loading transactions...</div>';
+  try {
+    const [txns, accounts] = await Promise.all([
+      API.getTransactions({ limit: 50 }),
+      API.getAccounts(),
+    ]);
+
+    const accountMap = {};
+    accounts.forEach(a => accountMap[a.id] = a);
+
+    const categories = [...new Set(txns.map(t => t.category))];
+
+    container.innerHTML = `
+      <div class="page-header">
+        <h1>💳 Transactions</h1>
+        <button class="btn btn-primary" id="add-txn-btn">+ Add Transaction</button>
+      </div>
+
+      <div class="card mb-2">
+        <form id="txn-filter-form" class="flex items-center gap-2" style="flex-wrap:wrap">
+          <select id="filter-account" style="width:auto;min-width:140px">
+            <option value="">All Accounts</option>
+            ${accounts.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('')}
+          </select>
+          <select id="filter-category" style="width:auto;min-width:140px">
+            <option value="">All Categories</option>
+            ${categories.map(c => `<option value="${c}">${escapeHtml(c)}</option>`).join('')}
+          </select>
+          <input type="date" id="filter-from" style="width:auto">
+          <input type="date" id="filter-to" style="width:auto">
+          <button type="submit" class="btn btn-sm btn-secondary">Filter</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Account</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th style="text-align:right">Amount</th>
+                <th style="text-align:right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="txn-table-body">
+              ${txns.length ? txns.map(t => {
+                const account = accountMap[t.accountId];
+                return `
+                  <tr>
+                    <td class="text-sm">${formatDate(t.date)}</td>
+                    <td class="text-sm">${account ? escapeHtml(account.name) : 'Unknown'}</td>
+                    <td><span class="badge badge-${t.type}">${escapeHtml(t.category)}</span></td>
+                    <td class="text-sm">${escapeHtml(t.description || '-')}</td>
+                    <td style="text-align:right;color:${t.type === 'income' ? 'var(--green)' : 'var(--red)'}">
+                      ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
+                    </td>
+                    <td style="text-align:right">
+                      <button class="btn btn-sm btn-danger delete-txn-btn" data-id="${t.id}">🗑️</button>
+                    </td>
+                  </tr>
+                `;
+              }).join('') : `
+                <tr><td colspan="6" class="text-center text-muted">No transactions found</td></tr>
+              `}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('add-txn-btn').addEventListener('click', () => this.showTransactionModal(accounts));
+
+    // Filter
+    document.getElementById('txn-filter-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const filters = {};
+      const acct = document.getElementById('filter-account').value;
+      if (acct) filters.accountId = acct;
+      const cat = document.getElementById('filter-category').value;
+      if (cat) filters.category = cat;
+      const from = document.getElementById('filter-from').value;
+      if (from) filters.from = from;
+      const to = document.getElementById('filter-to').value;
+      if (to) filters.to = to;
+      filters.limit = '50';
+      this.loadFilteredTransactions(container, filters, accounts, accountMap);
+    });
+
+    $$('.delete-txn-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this transaction?')) return;
+        try {
+          await API.deleteTransaction(btn.dataset.id);
+          showToast('Transaction deleted');
+          this.renderTransactions(container);
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    });
+  } catch (err) {
+    container.innerHTML = `<div class="text-center text-muted mt-2">Error: ${escapeHtml(err.message)}</div>`;
+  }
+};
+
+App.loadFilteredTransactions = async function(container, filters, accounts, accountMap) {
+  try {
+    const txns = await API.getTransactions(filters);
+    const tbody = document.getElementById('txn-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = txns.length ? txns.map(t => {
+      const account = accountMap[t.accountId];
+      return `
+        <tr>
+          <td class="text-sm">${formatDate(t.date)}</td>
+          <td class="text-sm">${account ? escapeHtml(account.name) : 'Unknown'}</td>
+          <td><span class="badge badge-${t.type}">${escapeHtml(t.category)}</span></td>
+          <td class="text-sm">${escapeHtml(t.description || '-')}</td>
+          <td style="text-align:right;color:${t.type === 'income' ? 'var(--green)' : 'var(--red)'}">
+            ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
+          </td>
+          <td style="text-align:right">
+            <button class="btn btn-sm btn-danger delete-txn-btn" data-id="${t.id}">🗑️</button>
+          </td>
+        </tr>
+      `;
+    }).join('') : '<tr><td colspan="6" class="text-center text-muted">No transactions found</td></tr>';
+
+    $$('.delete-txn-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this transaction?')) return;
+        try {
+          await API.deleteTransaction(btn.dataset.id);
+          showToast('Transaction deleted');
+          this.loadFilteredTransactions(container, filters, accounts, accountMap);
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    });
+  } catch (err) { showToast(err.message, 'error'); }
+};
+
+App.showTransactionModal = function(accounts) {
+  const formHtml = `
+    <div class="form-group">
+      <label>Account</label>
+      <select id="txn-account" required>
+        <option value="">Select account...</option>
+        ${accounts.map(a => `<option value="${a.id}">${escapeHtml(a.name)} (${formatCurrency(a.balance, a.currency)})</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type</label>
+        <select id="txn-type">
+          <option value="expense">Expense</option>
+          <option value="income">Income</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" step="0.01" id="txn-amount" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="txn-category">
+          ${['Food & Dining','Transportation','Housing','Utilities','Entertainment','Shopping','Healthcare','Education','Salary','Freelance','Investment','Gift','Other'].map(c => `<option value="${c}">${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="txn-date" value="${new Date().toISOString().slice(0,10)}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" id="txn-desc" placeholder="Optional description">
+    </div>
+  `;
+
+  this.showModal('New Transaction', formHtml, async () => {
+    await API.createTransaction({
+      accountId: document.getElementById('txn-account').value,
+      type: document.getElementById('txn-type').value,
+      amount: parseFloat(document.getElementById('txn-amount').value),
+      category: document.getElementById('txn-category').value,
+      date: document.getElementById('txn-date').value,
+      description: document.getElementById('txn-desc').value,
+    });
+    showToast('Transaction added');
+    this.renderTransactions(document.getElementById('page-content'));
+  });
+};
