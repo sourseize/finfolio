@@ -1,15 +1,24 @@
 {
-  "name": "budinv",
+  "name": "finfolio",
   "version": "1.0.0",
-  "description": "Investment & Budgeting Application",
+  "description": "FinFolio - Investment & Budgeting Application",
   "private": true,
   "type": "module",
+  "bin": {
+    "finfolio": "dist/server.js"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "npx tsx src/server.ts"
   },
-  "keywords": [],
+  "keywords": [
+    "finfolio",
+    "personal-finance",
+    "budgeting",
+    "investments",
+    "portfolio"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {

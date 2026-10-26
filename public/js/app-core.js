@@ -28,7 +28,7 @@ const App = {
     document.getElementById('app').innerHTML = `
       <div class="auth-page">
         <div class="auth-card" id="auth-card">
-          <h1>Bud<span>Inv</span></h1>
+          <h1>Fin<span>Folio</span></h1>
           <p>Take control of your finances</p>
           <div id="auth-form"></div>
         </div>
@@ -95,7 +95,7 @@ const App = {
         const res = await API.register(username, password);
         API.setToken(res.token);
         this.user = res.user;
-        showToast('Account created! Welcome to BudInv.');
+        showToast('Account created! Welcome to FinFolio.');
         this.showApp();
         this.navigate('dashboard');
       } catch (err) { showToast(err.message, 'error'); }
@@ -107,7 +107,7 @@ const App = {
     document.getElementById('app').innerHTML = `
       <div class="app-layout">
         <aside class="sidebar">
-          <div class="sidebar-brand">💰 Bud<span>Inv</span></div>
+          <div class="sidebar-brand">📊 Fin<span>Folio</span></div>
           <nav class="sidebar-nav">
             <div class="sidebar-link active" data-page="dashboard">📊 <span>Dashboard</span></div>
             <div class="sidebar-link" data-page="accounts">🏦 <span>Accounts</span></div>

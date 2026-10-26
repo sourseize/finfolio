@@ -1,4 +1,4 @@
-# 💰 BudInv — Investment & Budgeting Application
+# 📊 FinFolio — Investment & Budgeting Application
 
 > A fully self-contained, zero-dependency personal finance SPA built with TypeScript.
 
@@ -122,7 +122,8 @@ Track your accounts, transactions, budgets, investments, and financial goals —
 
 ```bash
 # Clone or navigate to the project directory
-cd budinv
+git clone https://github.com/sourseize/finfolio.git
+cd finfolio
 
 # Install dependencies (just TypeScript compiler)
 npm install
@@ -243,12 +244,12 @@ npm run build
 node --experimental-sea-config sea-config.json
 
 # Copy node binary and inject the blob
-cp $(which node) budinv
-npx postject budinv NODE_SEA_BLOB sea.blob \
+cp $(which node) finfolio
+npx postject finfolio NODE_SEA_BLOB sea.blob \
   --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
 
 # Now you have a portable binary!
-./budinv
+./finfolio
 ```
 
 ### Docker (optional)
@@ -275,7 +276,7 @@ CMD ["node", "dist/server.js"]
 ## 📁 Project Structure
 
 ```
-budinv/
+finfolio/
 ├── src/
 │   ├── server.ts            # Entry point — starts HTTP server
 │   ├── server/
@@ -298,6 +299,8 @@ budinv/
 │       └── pages-3.js       # Goals, Reports
 ├── data/                    # Created at runtime — JSON database
 ├── dist/                    # Compiled JavaScript output
+├── Dockerfile
+├── sea-config.json
 ├── tsconfig.json
 ├── package.json
 └── .gitignore
@@ -326,4 +329,4 @@ MIT — free to use, modify, and distribute.
 
 ---
 
-*Built with 💰 by keeping it simple — zero dependencies, maximum control.*
+*Built with 📊 by keeping it simple — zero dependencies, maximum control.*

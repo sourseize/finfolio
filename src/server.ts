@@ -14,7 +14,7 @@ async function main() {
   server.listen(PORT, () => {
     console.log(`
 ╔══════════════════════════════════════════════╗
-║     💰 BudInv - Investment & Budgeting       ║
+║     📊 FinFolio - Investment & Budgeting    ║
 ║     Server running at http://localhost:${PORT}  ║
 ╚══════════════════════════════════════════════╝
     `);
