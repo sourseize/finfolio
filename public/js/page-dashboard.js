@@ -10,12 +10,12 @@ App.renderDashboard = async function(container) {
         <div class="stat-card">
           <div class="label">Net Worth</div>
           <div class="value" style="color:var(--accent)">${formatCurrency(data.netWorth)}</div>
-          <div class="sub">Total assets minus liabilities</div>
+          <div class="sub">${data.totalLiabilities > 0 ? `Assets minus ${formatCurrency(data.totalLiabilities)} owed` : 'Total assets minus liabilities'}</div>
         </div>
         <div class="stat-card">
           <div class="label">Total Balance</div>
           <div class="value" style="color:var(--green)">${formatCurrency(data.totalBalance)}</div>
-          <div class="sub">Across all accounts</div>
+          <div class="sub">Cash & asset accounts</div>
         </div>
         <div class="stat-card">
           <div class="label">Monthly Income</div>
@@ -25,7 +25,7 @@ App.renderDashboard = async function(container) {
         <div class="stat-card">
           <div class="label">Monthly Expenses</div>
           <div class="value" style="color:var(--red)">${formatCurrency(data.monthlyExpenses)}</div>
-          <div class="sub">This month</div>
+          <div class="sub">This month (excl. transfers & investing)</div>
         </div>
         <div class="stat-card">
           <div class="label">Investment Value</div>
@@ -35,8 +35,13 @@ App.renderDashboard = async function(container) {
         <div class="stat-card">
           <div class="label">Savings Rate</div>
           <div class="value" style="color:${data.savingsRate >= 20 ? 'var(--green)' : data.savingsRate >= 10 ? 'var(--orange)' : 'var(--red)'}">${data.savingsRate}%</div>
-          <div class="sub">${data.savingsRate >= 20 ? 'Great job!' : data.savingsRate >= 10 ? 'Getting there' : 'Try to save more'}</div>
+          <div class="sub">${data.savingsRate >= 20 ? 'Great job!' : data.savingsRate >= 10 ? 'Getting there' : 'Try to save more'}${data.monthlyInvested ? ` · ${formatCurrency(data.monthlyInvested)} invested` : ''}</div>
         </div>
+      </div>
+
+      <div class="grid grid-2 gap-2 mb-2" id="outlook-row">
+        <div class="card outlook-card"><div class="text-muted text-sm">Loading outlook…</div></div>
+        <div class="card outlook-card"><div class="text-muted text-sm">Loading outlook…</div></div>
       </div>
 
       <div class="grid grid-2 gap-2">
@@ -68,6 +73,9 @@ App.renderDashboard = async function(container) {
         </div>
       </div>
     `;
+
+    // Forward-looking outlook (runway + FIRE) — rendered independently so a failure never blocks the dashboard
+    this.renderOutlook(document.getElementById('outlook-row'));
 
     // Doughnut chart
     const expData = data.topExpenseCategories;
@@ -128,7 +136,7 @@ App.renderDashboard = async function(container) {
             <div class="text-sm">${escapeHtml(t.description || t.category)}</div>
             <div class="text-xs text-muted">${formatDate(t.date)} · ${escapeHtml(t.category)}</div>
           </div>
-          <span class="badge ${t.type === 'income' ? 'badge-income' : 'badge-expense'}">
+          <span class="badge ${isTransferTxn(t) ? 'badge-budget' : t.type === 'income' ? 'badge-income' : 'badge-expense'}">
             ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
           </span>
         </div>
@@ -158,6 +166,110 @@ App.renderDashboard = async function(container) {
   } catch (err) {
     container.innerHTML = `<div class="text-center text-muted mt-2">Error: ${escapeHtml(err.message)}</div>`;
   }
+};
+
+// ── Dashboard outlook cards (from the simulator's baseline scenario) ──
+App.renderOutlook = async function(row) {
+  if (!row) return;
+  try {
+    const o = await API.getOutlook();
+    if (!o.hasHistory) {
+      row.innerHTML = `
+        <div class="card outlook-card" style="grid-column:1/-1">
+          <div class="card-header"><span class="card-title">🔮 Outlook</span><a href="#simulate" class="text-sm">Open simulator →</a></div>
+          <div class="text-muted text-sm">Add a few months of income and expenses and FinFolio will project your runway and financial-independence date here.</div>
+        </div>`;
+      return;
+    }
+    const cash = o.runway.cashMonths;
+    const runwayColor = cash === null ? 'var(--text-primary)' : cash >= 6 ? 'var(--green)' : cash >= 3 ? 'var(--orange)' : 'var(--red)';
+    const fi = o.fire;
+    row.innerHTML = `
+      <div class="card outlook-card">
+        <div class="card-header"><span class="card-title">🛟 Runway</span><a href="#simulate" class="text-sm">Simulate →</a></div>
+        <div class="big" style="color:${runwayColor}">${formatMonths(cash)}</div>
+        <div class="text-sm text-muted">of spending covered by cash at ${formatCurrency(o.monthlyExpenses)}/mo</div>
+        <div class="flex justify-between text-sm mt-2" style="border-top:1px solid var(--border);padding-top:8px">
+          <span class="text-muted">Including investments</span><span>${formatMonths(o.runway.totalMonths)}</span>
+        </div>
+        <div class="flex justify-between text-sm mt-1">
+          <span class="text-muted">If income stopped today</span><span>${o.runway.simulatedMonths === null ? 'never runs out' : `lasts ${formatMonths(o.runway.simulatedMonths)}`}</span>
+        </div>
+      </div>
+      <div class="card outlook-card">
+        <div class="card-header"><span class="card-title">🔥 Financial independence</span><a href="#simulate" class="text-sm">Simulate →</a></div>
+        <div class="big" style="color:${fi.fiDate ? 'var(--green)' : 'var(--orange)'}">${fi.fiDate ? `${formatPeriod(fi.fiDate)} · age ${Math.floor(fi.fiAge)}` : 'Not yet in sight'}</div>
+        <div class="text-sm text-muted">${fi.fiDate ? (fi.fiByRetirement ? `before your planned retirement at ${Math.round(fi.retirementAge)}` : `after your planned retirement at ${Math.round(fi.retirementAge)}`) : 'on current habits, within the plan horizon'}</div>
+        <div class="progress-bar mt-2"><div class="progress-fill" style="width:${Math.min(100, fi.progress * 100)}%"></div></div>
+        <div class="flex justify-between text-xs text-muted mt-1">
+          <span>${formatPercent(fi.progress)} of your FI number</span><span>${formatCompact(fi.fiNumber)}</span>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    row.innerHTML = `<div class="card outlook-card" style="grid-column:1/-1"><div class="text-muted text-sm">Outlook unavailable: ${escapeHtml(err.message)}</div></div>`;
+  }
+};
+
+// ── Native dialogs (replace window.confirm / window.prompt) ──
+App._openDialog = function(innerHtml) {
+  const dlg = document.createElement('dialog');
+  dlg.className = 'dialog';
+  dlg.innerHTML = innerHtml;
+  document.body.appendChild(dlg);
+  if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  return dlg;
+};
+
+/** Ask a yes/no question. Resolves true when confirmed, false when cancelled or dismissed (Esc). */
+App.confirmDialog = function(message, opts = {}) {
+  return new Promise(resolve => {
+    const dlg = this._openDialog(`
+      <h2>${escapeHtml(opts.title || 'Are you sure?')}</h2>
+      <p>${escapeHtml(message)}</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="dialog-cancel">${escapeHtml(opts.cancelText || 'Cancel')}</button>
+        <button type="button" class="btn ${opts.danger === false ? 'btn-primary' : 'btn-danger'}" id="dialog-confirm">${escapeHtml(opts.confirmText || 'Delete')}</button>
+      </div>
+    `);
+    let result = false;
+    dlg.addEventListener('close', () => { dlg.remove(); resolve(result); });
+    dlg.querySelector('#dialog-cancel').addEventListener('click', () => dlg.close());
+    dlg.querySelector('#dialog-confirm').addEventListener('click', () => { result = true; dlg.close(); });
+    const btn = dlg.querySelector('#dialog-confirm');
+    if (btn.focus) btn.focus();
+  });
+};
+
+/** Ask for a single text value. Resolves the string, or null when cancelled. */
+App.promptDialog = function(title, opts = {}) {
+  return new Promise(resolve => {
+    const dlg = this._openDialog(`
+      <h2>${escapeHtml(title)}</h2>
+      ${opts.message ? `<p>${escapeHtml(opts.message)}</p>` : ''}
+      <form id="dialog-form">
+        <div class="form-group">
+          ${opts.label ? `<label>${escapeHtml(opts.label)}</label>` : ''}
+          <input type="text" id="dialog-input" value="${escapeHtml(opts.value || '')}" placeholder="${escapeHtml(opts.placeholder || '')}" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="dialog-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="dialog-confirm">${escapeHtml(opts.confirmText || 'Save')}</button>
+        </div>
+      </form>
+    `);
+    let result = null;
+    dlg.addEventListener('close', () => { dlg.remove(); resolve(result); });
+    dlg.querySelector('#dialog-cancel').addEventListener('click', () => dlg.close());
+    dlg.querySelector('#dialog-form').addEventListener('submit', e => {
+      e.preventDefault();
+      result = dlg.querySelector('#dialog-input').value;
+      dlg.close();
+    });
+    const input = dlg.querySelector('#dialog-input');
+    if (input.focus) input.focus();
+    if (input.select) input.select();
+  });
 };
 
 // ── Modal helper ──

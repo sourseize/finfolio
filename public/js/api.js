@@ -47,6 +47,21 @@ const API = {
   updateGoal(id, data) { return this.request('PUT', `/api/goals/${id}`, data); },
   deleteGoal(id) { return this.request('DELETE', `/api/goals/${id}`); },
 
+  // ── Simulation ──
+  getMeta() { return this.request('GET', '/api/meta'); },
+  getSimCatalog() { return this.request('GET', '/api/simulate/catalog'); },
+  getProfile() { return this.request('GET', '/api/profile'); },
+  updateProfile(data) { return this.request('PUT', '/api/profile', data); },
+  getSimBaseline(lookback) { return this.request('GET', `/api/simulate/baseline${lookback ? `?lookback=${lookback}` : ''}`); },
+  simulate(payload) { return this.request('POST', '/api/simulate', payload || {}); },
+  compareScenarios(scenarios) { return this.request('POST', '/api/simulate/compare', { scenarios }); },
+  opportunityCost(data) { return this.request('POST', '/api/simulate/opportunity-cost', data); },
+  getOutlook() { return this.request('GET', '/api/simulate/outlook'); },
+  getScenarios() { return this.request('GET', '/api/scenarios'); },
+  createScenario(data) { return this.request('POST', '/api/scenarios', data); },
+  updateScenario(id, data) { return this.request('PUT', `/api/scenarios/${id}`, data); },
+  deleteScenario(id) { return this.request('DELETE', `/api/scenarios/${id}`); },
+
   setToken(token) {
     this._token = token;
     localStorage.setItem('token', token);

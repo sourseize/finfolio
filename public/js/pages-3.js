@@ -73,7 +73,7 @@ App.renderGoals = async function(container) {
 
     $$('.delete-goal-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Delete this goal?')) return;
+        if (!(await App.confirmDialog('This cannot be undone.', { title: 'Delete this goal?' }))) return;
         try {
           await API.deleteGoal(btn.dataset.id);
           showToast('Goal deleted');
@@ -157,7 +157,7 @@ App.renderReports = async function(container) {
   container.innerHTML = '<div class="text-center text-muted mt-2">Loading reports...</div>';
   try {
     const data = await API.getDashboard();
-    const txns = await API.getTransactions({ limit: 200 });
+    const txns = await API.getTransactions({ limit: 1000 });
     const accounts = await API.getAccounts();
     const investments = await API.getInvestments();
     const goals = await API.getGoals();
@@ -167,7 +167,7 @@ App.renderReports = async function(container) {
     const incomeData = [];
     const expenseData = [];
     for (let i = 5; i >= 0; i--) {
-      const d = new Date();
+      const d = new Date(App.today + 'T00:00:00');
       d.setMonth(d.getMonth() - i);
       const m = d.getMonth();
       const y = d.getFullYear();
@@ -178,8 +178,8 @@ App.renderReports = async function(container) {
         const td = new Date(t.date);
         return td.getMonth() === m && td.getFullYear() === y;
       });
-      incomeData.push(monthTxns.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0));
-      expenseData.push(monthTxns.filter(t => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0));
+      incomeData.push(monthTxns.filter(isIncomeTxn).reduce((s, t) => s + t.amount, 0));
+      expenseData.push(monthTxns.filter(isSpendingTxn).reduce((s, t) => s + Math.abs(t.amount), 0));
     }
 
     container.innerHTML = `
@@ -196,7 +196,7 @@ App.renderReports = async function(container) {
 
       <div class="grid grid-2 gap-2">
         <div class="chart-container">
-          <h3>🏦 Balance by Account</h3>
+          <h3>🏦 Balance by Account (assets)</h3>
           <canvas id="balance-chart"></canvas>
         </div>
         <div class="card">
@@ -206,6 +206,7 @@ App.renderReports = async function(container) {
           <div class="flex flex-col gap-2">
             <div class="flex justify-between"><span class="text-muted">Net Worth</span><span style="color:var(--accent)">${formatCurrency(data.netWorth)}</span></div>
             <div class="flex justify-between"><span class="text-muted">Total Balance</span><span>${formatCurrency(data.totalBalance)}</span></div>
+            <div class="flex justify-between"><span class="text-muted">Liabilities</span><span style="color:var(--red)">${formatCurrency(data.totalLiabilities || 0)}</span></div>
             <div class="flex justify-between"><span class="text-muted">Investment Value</span><span style="color:var(--purple)">${formatCurrency(data.investmentValue)}</span></div>
             <div class="flex justify-between"><span class="text-muted">Avg Monthly Income</span><span style="color:var(--green)">${formatCurrency(data.monthlyIncome)}</span></div>
             <div class="flex justify-between"><span class="text-muted">Avg Monthly Expenses</span><span style="color:var(--red)">${formatCurrency(data.monthlyExpenses)}</span></div>
@@ -243,10 +244,11 @@ App.renderReports = async function(container) {
 
     // Balance chart
     setTimeout(() => {
+      const assetAccounts = accounts.filter(a => !isLiabilityAccount(a));
       Chart.bar(
         document.getElementById('balance-chart'),
-        accounts.map(a => a.name),
-        accounts.map(a => a.balance),
+        assetAccounts.map(a => a.name),
+        assetAccounts.map(a => a.balance),
       );
     }, 100);
 

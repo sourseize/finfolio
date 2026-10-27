@@ -2,9 +2,15 @@
 const App = {
   currentPage: 'dashboard',
   user: null,
+  /** Server's notion of "today" (YYYY-MM-DD); honours a frozen clock on the server. */
+  today: new Date().toISOString().slice(0, 10),
 
   async init() {
     this.renderShell();
+    try {
+      const meta = await API.getMeta();
+      if (meta && meta.today) this.today = meta.today;
+    } catch { /* fall back to the browser clock */ }
     if (API.isLoggedIn()) {
       this.user = { id: 'user' };
       this.showApp();
@@ -116,6 +122,7 @@ const App = {
             <div class="sidebar-link" data-page="investments">📈 <span>Investments</span></div>
             <div class="sidebar-link" data-page="goals">🎯 <span>Goals</span></div>
             <div class="sidebar-link" data-page="reports">📑 <span>Reports</span></div>
+            <div class="sidebar-link" data-page="simulate">🔮 <span>Simulate</span></div>
           </nav>
           <div class="sidebar-footer">
             <div style="cursor:pointer" id="logout-btn">🚪 Sign Out</div>
@@ -130,8 +137,6 @@ const App = {
     $$('.sidebar-link').forEach(link => {
       link.addEventListener('click', () => {
         const page = link.dataset.page;
-        $$('.sidebar-link').forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
         window.location.hash = page;
         this.navigate(page);
       });
@@ -146,6 +151,7 @@ const App = {
 
   navigate(page) {
     this.currentPage = page;
+    $$('.sidebar-link').forEach(l => l.classList.toggle('active', l.dataset.page === page));
     const content = document.getElementById('page-content');
     switch (page) {
       case 'dashboard': this.renderDashboard(content); break;
@@ -155,6 +161,7 @@ const App = {
       case 'investments': this.renderInvestments(content); break;
       case 'goals': this.renderGoals(content); break;
       case 'reports': this.renderReports(content); break;
+      case 'simulate': this.renderSimulate(content); break;
       default: content.innerHTML = '<div class="text-center text-muted mt-2">Page not found</div>';
     }
   },

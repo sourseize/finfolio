@@ -3,7 +3,8 @@ App.renderAccounts = async function(container) {
   container.innerHTML = '<div class="text-center text-muted mt-2">Loading accounts...</div>';
   try {
     const accounts = await API.getAccounts();
-    const totalBalance = accounts.reduce((s, a) => s + a.balance, 0);
+    const totalAssets = accounts.filter(a => !isLiabilityAccount(a)).reduce((s, a) => s + a.balance, 0);
+    const totalOwed = accounts.filter(isLiabilityAccount).reduce((s, a) => s + a.balance, 0);
 
     container.innerHTML = `
       <div class="page-header">
@@ -12,7 +13,9 @@ App.renderAccounts = async function(container) {
       </div>
       <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
         <div class="stat-card"><div class="label">Total Accounts</div><div class="value" style="font-size:1.2rem">${accounts.length}</div></div>
-        <div class="stat-card"><div class="label">Total Balance</div><div class="value" style="font-size:1.2rem;color:var(--accent)">${formatCurrency(totalBalance)}</div></div>
+        <div class="stat-card"><div class="label">Total Assets</div><div class="value" style="font-size:1.2rem;color:var(--accent)">${formatCurrency(totalAssets)}</div></div>
+        <div class="stat-card"><div class="label">Total Owed</div><div class="value" style="font-size:1.2rem;color:${totalOwed > 0 ? 'var(--red)' : 'var(--text-primary)'}">${formatCurrency(totalOwed)}</div></div>
+        <div class="stat-card"><div class="label">Net</div><div class="value" style="font-size:1.2rem;color:var(--green)">${formatCurrency(totalAssets - totalOwed)}</div></div>
       </div>
       <div class="grid grid-3 gap-2" id="accounts-list">
         ${accounts.length ? accounts.map(a => `
@@ -25,8 +28,8 @@ App.renderAccounts = async function(container) {
               </div>
             </div>
             <div class="card-title">${escapeHtml(a.name)}</div>
-            <div class="card-value">${formatCurrency(a.balance, a.currency)}</div>
-            <div class="text-xs text-muted mt-1">${a.currency}</div>
+            <div class="card-value ${describeAccountBalance(a).cls}">${describeAccountBalance(a).text}</div>
+            <div class="text-xs text-muted mt-1">${a.currency}${describeAccountBalance(a).note ? ' · ' + describeAccountBalance(a).note : ''}</div>
           </div>
         `).join('') : `
           <div class="empty-state" style="grid-column:1/-1">
@@ -51,7 +54,7 @@ App.renderAccounts = async function(container) {
     $$('.delete-account-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (!confirm('Delete this account? This will also remove all its transactions.')) return;
+        if (!(await App.confirmDialog('This will also remove all of its transactions.', { title: 'Delete this account?' }))) return;
         try {
           await API.deleteAccount(btn.dataset.id);
           showToast('Account deleted');
@@ -90,8 +93,9 @@ App.showAccountModal = function(account) {
       </div>
     </div>
     <div class="form-group">
-      <label>Balance</label>
+      <label id="acc-balance-label">Balance</label>
       <input type="number" step="0.01" id="acc-balance" value="${isEdit ? account.balance : 0}">
+      <div class="text-xs text-muted mt-1" id="acc-balance-hint"></div>
     </div>
   `;
 
@@ -111,6 +115,18 @@ App.showAccountModal = function(account) {
     }
     this.renderAccounts(document.getElementById('page-content'));
   });
+
+  // Credit accounts store the amount owed as a positive number.
+  const typeSel = document.getElementById('acc-type');
+  const syncBalanceLabel = () => {
+    const credit = typeSel.value === 'credit';
+    document.getElementById('acc-balance-label').textContent = credit ? 'Amount Owed' : 'Balance';
+    document.getElementById('acc-balance-hint').textContent = credit
+      ? 'Enter what you currently owe as a positive number. Purchases increase it, payments reduce it.'
+      : '';
+  };
+  typeSel.addEventListener('change', syncBalanceLabel);
+  syncBalanceLabel();
 };
 
 // ── TRANSACTIONS ──
@@ -169,9 +185,9 @@ App.renderTransactions = async function(container) {
                   <tr>
                     <td class="text-sm">${formatDate(t.date)}</td>
                     <td class="text-sm">${account ? escapeHtml(account.name) : 'Unknown'}</td>
-                    <td><span class="badge badge-${t.type}">${escapeHtml(t.category)}</span></td>
+                    <td><span class="badge ${isTransferTxn(t) ? 'badge-budget' : 'badge-' + t.type}">${escapeHtml(t.category)}</span></td>
                     <td class="text-sm">${escapeHtml(t.description || '-')}</td>
-                    <td style="text-align:right;color:${t.type === 'income' ? 'var(--green)' : 'var(--red)'}">
+                    <td style="text-align:right;color:${isTransferTxn(t) ? 'var(--text-secondary)' : t.type === 'income' ? 'var(--green)' : 'var(--red)'}">
                       ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
                     </td>
                     <td style="text-align:right">
@@ -208,7 +224,7 @@ App.renderTransactions = async function(container) {
 
     $$('.delete-txn-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Delete this transaction?')) return;
+        if (!(await App.confirmDialog('The account balance will be adjusted accordingly.', { title: 'Delete this transaction?' }))) return;
         try {
           await API.deleteTransaction(btn.dataset.id);
           showToast('Transaction deleted');
@@ -232,9 +248,9 @@ App.loadFilteredTransactions = async function(container, filters, accounts, acco
         <tr>
           <td class="text-sm">${formatDate(t.date)}</td>
           <td class="text-sm">${account ? escapeHtml(account.name) : 'Unknown'}</td>
-          <td><span class="badge badge-${t.type}">${escapeHtml(t.category)}</span></td>
+          <td><span class="badge ${isTransferTxn(t) ? 'badge-budget' : 'badge-' + t.type}">${escapeHtml(t.category)}</span></td>
           <td class="text-sm">${escapeHtml(t.description || '-')}</td>
-          <td style="text-align:right;color:${t.type === 'income' ? 'var(--green)' : 'var(--red)'}">
+          <td style="text-align:right;color:${isTransferTxn(t) ? 'var(--text-secondary)' : t.type === 'income' ? 'var(--green)' : 'var(--red)'}">
             ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
           </td>
           <td style="text-align:right">
@@ -246,7 +262,7 @@ App.loadFilteredTransactions = async function(container, filters, accounts, acco
 
     $$('.delete-txn-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Delete this transaction?')) return;
+        if (!(await App.confirmDialog('The account balance will be adjusted accordingly.', { title: 'Delete this transaction?' }))) return;
         try {
           await API.deleteTransaction(btn.dataset.id);
           showToast('Transaction deleted');
@@ -263,7 +279,7 @@ App.showTransactionModal = function(accounts) {
       <label>Account</label>
       <select id="txn-account" required>
         <option value="">Select account...</option>
-        ${accounts.map(a => `<option value="${a.id}">${escapeHtml(a.name)} (${formatCurrency(a.balance, a.currency)})</option>`).join('')}
+        ${accounts.map(a => `<option value="${a.id}">${escapeHtml(a.name)} (${isLiabilityAccount(a) && a.balance > 0 ? 'owes ' : ''}${describeAccountBalance(a).text})</option>`).join('')}
       </select>
     </div>
     <div class="form-row">
@@ -283,8 +299,9 @@ App.showTransactionModal = function(accounts) {
       <div class="form-group">
         <label>Category</label>
         <select id="txn-category">
-          ${['Food & Dining','Transportation','Housing','Utilities','Entertainment','Shopping','Healthcare','Education','Salary','Freelance','Investment','Gift','Other'].map(c => `<option value="${c}">${c}</option>`).join('')}
+          ${['Food & Dining','Transportation','Housing','Utilities','Entertainment','Shopping','Healthcare','Education','Salary','Freelance','Investment','Gift','Transfer','Other'].map(c => `<option value="${c}">${c}</option>`).join('')}
         </select>
+        <div class="help">“Transfer” = between your own accounts (not income or spending). “Investment” as an expense = money invested.</div>
       </div>
       <div class="form-group">
         <label>Date</label>

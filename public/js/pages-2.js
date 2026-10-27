@@ -63,7 +63,7 @@ App.renderBudgets = async function(container) {
 
     $$('.delete-budget-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Delete this budget?')) return;
+        if (!(await App.confirmDialog('Spending history is kept; only the budget limit is removed.', { title: 'Delete this budget?' }))) return;
         try {
           await API.deleteBudget(btn.dataset.id);
           showToast('Budget deleted');
@@ -197,7 +197,7 @@ App.renderInvestments = async function(container) {
     $$('.delete-invest-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (!confirm('Delete this investment?')) return;
+        if (!(await App.confirmDialog('Its trade history will be removed as well.', { title: 'Delete this investment?' }))) return;
         try {
           await API.deleteInvestment(btn.dataset.id);
           showToast('Investment deleted');

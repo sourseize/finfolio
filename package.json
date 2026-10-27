@@ -10,7 +10,17 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "npx tsx src/server.ts"
+    "dev": "npx tsx src/server.ts",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "pretest": "tsc -p tsconfig.test.json",
+    "test": "node --test --test-reporter=spec \".test-build/tests/**/*.test.js\"",
+    "test:unit": "tsc -p tsconfig.test.json && node --test --test-reporter=spec \".test-build/tests/unit/**/*.test.js\"",
+    "test:api": "tsc -p tsconfig.test.json && node --test --test-reporter=spec \".test-build/tests/api/**/*.test.js\"",
+    "test:watch": "tsc -p tsconfig.test.json && node --test --test-reporter=spec --watch \".test-build/tests/**/*.test.js\"",
+    "seed": "tsc && node dist/seed/cli.js",
+    "test:ui": "tsc -p tsconfig.test.json && node --test --test-reporter=spec \".test-build/tests/ui/**/*.test.js\"",
+    "test:golden": "tsc -p tsconfig.test.json && node --test --test-reporter=spec \".test-build/tests/golden/**/*.test.js\"",
+    "test:update-golden": "tsc -p tsconfig.test.json && UPDATE_GOLDEN=1 node --test \".test-build/tests/golden/**/*.test.js\" && echo 'Golden snapshot updated: review git diff tests/golden/'"
   },
   "keywords": [
     "finfolio",

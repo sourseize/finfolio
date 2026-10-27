@@ -1,6 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { now, nowIso } from '../util/clock.js';
+import type { Profile, Scenario } from '../sim/types.js';
 
 export interface User {
   id: string;
@@ -9,6 +11,13 @@ export interface User {
   createdAt: string;
 }
 
+/**
+ * Account balance convention:
+ *  - Asset accounts (checking, savings, cash, investment): balance is what you own.
+ *  - Credit accounts: balance is what you OWE, stored as a positive number.
+ *    An expense on a credit account increases the balance; an income (payment,
+ *    refund) decreases it. See `isLiabilityAccount` / `signedBalance`.
+ */
 export interface Account {
   id: string;
   userId: string;
@@ -81,7 +90,61 @@ export interface Goal {
   createdAt: string;
 }
 
+/** Per-user planning assumptions used by the simulator. */
+export interface UserProfile extends Profile {
+  userId: string;
+  updatedAt: string;
+}
+
+/** A saved what-if scenario. */
+export interface StoredScenario extends Scenario {
+  id: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Transaction category semantics shared by the dashboard and the simulator:
+ *  - `Transfer`: money moved between your own accounts — never income, never spending.
+ *  - `Investment` as an expense: money put into investments — saving, not spending.
+ *    `Investment` as income (dividends, interest) is real income.
+ */
+export const TRANSFER_CATEGORY = 'Transfer';
+export const INVESTMENT_CATEGORY = 'Investment';
+
+/** True when the transaction counts as take-home income. */
+export function isIncomeTxn(t: Pick<Transaction, 'type' | 'category'>): boolean {
+  return t.type === 'income' && t.category !== TRANSFER_CATEGORY;
+}
+
+/** True when the transaction counts as consumption (spending). */
+export function isSpendingTxn(t: Pick<Transaction, 'type' | 'category'>): boolean {
+  return t.type === 'expense' && t.category !== TRANSFER_CATEGORY && t.category !== INVESTMENT_CATEGORY;
+}
+
+/** Bump when stored data needs a migration (see `migrate`). */
+export const SCHEMA_VERSION = 2;
+
+/** True for account types whose balance represents money owed. */
+export function isLiabilityAccount(account: Pick<Account, 'type'>): boolean {
+  return account.type === 'credit';
+}
+
+/** Balance as a contribution to net worth: assets positive, liabilities negative. */
+export function signedBalance(account: Pick<Account, 'type' | 'balance'>): number {
+  return isLiabilityAccount(account) ? -account.balance : account.balance;
+}
+
+/** Apply a transaction's effect to an account balance (or reverse it with `direction = -1`). */
+export function applyTransactionToBalance(account: Account, txn: Pick<Transaction, 'type' | 'amount'>, direction: 1 | -1 = 1): void {
+  const amount = Math.abs(txn.amount) * direction;
+  if (txn.type === 'income') account.balance += isLiabilityAccount(account) ? -amount : amount;
+  else if (txn.type === 'expense') account.balance += isLiabilityAccount(account) ? amount : -amount;
+}
+
 interface DBData {
+  schemaVersion?: number;
   users: User[];
   accounts: Account[];
   transactions: Transaction[];
@@ -89,15 +152,30 @@ interface DBData {
   investments: Investment[];
   investmentTransactions: InvestmentTransaction[];
   goals: Goal[];
+  profiles: UserProfile[];
+  scenarios: StoredScenario[];
 }
 
-const DB_PATH = path.join(process.cwd(), 'data', 'database.json');
+/**
+ * Resolve the directory the JSON database lives in.
+ * Priority: explicit argument → FINFOLIO_DATA_DIR env var → ./data
+ */
+export function resolveDataDir(dataDir?: string): string {
+  return path.resolve(dataDir || process.env.FINFOLIO_DATA_DIR || path.join(process.cwd(), 'data'));
+}
 
 export class Database {
   private data!: DBData;
+  private dbPath: string = path.join(resolveDataDir(), 'database.json');
+
+  /** Absolute path of the backing JSON file. */
+  get filePath(): string {
+    return this.dbPath;
+  }
 
   private getDefaultData(): DBData {
     return {
+      schemaVersion: SCHEMA_VERSION,
       users: [],
       accounts: [],
       transactions: [],
@@ -105,22 +183,65 @@ export class Database {
       investments: [],
       investmentTransactions: [],
       goals: [],
+      profiles: [],
+      scenarios: [],
     };
   }
 
-  async init(): Promise<void> {
+  /**
+   * Load the database from disk (creating an empty one if missing).
+   * @param dataDir optional directory override; see `resolveDataDir`.
+   */
+  async init(dataDir?: string): Promise<void> {
+    this.dbPath = path.join(resolveDataDir(dataDir), 'database.json');
     try {
-      await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
-      const raw = await fs.readFile(DB_PATH, 'utf-8');
-      this.data = JSON.parse(raw);
+      await fs.mkdir(path.dirname(this.dbPath), { recursive: true });
+      const raw = await fs.readFile(this.dbPath, 'utf-8');
+      const parsed = JSON.parse(raw);
+      this.data = { ...this.getDefaultData(), ...parsed, schemaVersion: parsed.schemaVersion ?? 1 };
     } catch {
       this.data = this.getDefaultData();
       await this.persist();
     }
+    if (this.migrate()) await this.persist();
+  }
+
+  /**
+   * Upgrade older on-disk layouts in place. Returns true when something changed.
+   *
+   * v1 → v2: credit balances were implicitly "negative = owed" (expenses subtracted).
+   *          They are now stored as a positive amount owed.
+   */
+  migrate(): boolean {
+    let changed = false;
+    const version = this.data.schemaVersion ?? 1;
+    if (version < 2) {
+      for (const a of this.data.accounts) {
+        if (isLiabilityAccount(a) && a.balance < 0) {
+          a.balance = Math.abs(a.balance);
+          changed = true;
+        }
+      }
+    }
+    if (version !== SCHEMA_VERSION) {
+      this.data.schemaVersion = SCHEMA_VERSION;
+      changed = true;
+    }
+    return changed;
+  }
+
+  get schemaVersion(): number {
+    return this.data.schemaVersion ?? 1;
+  }
+
+  /** Drop all in-memory data and write an empty database (test/seed helper). */
+  async reset(): Promise<void> {
+    this.data = this.getDefaultData();
+    await this.persist();
   }
 
   async persist(): Promise<void> {
-    await fs.writeFile(DB_PATH, JSON.stringify(this.data, null, 2), 'utf-8');
+    await fs.writeFile(this.dbPath, JSON.stringify(this.data, null, 2), 'utf-8');
   }
 
   hashPassword(password: string): string {
@@ -133,7 +254,7 @@ export class Database {
       id: crypto.randomUUID(),
       username,
       passwordHash: this.hashPassword(password),
-      createdAt: new Date().toISOString(),
+      createdAt: nowIso(),
     };
     this.data.users.push(user);
     return user;
@@ -150,6 +271,10 @@ export class Database {
     return this.data.users.find(u => u.id === id);
   }
 
+  getUserByUsername(username: string): User | undefined {
+    return this.data.users.find(u => u.username === username);
+  }
+
   getAccounts(userId: string): Account[] {
     return this.data.accounts.filter(a => a.userId === userId);
   }
@@ -162,7 +287,7 @@ export class Database {
     const newAccount: Account = {
       ...account,
       id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
+      createdAt: nowIso(),
     };
     this.data.accounts.push(newAccount);
     return newAccount;
@@ -198,10 +323,7 @@ export class Database {
     const newTxn: Transaction = { ...txn, id: crypto.randomUUID() };
     this.data.transactions.push(newTxn);
     const account = this.data.accounts.find(a => a.id === txn.accountId);
-    if (account) {
-      if (txn.type === 'income') account.balance += txn.amount;
-      else if (txn.type === 'expense') account.balance -= txn.amount;
-    }
+    if (account) applyTransactionToBalance(account, txn, 1);
     return newTxn;
   }
 
@@ -210,10 +332,7 @@ export class Database {
     if (idx === -1) return false;
     const txn = this.data.transactions[idx];
     const account = this.data.accounts.find(a => a.id === txn.accountId);
-    if (account) {
-      if (txn.type === 'income') account.balance -= txn.amount;
-      else if (txn.type === 'expense') account.balance += txn.amount;
-    }
+    if (account) applyTransactionToBalance(account, txn, -1);
     this.data.transactions.splice(idx, 1);
     return true;
   }
@@ -268,7 +387,7 @@ export class Database {
     const newInv: Investment = {
       ...inv,
       id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
+      createdAt: nowIso(),
     };
     this.data.investments.push(newInv);
     return newInv;
@@ -319,7 +438,7 @@ export class Database {
     const newGoal: Goal = {
       ...goal,
       id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
+      createdAt: nowIso(),
     };
     this.data.goals.push(newGoal);
     return newGoal;
@@ -339,13 +458,73 @@ export class Database {
     return true;
   }
 
+  // ── Profiles ──
+
+  getProfile(userId: string): UserProfile | undefined {
+    return this.data.profiles.find(p => p.userId === userId);
+  }
+
+  upsertProfile(userId: string, profile: Profile): UserProfile {
+    const record: UserProfile = { ...profile, userId, updatedAt: nowIso() };
+    const idx = this.data.profiles.findIndex(p => p.userId === userId);
+    if (idx === -1) this.data.profiles.push(record);
+    else this.data.profiles[idx] = record;
+    return record;
+  }
+
+  // ── Scenarios ──
+
+  getScenarios(userId: string): StoredScenario[] {
+    return this.data.scenarios.filter(s => s.userId === userId);
+  }
+
+  getScenario(id: string): StoredScenario | undefined {
+    return this.data.scenarios.find(s => s.id === id);
+  }
+
+  createScenario(userId: string, scenario: Scenario): StoredScenario {
+    const ts = nowIso();
+    const record: StoredScenario = { ...scenario, id: crypto.randomUUID(), userId, createdAt: ts, updatedAt: ts };
+    this.data.scenarios.push(record);
+    return record;
+  }
+
+  updateScenario(id: string, scenario: Scenario): StoredScenario | null {
+    const idx = this.data.scenarios.findIndex(s => s.id === id);
+    if (idx === -1) return null;
+    const prev = this.data.scenarios[idx];
+    this.data.scenarios[idx] = { ...scenario, id: prev.id, userId: prev.userId, createdAt: prev.createdAt, updatedAt: nowIso() };
+    return this.data.scenarios[idx];
+  }
+
+  deleteScenario(id: string): boolean {
+    const idx = this.data.scenarios.findIndex(s => s.id === id);
+    if (idx === -1) return false;
+    this.data.scenarios.splice(idx, 1);
+    return true;
+  }
+
+  /** Everything the simulator needs to derive a baseline for a user. */
+  getSimulationSource(userId: string) {
+    const investments = this.getInvestments(userId);
+    const ids = new Set(investments.map(i => i.id));
+    return {
+      accounts: this.getAccounts(userId),
+      transactions: this.data.transactions.filter(t => t.userId === userId),
+      investments,
+      investmentTransactions: this.data.investmentTransactions.filter(t => ids.has(t.investmentId)),
+      goals: this.getGoals(userId),
+    };
+  }
+
   getDashboard(userId: string) {
-    const now = new Date();
-    const month = now.getMonth();
-    const year = now.getFullYear();
+    const current = now();
+    const month = current.getMonth();
+    const year = current.getFullYear();
 
     const accounts = this.data.accounts.filter(a => a.userId === userId);
-    const totalBalance = accounts.reduce((s, a) => s + a.balance, 0);
+    const totalBalance = accounts.filter(a => !isLiabilityAccount(a)).reduce((s, a) => s + a.balance, 0);
+    const totalLiabilities = accounts.filter(a => isLiabilityAccount(a)).reduce((s, a) => s + a.balance, 0);
     const transactions = this.data.transactions.filter(t => t.userId === userId);
 
     const monthlyTxns = transactions.filter(t => {
@@ -353,14 +532,14 @@ export class Database {
       return d.getMonth() === month && d.getFullYear() === year;
     });
 
-    const monthlyIncome = monthlyTxns.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-    const monthlyExpenses = monthlyTxns.filter(t => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0);
+    const monthlyIncome = monthlyTxns.filter(isIncomeTxn).reduce((s, t) => s + t.amount, 0);
+    const monthlyExpenses = monthlyTxns.filter(isSpendingTxn).reduce((s, t) => s + Math.abs(t.amount), 0);
+    const monthlyInvested = monthlyTxns.filter(t => t.type === 'expense' && t.category === INVESTMENT_CATEGORY).reduce((s, t) => s + Math.abs(t.amount), 0);
 
     const investments = this.data.investments.filter(i => i.userId === userId);
     const investmentValue = investments.reduce((s, i) => s + (i.currentPrice * i.shares), 0);
 
-    const liabilities = accounts.filter(a => a.type === 'credit').reduce((s, a) => s + a.balance, 0);
-    const netWorth = totalBalance + investmentValue - Math.abs(liabilities);
+    const netWorth = totalBalance + investmentValue - totalLiabilities;
 
     const budgets = this.data.budgets.filter(b => b.userId === userId && b.month === month && b.year === year);
     const budgetHealth = budgets.map(b => ({
@@ -376,7 +555,7 @@ export class Database {
       .slice(0, 10);
 
     const expenseByCat = monthlyTxns
-      .filter(t => t.type === 'expense')
+      .filter(isSpendingTxn)
       .reduce<Record<string, number>>((acc, t) => {
         acc[t.category] = (acc[t.category] || 0) + Math.abs(t.amount);
         return acc;
@@ -403,7 +582,9 @@ export class Database {
 
     return {
       totalBalance,
+      totalLiabilities,
       monthlyIncome,
+      monthlyInvested,
       monthlyExpenses,
       netWorth,
       investmentValue,

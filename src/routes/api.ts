@@ -1,11 +1,17 @@
 import { router } from '../server/router.js';
 import { db } from '../db/database.js';
+import { now, nowIso, today, isClockFrozen } from '../util/clock.js';
 import type { ServerResponse, IncomingMessage } from 'node:http';
 
 function json(res: ServerResponse, data: any, status = 200) {
   res.writeHead(status, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify(data));
 }
+
+// ── Meta ──
+router.get('/api/meta', async (_req, res) => {
+  json(res, { name: 'finfolio', now: nowIso(), today: today(), clockFrozen: isClockFrozen() });
+}, false);
 
 // ── Auth ──
 router.post('/api/auth/register', async (req, res, _match, body) => {
@@ -100,7 +106,7 @@ router.post('/api/transactions', async (req, res, _match, body) => {
     category: body.category,
     amount: body.amount,
     description: body.description || '',
-    date: body.date || new Date().toISOString().slice(0, 10),
+    date: body.date || today(),
     tags: body.tags || [],
   });
   // Recalculate budgets
@@ -126,15 +132,15 @@ router.get('/api/budgets', async (req, res) => {
 router.post('/api/budgets', async (req, res, _match, body) => {
   const userId = (req as any).userId;
   if (!body?.category || !body?.amount) return json(res, { error: 'category and amount required' }, 400);
-  const now = new Date();
+  const current = now();
   const budget = db.createBudget({
     userId,
     category: body.category,
     amount: body.amount,
     spent: 0,
     period: body.period || 'monthly',
-    month: body.month ?? now.getMonth(),
-    year: body.year ?? now.getFullYear(),
+    month: body.month ?? current.getMonth(),
+    year: body.year ?? current.getFullYear(),
   });
   await db.persist();
   json(res, budget, 201);
@@ -209,7 +215,7 @@ router.post('/api/investments/:id/transactions', async (req, res, match, body) =
     shares: body.shares,
     pricePerShare: body.pricePerShare,
     totalAmount: body.shares * body.pricePerShare,
-    date: body.date || new Date().toISOString().slice(0, 10),
+    date: body.date || today(),
     notes: body.notes || '',
   });
   await db.persist();

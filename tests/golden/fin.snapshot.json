@@ -1,0 +1,877 @@
+{
+  "dashboard": {
+    "totalBalance": 38580.4,
+    "totalLiabilities": 917.82,
+    "monthlyIncome": 6400,
+    "monthlyInvested": 1200,
+    "monthlyExpenses": 3569.43,
+    "netWorth": 105898.57999999999,
+    "investmentValue": 68236,
+    "budgetHealth": [
+      {
+        "category": "Food & Dining",
+        "budgeted": 750,
+        "spent": 773.5600000000001,
+        "remaining": -23.56000000000006,
+        "percentUsed": 103
+      },
+      {
+        "category": "Transportation",
+        "budgeted": 260,
+        "spent": 127.88,
+        "remaining": 132.12,
+        "percentUsed": 49
+      },
+      {
+        "category": "Entertainment",
+        "budgeted": 180,
+        "spent": 62.84,
+        "remaining": 117.16,
+        "percentUsed": 35
+      },
+      {
+        "category": "Shopping",
+        "budgeted": 300,
+        "spent": 43.42,
+        "remaining": 256.58,
+        "percentUsed": 14
+      },
+      {
+        "category": "Utilities",
+        "budgeted": 260,
+        "spent": 323.62,
+        "remaining": -63.620000000000005,
+        "percentUsed": 124
+      },
+      {
+        "category": "Housing",
+        "budgeted": 1950,
+        "spent": 1950,
+        "remaining": 0,
+        "percentUsed": 100
+      },
+      {
+        "category": "Healthcare",
+        "budgeted": 150,
+        "spent": 160.11,
+        "remaining": -10.110000000000014,
+        "percentUsed": 107
+      }
+    ],
+    "topExpenseCategories": [
+      {
+        "category": "Housing",
+        "amount": 1950,
+        "percentage": 55
+      },
+      {
+        "category": "Food & Dining",
+        "amount": 773.5600000000001,
+        "percentage": 22
+      },
+      {
+        "category": "Utilities",
+        "amount": 323.62,
+        "percentage": 9
+      },
+      {
+        "category": "Healthcare",
+        "amount": 160.11,
+        "percentage": 4
+      },
+      {
+        "category": "Other",
+        "amount": 128,
+        "percentage": 4
+      }
+    ],
+    "savingsRate": 44,
+    "goalProgress": [
+      {
+        "name": "Emergency fund (6 months)",
+        "current": 18500,
+        "target": 25000,
+        "percentage": 74
+      },
+      {
+        "name": "Flat deposit",
+        "current": 22000,
+        "target": 84000,
+        "percentage": 26
+      },
+      {
+        "name": "Japan trip",
+        "current": 900,
+        "target": 4500,
+        "percentage": 20
+      },
+      {
+        "name": "Retire at 65",
+        "current": 0,
+        "target": 1500000,
+        "percentage": 0
+      }
+    ]
+  },
+  "baseline": {
+    "asOf": "2026-10-25",
+    "liquid": 36430.4,
+    "invested": 70386,
+    "debt": 917.82,
+    "monthlyIncome": 7089.44,
+    "monthlyExpenses": 3950.78,
+    "monthlyContribution": 1269.6,
+    "lookbackMonths": 12,
+    "expenseByCategory": {
+      "Housing": 1981.67,
+      "Food & Dining": 734.71,
+      "Transportation": 226.97,
+      "Utilities": 287.03,
+      "Entertainment": 271.08,
+      "Other": 128,
+      "Healthcare": 68.94,
+      "Shopping": 184.55,
+      "Gift": 38.75,
+      "Education": 29.08
+    },
+    "window": [
+      "2025-10",
+      "2026-09"
+    ]
+  },
+  "outlook": {
+    "asOf": "2026-10-25",
+    "hasHistory": true,
+    "monthlyIncome": 7089.44,
+    "monthlyExpenses": 3950.78,
+    "monthlyContribution": 1269.6,
+    "runway": {
+      "cashMonths": 9.22,
+      "totalMonths": 26.8,
+      "simulatedMonths": 28
+    },
+    "fire": {
+      "fiNumber": 1185234,
+      "progress": 0.0893,
+      "fiDate": "2043-05",
+      "fiAge": 56.83,
+      "fiByRetirement": true,
+      "coastFiMonth": 114,
+      "retirementAge": 65
+    },
+    "netWorthAtRetirement": 3911741.41,
+    "endNetWorth": 13871095.44
+  },
+  "scenarios": {
+    "Keep going": {
+      "summary": {
+        "horizonMonths": 597,
+        "startNetWorth": 105898.58,
+        "endNetWorth": 13871095.44,
+        "endRealNetWorth": 4069041.43,
+        "peakNetWorth": 13871095.44,
+        "minNetWorth": 109546.05,
+        "depletedMonth": null,
+        "endShortfall": 0,
+        "netWorthAtRetirement": 3911741.41,
+        "totalIncome": 3099817.61,
+        "totalExpenses": 4633820.68,
+        "totalContributions": -1482308.99,
+        "fire": {
+          "safeWithdrawalRate": 0.04,
+          "annualExpensesToday": 47409.36,
+          "fiNumber": 1185234,
+          "leanFiNumber": 829663.8,
+          "coastFiNumber": 409233.64,
+          "investableToday": 105898.58,
+          "progress": 0.0893,
+          "fiMonth": 199,
+          "leanFiMonth": 150,
+          "coastFiMonth": 114,
+          "fiDate": "2043-05",
+          "fiAge": 56.83,
+          "retirementMonth": 297,
+          "retirementAge": 65,
+          "fiByRetirement": true
+        },
+        "runway": {
+          "cashMonths": 9.22,
+          "totalMonths": 26.8,
+          "simulatedMonths": 28
+        }
+      },
+      "yearlyNetWorth": [
+        151825.36,
+        202391.14,
+        257955.67,
+        318919.19,
+        385711.58,
+        458794.56,
+        538663.97,
+        625852.17,
+        720930.7,
+        824513.06,
+        937257.72,
+        1059871.35,
+        1193112.23,
+        1337793.95,
+        1494789.35,
+        1665034.73,
+        1849534.41,
+        2049365.51,
+        2265683.19,
+        2499726.14,
+        2752822.55,
+        3026396.45,
+        3321974.52,
+        3641193.37,
+        3941168.71,
+        4124737.51,
+        4318943.61,
+        4524381.01,
+        4741776.8,
+        4971907.53,
+        5215602.56,
+        5473747.79,
+        5747289.51,
+        6037238.64,
+        6344675.17,
+        6670753.01,
+        7016705.06,
+        7383848.74,
+        7773591.83,
+        8187438.78,
+        8626997.41,
+        9093986.09,
+        9590241.45,
+        10117726.59,
+        10678539.9,
+        11274924.45,
+        11909278.08,
+        12584164.2,
+        13302323.26,
+        13871095.44
+      ],
+      "montecarlo": {
+        "successProbability": 0.895,
+        "fiByRetirementProbability": 0.915,
+        "fiMonth": {
+          "p10": 147,
+          "p50": 198,
+          "p90": 264
+        },
+        "endNetWorth": {
+          "p10": -39497.12,
+          "p25": 2045509.83,
+          "p50": 6419161.24,
+          "p75": 17244256.01,
+          "p90": 36175812.47,
+          "mean": 14938214.18
+        },
+        "bandsAt10y": {
+          "t": 119,
+          "period": "2036-09",
+          "p10": 538479.45,
+          "p25": 633449.95,
+          "p50": 760395.27,
+          "p75": 918115.45,
+          "p90": 1102313.03
+        }
+      },
+      "goals": [
+        {
+          "name": "Emergency fund (6 months)",
+          "status": "on_track",
+          "fundedBy": "2027-06",
+          "allocatedMonthly": 812.5
+        },
+        {
+          "name": "Flat deposit",
+          "status": "at_risk",
+          "fundedBy": "2031-06",
+          "allocatedMonthly": 1108.45
+        },
+        {
+          "name": "Retire at 65",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        },
+        {
+          "name": "Japan trip",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        }
+      ]
+    },
+    "Buy a flat in 2028": {
+      "summary": {
+        "horizonMonths": 597,
+        "startNetWorth": 105898.58,
+        "endNetWorth": 16098028.69,
+        "endRealNetWorth": 4722305.17,
+        "peakNetWorth": 16098028.69,
+        "minNetWorth": 109546.05,
+        "depletedMonth": null,
+        "endShortfall": 0,
+        "netWorthAtRetirement": 4347854.6,
+        "totalIncome": 3099817.61,
+        "totalExpenses": 3475158.83,
+        "totalContributions": -411157.06,
+        "fire": {
+          "safeWithdrawalRate": 0.04,
+          "annualExpensesToday": 47409.36,
+          "fiNumber": 1185234,
+          "leanFiNumber": 829663.8,
+          "coastFiNumber": 362142.35,
+          "investableToday": 105898.58,
+          "progress": 0.0893,
+          "fiMonth": 213,
+          "leanFiMonth": 170,
+          "coastFiMonth": 135,
+          "fiDate": "2044-07",
+          "fiAge": 58,
+          "retirementMonth": 297,
+          "retirementAge": 65,
+          "fiByRetirement": true
+        },
+        "runway": {
+          "cashMonths": 9.22,
+          "totalMonths": 26.8,
+          "simulatedMonths": 15
+        }
+      },
+      "yearlyNetWorth": [
+        151825.36,
+        211976.18,
+        278281.04,
+        350312.36,
+        428721.44,
+        513995.87,
+        606658.56,
+        707270.27,
+        816432.25,
+        934789.14,
+        1063032.03,
+        1201901.75,
+        1352192.38,
+        1514755.03,
+        1690501.85,
+        1880410.33,
+        2085527.96,
+        2306977.13,
+        2545960.41,
+        2803766.23,
+        3081774.92,
+        3381465.18,
+        3704421,
+        4052339.1,
+        4382377.31,
+        4597225.79,
+        4824376.28,
+        5064888.51,
+        5319621.28,
+        5589499.1,
+        5875509.21,
+        6178706.01,
+        6500215.63,
+        6841240.93,
+        7203066.82,
+        7587065.9,
+        7994704.6,
+        8427549.64,
+        8887274.97,
+        9375669.29,
+        9894643.92,
+        10446241.37,
+        11032644.43,
+        11656185.92,
+        12319359.13,
+        13024828.93,
+        13775443.75,
+        14574248.34,
+        15424497.37,
+        16098028.69
+      ],
+      "montecarlo": {
+        "successProbability": 0.965,
+        "fiByRetirementProbability": 0.92,
+        "fiMonth": {
+          "p10": 169,
+          "p50": 215,
+          "p90": 278
+        },
+        "endNetWorth": {
+          "p10": 3082879.01,
+          "p25": 5007645.01,
+          "p50": 9582364.34,
+          "p75": 18986466.56,
+          "p90": 36416367.45,
+          "mean": 16997464.89
+        },
+        "bandsAt10y": {
+          "t": 119,
+          "period": "2036-09",
+          "p10": 734855.29,
+          "p25": 798410.76,
+          "p50": 895787.13,
+          "p75": 999311.5,
+          "p90": 1134650.67
+        }
+      },
+      "goals": [
+        {
+          "name": "Emergency fund (6 months)",
+          "status": "on_track",
+          "fundedBy": "2027-06",
+          "allocatedMonthly": 812.5
+        },
+        {
+          "name": "Flat deposit",
+          "status": "at_risk",
+          "fundedBy": "2031-06",
+          "allocatedMonthly": 1108.45
+        },
+        {
+          "name": "Retire at 65",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        },
+        {
+          "name": "Japan trip",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        }
+      ]
+    },
+    "Sabbatical + crash": {
+      "summary": {
+        "horizonMonths": 597,
+        "startNetWorth": 105898.58,
+        "endNetWorth": 11049687.28,
+        "endRealNetWorth": 3241390.38,
+        "peakNetWorth": 11049687.28,
+        "minNetWorth": 50567.97,
+        "depletedMonth": null,
+        "endShortfall": 0,
+        "netWorthAtRetirement": 3388960.01,
+        "totalIncome": 3012296.82,
+        "totalExpenses": 4633820.68,
+        "totalContributions": -1570472.5,
+        "fire": {
+          "safeWithdrawalRate": 0.04,
+          "annualExpensesToday": 47409.36,
+          "fiNumber": 1185234,
+          "leanFiNumber": 829663.8,
+          "coastFiNumber": 409233.64,
+          "investableToday": 105898.58,
+          "progress": 0.0893,
+          "fiMonth": 226,
+          "leanFiMonth": 177,
+          "coastFiMonth": 160,
+          "fiDate": "2045-08",
+          "fiAge": 59.08,
+          "retirementMonth": 297,
+          "retirementAge": 65,
+          "fiByRetirement": true
+        },
+        "runway": {
+          "cashMonths": 9.22,
+          "totalMonths": 26.8,
+          "simulatedMonths": 22
+        }
+      },
+      "yearlyNetWorth": [
+        107933.34,
+        74759.19,
+        127806.76,
+        190164.79,
+        249082.9,
+        312601.88,
+        382237.8,
+        458476.17,
+        541838.37,
+        632884.27,
+        732214.92,
+        840475.55,
+        958358.73,
+        1086607.7,
+        1226020.06,
+        1377451.59,
+        1541820.45,
+        1720111.58,
+        1913381.48,
+        2122763.31,
+        2349472.32,
+        2594811.7,
+        2860178.84,
+        3147072,
+        3412458.83,
+        3559017.95,
+        3713623.68,
+        3876688.68,
+        4048746.01,
+        4230364.58,
+        4422151.61,
+        4624755.27,
+        4838867.52,
+        5065227.1,
+        5304622.83,
+        5557897,
+        5825949.13,
+        6109739.9,
+        6410295.37,
+        6728711.57,
+        7066159.3,
+        7423889.31,
+        7803237.89,
+        8205632.78,
+        8632599.52,
+        9085768.24,
+        9566880.95,
+        10077799.26,
+        10620512.77,
+        11049687.28
+      ],
+      "montecarlo": {
+        "successProbability": 0.865,
+        "fiByRetirementProbability": 0.88,
+        "fiMonth": {
+          "p10": 172,
+          "p50": 226,
+          "p90": 285
+        },
+        "endNetWorth": {
+          "p10": -603361.97,
+          "p25": 1294404.35,
+          "p50": 4899505.87,
+          "p75": 14145173.9,
+          "p90": 29897406.61,
+          "mean": 12046585.37
+        },
+        "bandsAt10y": {
+          "t": 119,
+          "period": "2036-09",
+          "p10": 439861.21,
+          "p25": 504974.43,
+          "p50": 595693.41,
+          "p75": 701830.48,
+          "p90": 821028.25
+        }
+      },
+      "goals": [
+        {
+          "name": "Emergency fund (6 months)",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        },
+        {
+          "name": "Flat deposit",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        },
+        {
+          "name": "Retire at 65",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        },
+        {
+          "name": "Japan trip",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        }
+      ]
+    },
+    "Retire at 58": {
+      "summary": {
+        "horizonMonths": 597,
+        "startNetWorth": 105898.58,
+        "endNetWorth": 6252169.62,
+        "endRealNetWorth": 1834053.94,
+        "peakNetWorth": 6252169.62,
+        "minNetWorth": 109546.05,
+        "depletedMonth": null,
+        "endShortfall": 0,
+        "netWorthAtRetirement": 2002924.02,
+        "totalIncome": 1983155.76,
+        "totalExpenses": 4633820.68,
+        "totalContributions": -2604558.46,
+        "fire": {
+          "safeWithdrawalRate": 0.04,
+          "annualExpensesToday": 47409.36,
+          "fiNumber": 1185234,
+          "leanFiNumber": 829663.8,
+          "coastFiNumber": 552829.03,
+          "investableToday": 105898.58,
+          "progress": 0.0893,
+          "fiMonth": 199,
+          "leanFiMonth": 150,
+          "coastFiMonth": 184,
+          "fiDate": "2043-05",
+          "fiAge": 56.83,
+          "retirementMonth": 213,
+          "retirementAge": 58,
+          "fiByRetirement": true
+        },
+        "runway": {
+          "cashMonths": 9.22,
+          "totalMonths": 26.8,
+          "simulatedMonths": 28
+        }
+      },
+      "yearlyNetWorth": [
+        151825.36,
+        202391.14,
+        257955.67,
+        318919.19,
+        385711.58,
+        458794.56,
+        538663.97,
+        625852.17,
+        720930.7,
+        824513.06,
+        937257.72,
+        1059871.35,
+        1193112.23,
+        1337793.95,
+        1494789.35,
+        1665034.73,
+        1849534.41,
+        2013075.2,
+        2076330.74,
+        2142152.86,
+        2210594.49,
+        2281789.32,
+        2355879.12,
+        2433014.31,
+        2513354.56,
+        2597069.36,
+        2684338.69,
+        2775353.74,
+        2870317.62,
+        2969446.21,
+        3072968.95,
+        3181129.83,
+        3294188.29,
+        3412420.33,
+        3536119.58,
+        3665598.53,
+        3801189.77,
+        3943247.38,
+        4092148.37,
+        4248294.28,
+        4412112.8,
+        4584059.55,
+        4764620.05,
+        4954311.69,
+        5153685.96,
+        5363330.73,
+        5583872.81,
+        5815980.55,
+        6060366.76,
+        6252169.62
+      ],
+      "montecarlo": {
+        "successProbability": 0.615,
+        "fiByRetirementProbability": 0.585,
+        "fiMonth": {
+          "p10": 143,
+          "p50": 189,
+          "p90": 236
+        },
+        "endNetWorth": {
+          "p10": -1983002.43,
+          "p25": -1238801.79,
+          "p50": 1041998.85,
+          "p75": 7528091.65,
+          "p90": 23121511.49,
+          "mean": 7550640.2
+        },
+        "bandsAt10y": {
+          "t": 119,
+          "period": "2036-09",
+          "p10": 538479.45,
+          "p25": 633449.95,
+          "p50": 760395.27,
+          "p75": 918115.45,
+          "p90": 1102313.03
+        }
+      },
+      "goals": [
+        {
+          "name": "Emergency fund (6 months)",
+          "status": "on_track",
+          "fundedBy": "2027-06",
+          "allocatedMonthly": 812.5
+        },
+        {
+          "name": "Flat deposit",
+          "status": "at_risk",
+          "fundedBy": "2031-06",
+          "allocatedMonthly": 1108.45
+        },
+        {
+          "name": "Retire at 65",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        },
+        {
+          "name": "Japan trip",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        }
+      ]
+    },
+    "Family of four": {
+      "summary": {
+        "horizonMonths": 597,
+        "startNetWorth": 105898.58,
+        "endNetWorth": 2137399.06,
+        "endRealNetWorth": 387122.35,
+        "peakNetWorth": 2296590.28,
+        "minNetWorth": 109342.96,
+        "depletedMonth": null,
+        "endShortfall": 0,
+        "netWorthAtRetirement": 2030547.68,
+        "totalIncome": 7002606.35,
+        "totalExpenses": 7905540.06,
+        "totalContributions": -839918.83,
+        "fire": {
+          "safeWithdrawalRate": 0.04,
+          "annualExpensesToday": 47409.36,
+          "fiNumber": 1185234,
+          "leanFiNumber": 829663.8,
+          "coastFiNumber": 1238355.92,
+          "investableToday": 105898.58,
+          "progress": 0.0893,
+          "fiMonth": null,
+          "leanFiMonth": null,
+          "coastFiMonth": null,
+          "fiDate": null,
+          "fiAge": null,
+          "retirementMonth": 297,
+          "retirementAge": 65,
+          "fiByRetirement": false
+        },
+        "runway": {
+          "cashMonths": 9.22,
+          "totalMonths": 26.8,
+          "simulatedMonths": 23
+        }
+      },
+      "yearlyNetWorth": [
+        146168.85,
+        177702.26,
+        208043.61,
+        231947.35,
+        282420.04,
+        334871.8,
+        389409.75,
+        446087.86,
+        504960.67,
+        566083.21,
+        629510.97,
+        695299.82,
+        763505.99,
+        834185.94,
+        907396.36,
+        983194.06,
+        1061635.87,
+        1142778.57,
+        1230369.22,
+        1340194.51,
+        1458363.08,
+        1600991.56,
+        1750281.74,
+        1906493.71,
+        2034934.06,
+        2061384.43,
+        2087468.31,
+        2112622.54,
+        2136740.87,
+        2159710.42,
+        2181411.24,
+        2201716.03,
+        2220489.7,
+        2237588.99,
+        2252862.05,
+        2266147.96,
+        2277276.31,
+        2286066.67,
+        2292328.13,
+        2295858.7,
+        2296444.81,
+        2293860.67,
+        2287867.7,
+        2278213.85,
+        2264632.95,
+        2246843.98,
+        2224550.35,
+        2197439.12,
+        2165180.17,
+        2137399.06
+      ],
+      "montecarlo": {
+        "successProbability": 0.505,
+        "fiByRetirementProbability": 0.185,
+        "fiMonth": {
+          "p10": 226,
+          "p50": 274,
+          "p90": 393
+        },
+        "endNetWorth": {
+          "p10": -1121059.91,
+          "p25": -674056.04,
+          "p50": 68505.14,
+          "p75": 2257342.59,
+          "p90": 7627092.77,
+          "mean": 2676675.6
+        },
+        "bandsAt10y": {
+          "t": 119,
+          "period": "2036-09",
+          "p10": 359639.09,
+          "p25": 422184.89,
+          "p50": 514289.5,
+          "p75": 625981,
+          "p90": 774546.59
+        }
+      },
+      "goals": [
+        {
+          "name": "Emergency fund (6 months)",
+          "status": "on_track",
+          "fundedBy": "2027-06",
+          "allocatedMonthly": 812.5
+        },
+        {
+          "name": "Flat deposit",
+          "status": "at_risk",
+          "fundedBy": "2032-08",
+          "allocatedMonthly": 895.16
+        },
+        {
+          "name": "Retire at 65",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        },
+        {
+          "name": "Japan trip",
+          "status": "unreachable",
+          "fundedBy": null,
+          "allocatedMonthly": 0
+        }
+      ]
+    }
+  }
+}
