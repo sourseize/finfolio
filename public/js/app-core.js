@@ -10,11 +10,13 @@ const App = {
     try {
       const meta = await API.getMeta();
       if (meta && meta.today) this.today = meta.today;
+      this.clockFrozen = !!(meta && meta.clockFrozen);
     } catch { /* fall back to the browser clock */ }
     if (API.isLoggedIn()) {
       this.user = { id: 'user' };
       this.showApp();
       this.navigate(window.location.hash.slice(1) || 'dashboard');
+      this.checkNudge();
     } else {
       this.showAuth();
     }
@@ -71,6 +73,7 @@ const App = {
         showToast('Welcome back!');
         this.showApp();
         this.navigate('dashboard');
+        this.checkNudge();
       } catch (err) { showToast(err.message, 'error'); }
     });
     document.getElementById('show-register').addEventListener('click', () => this.showRegisterForm());
@@ -122,10 +125,12 @@ const App = {
             <div class="sidebar-link" data-page="budgets">📋 <span>Budgets</span></div>
             <div class="sidebar-link" data-page="investments">📈 <span>Investments</span></div>
             <div class="sidebar-link" data-page="goals">🎯 <span>Goals</span></div>
+            <div class="sidebar-link" data-page="rewards">🏅 <span>Rewards</span></div>
             <div class="sidebar-link" data-page="reports">📑 <span>Reports</span></div>
             <div class="sidebar-link" data-page="simulate">🔮 <span>Simulate</span></div>
           </nav>
           <div class="sidebar-footer">
+            ${this.clockFrozen ? `<div class="text-xs" style="color:var(--orange);margin-bottom:6px" id="clock-frozen" title="Server clock frozen with --now / FINFOLIO_NOW">⏰ Today is ${this.today}</div>` : ''}
             <div style="cursor:pointer" id="logout-btn">🚪 Sign Out</div>
           </div>
         </aside>
@@ -137,9 +142,7 @@ const App = {
 
     $$('.sidebar-link').forEach(link => {
       link.addEventListener('click', () => {
-        const page = link.dataset.page;
-        window.location.hash = page;
-        this.navigate(page);
+        this.navigate(link.dataset.page);
       });
     });
 
@@ -158,6 +161,13 @@ const App = {
     const [page, query] = String(target || 'dashboard').split('?');
     this.currentPage = page;
     this.pageParams = Object.fromEntries(new URLSearchParams(query || ''));
+    // Keep the URL in step with what is on screen, without firing hashchange (replaceState is silent).
+    // Otherwise, after sign-out → sign-in the hash can still say "#rewards" while the dashboard is
+    // showing, and clicking a "#rewards" link does nothing because the hash does not change.
+    const wanted = `#${target || 'dashboard'}`;
+    if (window.location.hash !== wanted && window.history && typeof window.history.replaceState === 'function') {
+      try { window.history.replaceState(null, '', wanted); } catch { /* e.g. file:// */ }
+    }
     $$('.sidebar-link').forEach(l => l.classList.toggle('active', l.dataset.page === page));
     const content = document.getElementById('page-content');
     switch (page) {
@@ -168,6 +178,7 @@ const App = {
       case 'budgets': this.renderBudgets(content); break;
       case 'investments': this.renderInvestments(content); break;
       case 'goals': this.renderGoals(content); break;
+      case 'rewards': this.renderRewards(content); break;
       case 'reports': this.renderReports(content); break;
       case 'simulate': this.renderSimulate(content); break;
       default: content.innerHTML = '<div class="text-center text-muted mt-2">Page not found</div>';

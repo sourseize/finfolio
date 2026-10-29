@@ -3,6 +3,9 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { now, nowIso } from '../util/clock.js';
 import type { Profile, Scenario } from '../sim/types.js';
+import type { Habit, Milestone, Reward, RewardClaim } from '../motivation/types.js';
+
+export type { Habit, Milestone, Reward, RewardClaim } from '../motivation/types.js';
 
 export interface User {
   id: string;
@@ -201,7 +204,7 @@ export function isSpendingTxn(t: Pick<Transaction, 'type' | 'category'>): boolea
 }
 
 /** Bump when stored data needs a migration (see `migrate`). */
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 6;
 
 /** True for account types whose balance represents money owed. */
 export function isLiabilityAccount(account: Pick<Account, 'type'>): boolean {
@@ -233,6 +236,10 @@ interface DBData {
   scenarios: StoredScenario[];
   importBatches: ImportBatch[];
   importProfiles: ImportProfile[];
+  habits: Habit[];
+  rewards: Reward[];
+  rewardClaims: RewardClaim[];
+  milestones: Milestone[];
 }
 
 /**
@@ -266,6 +273,10 @@ export class Database {
       scenarios: [],
       importBatches: [],
       importProfiles: [],
+      habits: [],
+      rewards: [],
+      rewardClaims: [],
+      milestones: [],
     };
   }
 
@@ -295,6 +306,10 @@ export class Database {
    * v2 → v3: statement import — `importBatches` and `importProfiles` collections
    *          (created empty by `getDefaultData`) and the optional `import` block on
    *          transactions. Nothing to rewrite; the version is bumped.
+   * v3 → v4: motivation — the `habits` collection (created empty by `getDefaultData`).
+   *          Nothing to rewrite; the version is bumped.
+   * v4 → v5: rewards — `rewards` and `rewardClaims` collections. Nothing to rewrite.
+   * v5 → v6: badges — the `milestones` collection (observed FI milestones). Nothing to rewrite.
    */
   migrate(): boolean {
     let changed = false;
@@ -390,6 +405,7 @@ export class Database {
     this.data.accounts.splice(idx, 1);
     this.data.transactions = this.data.transactions.filter(t => t.accountId !== id);
     this.data.importBatches = this.data.importBatches.filter(b => b.accountId !== id);
+    for (const h of this.data.habits) if (h.accountId === id) delete h.accountId;
     return true;
   }
 
@@ -656,6 +672,118 @@ export class Database {
     if (idx === -1) return false;
     this.data.importProfiles.splice(idx, 1);
     return true;
+  }
+
+  // ── Habits (motivation) ──
+
+  getHabits(userId: string): Habit[] {
+    return this.data.habits.filter(h => h.userId === userId);
+  }
+
+  getHabit(id: string): Habit | undefined {
+    return this.data.habits.find(h => h.id === id);
+  }
+
+  createHabit(habit: Omit<Habit, 'id' | 'createdAt'>): Habit {
+    const record: Habit = { ...habit, id: crypto.randomUUID(), createdAt: nowIso() };
+    this.data.habits.push(record);
+    return record;
+  }
+
+  updateHabit(id: string, updates: Partial<Omit<Habit, 'id' | 'userId' | 'createdAt'>>): Habit | null {
+    const idx = this.data.habits.findIndex(h => h.id === id);
+    if (idx === -1) return null;
+    const next: Habit = { ...this.data.habits[idx], ...updates };
+    if (updates.accountId === undefined && 'accountId' in updates) delete next.accountId;
+    if (updates.category === undefined && 'category' in updates) delete next.category;
+    this.data.habits[idx] = next;
+    return next;
+  }
+
+  deleteHabit(id: string): boolean {
+    const idx = this.data.habits.findIndex(h => h.id === id);
+    if (idx === -1) return false;
+    this.data.habits.splice(idx, 1);
+    return true;
+  }
+
+  // ── Rewards ──
+
+  getRewards(userId: string): Reward[] {
+    return this.data.rewards.filter(r => r.userId === userId);
+  }
+
+  getReward(id: string): Reward | undefined {
+    return this.data.rewards.find(r => r.id === id);
+  }
+
+  createReward(reward: Omit<Reward, 'id' | 'createdAt'>): Reward {
+    const record: Reward = { ...reward, id: crypto.randomUUID(), createdAt: nowIso() };
+    this.data.rewards.push(record);
+    return record;
+  }
+
+  updateReward(id: string, updates: Partial<Pick<Reward, 'name' | 'cost' | 'note'>>): Reward | null {
+    const idx = this.data.rewards.findIndex(r => r.id === id);
+    if (idx === -1) return null;
+    this.data.rewards[idx] = { ...this.data.rewards[idx], ...updates };
+    return this.data.rewards[idx];
+  }
+
+  /** Remove a reward from the list. Past claims keep their copied name/cost. */
+  deleteReward(id: string): boolean {
+    const idx = this.data.rewards.findIndex(r => r.id === id);
+    if (idx === -1) return false;
+    this.data.rewards.splice(idx, 1);
+    return true;
+  }
+
+  getRewardClaims(userId: string): RewardClaim[] {
+    return this.data.rewardClaims.filter(c => c.userId === userId);
+  }
+
+  createRewardClaim(claim: Omit<RewardClaim, 'id' | 'createdAt'>): RewardClaim {
+    const record: RewardClaim = { ...claim, id: crypto.randomUUID(), createdAt: nowIso() };
+    this.data.rewardClaims.push(record);
+    return record;
+  }
+
+  deleteRewardClaim(id: string): boolean {
+    const idx = this.data.rewardClaims.findIndex(c => c.id === id);
+    if (idx === -1) return false;
+    this.data.rewardClaims.splice(idx, 1);
+    return true;
+  }
+
+  // ── Milestones (observed FI progress) ──
+
+  getMilestones(userId: string): Milestone[] {
+    return this.data.milestones.filter(m => m.userId === userId);
+  }
+
+  createMilestone(milestone: Omit<Milestone, 'id' | 'createdAt'>): Milestone {
+    const record: Milestone = { ...milestone, id: crypto.randomUUID(), createdAt: nowIso() };
+    this.data.milestones.push(record);
+    return record;
+  }
+
+  deleteMilestone(id: string): boolean {
+    const idx = this.data.milestones.findIndex(m => m.id === id);
+    if (idx === -1) return false;
+    this.data.milestones.splice(idx, 1);
+    return true;
+  }
+
+  /** Everything the points engine needs for a user. */
+  getMotivationSource(userId: string) {
+    return {
+      habits: this.getHabits(userId),
+      transactions: this.data.transactions.filter(t => t.userId === userId),
+      accounts: this.getAccounts(userId),
+      rewards: this.getRewards(userId),
+      claims: this.getRewardClaims(userId),
+      milestones: this.getMilestones(userId),
+    };
   }
 
   /** Everything the simulator needs to derive a baseline for a user. */

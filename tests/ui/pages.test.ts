@@ -28,6 +28,26 @@ describe('UI (headless) with fin', () => {
   test('shell renders with the Simulate nav item and server clock', async () => {
     assert.ok(b.$('.sidebar-link[data-page="simulate"]'));
     assert.equal(b.App.today, '2026-10-25', 'today comes from the frozen server clock');
+    assert.match(b.$('#clock-frozen').textContent, /Today is 2026-10-25/, 'a frozen clock is visible in the sidebar');
+    noErrors();
+  });
+
+  test('sign-in nudge: a once-a-day pop-up when a reward has been affordable for 30+ days', async () => {
+    // App.init() ran in `before`; fin has had brunch within reach since 5 Sep (50 days).
+    await b.waitFor(() => !!b.document.querySelector('dialog.nudge-dialog'));
+    const dlg = b.$('dialog.nudge-dialog');
+    assert.match(dlg.textContent, /You have earned a treat/);
+    assert.match(dlg.textContent, /With 295 points you can treat yourself to Brunch at the coffee shop \(100 pts, since Sep 5, 2026 — 50 days\), Dinner for two \(250 pts, since Oct 5, 2026 — 20 days\)/);
+    assert.match(dlg.textContent, /Go for Dinner for two — you have earned it/);
+    assert.match(dlg.textContent, /Or keep banking: 205 more and Family dinner out is yours/);
+    assert.match(dlg.textContent, /Last one enjoyed: Dinner for two on Sep 5, 2026/);
+    assert.match(dlg.textContent, /As of Oct 25, 2026 — the server clock is frozen/);
+    await b.$('#nudge-later').click();
+    assert.equal(b.document.querySelector('dialog.nudge-dialog'), null, 'Later closes it');
+    await b.App.checkNudge();
+    await flush(3);
+    assert.equal(b.document.querySelector('dialog.nudge-dialog'), null, 'not shown again the same day');
+    assert.equal(b.window.localStorage.getItem(`finfolio-nudge-seen:${(await app.get('/api/motivation', token)).body.nudge.rewardId}`), '2026-10-25');
     noErrors();
   });
 
@@ -48,6 +68,31 @@ describe('UI (headless) with fin', () => {
     assert.equal(doughnut.style.margin, '0 auto');
     assert.equal(doughnut.width, doughnut.height, 'bitmap is square');
     assert.ok(b.$$('#budget-health-list .progress-bar').length >= 5);
+    noErrors();
+  });
+
+  test('dashboard: the habits & rewards card shows the balance, the bar towards the next reward, a ready reward and the latest trail lines', async () => {
+    const content = await b.goto('dashboard');
+    await b.waitFor(() => /Habits & rewards/.test(content.textContent) && /enjoyed/.test(content.textContent));
+    const m = (await app.get('/api/motivation', token)).body;
+    const card = b.$('#rewards-row');
+    assert.match(card.textContent, /295\s*points/);
+    assert.match(card.textContent, /205 more for Family dinner out \(500\)/);
+    assert.equal(b.$('#rewards-row .rewards-points .progress-fill').style.width, '59%', 'the bar fills towards the next reward, not the next 100-step');
+    assert.equal(b.$$('#rewards-row .chip.ready').length, 2, 'brunch and dinner are affordable');
+    assert.match(b.$('#rewards-claim-link').textContent, /Dinner for two/, 'the banner names the biggest reward within reach');
+    assert.equal(b.$('#rewards-claim-link').getAttribute('href'), '#rewards');
+    assert.equal(b.$$('#rewards-habits .habit-row').length, 3);
+    assert.equal(b.$$('#rewards-habits .habit-row.met').length, 2, 'saving and investing are done for October');
+    assert.match(b.$('#rewards-habits .habit-row.track').textContent, /of the \$175 cap/);
+    assert.ok(b.$$('#rewards-habits .chip.streak').length >= 2, 'streak chips');
+    assert.equal(b.$$('#rewards-recent .trail-line').length, 5, 'five latest trail lines');
+    assert.match(b.$('#rewards-recent').textContent, /points doubled/);
+    assert.ok(b.$$('#rewards-recent .trail-line.miss').length >= 1, 'misses are shown too');
+    assert.equal(b.$$('#rewards-badges .badge-tile').length, 13, 'badge strip');
+    assert.equal(b.$$('#rewards-badges .badge-tile.unlocked').length, m.badges.filter((x: any) => x.unlockedOn).length);
+    assert.ok(b.$$('#rewards-badges svg.badge-svg').length === 13, 'inline SVG icons');
+    assert.equal(m.points.balance, 295);
     noErrors();
   });
 
@@ -163,6 +208,8 @@ describe('UI (headless) with fin', () => {
     content = await b.goto('goals');
     assert.ok(b.$$('#goals-list .card').length === 4);
     assert.match(content.textContent, /Flat deposit/);
+    assert.match(content.textContent, /live under/, 'goals page points to Rewards');
+    assert.ok(b.$('.sidebar-link[data-page="rewards"]'), 'Rewards has its own sidebar entry');
     content = await b.goto('reports');
     assert.match(content.textContent, /Income vs Expenses/);
     assert.match(content.textContent, /Liabilities/);
@@ -175,6 +222,173 @@ describe('UI (headless) with fin', () => {
     assert.ok(trend.height >= 200 && trend.height <= 340);
     assert.ok((trend as any).__ctxCalls.includes('setTransform'), 'DPR handled via setTransform');
     noErrors();
+  });
+
+  describe('rewards page', () => {
+    test('reward list, habits, trail with filters and the rule set render from fin\'s data', async () => {
+      const content = await b.goto('rewards');
+      await b.waitFor(() => /Trail/.test(content.textContent));
+      assert.equal(b.$('.sidebar-link.active').getAttribute('data-page'), 'rewards');
+      assert.equal(b.$$('#reward-cards .reward-card').length, 4);
+      assert.equal(b.$$('#reward-cards .reward-card.ready').length, 2, 'brunch and dinner are affordable');
+      assert.equal(b.$$('#reward-cards .claim-reward-btn').length, 2);
+      assert.match(b.$('#reward-cards').textContent, /enjoyed ×2/);
+      assert.match(b.$('#reward-cards').textContent, /205 more/);
+      // Where did the 700 go? A visible history, and the "enjoyed" figure filters the trail
+      assert.match(b.$('#enjoyed-list').textContent, /700 points · 4 rewards/);
+      assert.equal(b.$$('#enjoyed-list .pts.minus').length, 4);
+      assert.match(b.$('#enjoyed-list').textContent, /Jul 10, 2026.*Dinner for two/s);
+      await b.$('.enjoyed-link').click();
+      assert.equal(b.$('#trail-filter').value, 'reward');
+      assert.equal(b.$$('#trail-list .trail-line').length, 4);
+      b.$('#trail-filter').value = 'all';
+      await b.$('#trail-filter').fire('change');
+      assert.equal(b.$$('#habit-cards .habit-card').length, 3);
+      assert.match(b.$('#habit-cards').textContent, /Save \$900 a month/);
+      assert.match(b.$('#habit-cards').textContent, /Keep Food & Dining under \$175 a week/);
+      assert.match(b.$('#habit-cards').textContent, /Met 10 of 10 months/);
+      assert.ok(b.$$('#habit-cards .dots .dot').length >= 20, 'period dots');
+      const m = (await app.get('/api/motivation', token)).body;
+      assert.equal(b.$$('#trail-list .trail-line').length, 30, 'first page of the trail');
+      assert.equal(b.$('#trail-more').style.display, '', 'more to show');
+      await b.$('#trail-more').click();
+      assert.equal(b.$$('#trail-list .trail-line').length, Math.min(80, m.ledger.length));
+      const filter = b.$('#trail-filter');
+      filter.value = 'miss';
+      await filter.fire('change');
+      assert.ok(b.$$('#trail-list .trail-line').length > 5);
+      assert.ok(b.$$('#trail-list .trail-line').every(l => l.className.includes('miss')), 'misses only');
+      filter.value = 'reward';
+      await filter.fire('change');
+      assert.equal(b.$$('#trail-list .trail-line').length, 4, 'four claims');
+      assert.match(b.$('#trail-list').textContent, /Reward: Dinner for two/);
+      filter.value = 'milestone';
+      await filter.fire('change');
+      assert.equal(b.$$('#trail-list .trail-line').length, m.badges.filter((x: any) => x.unlockedOn).length, 'one trail line per unlocked badge');
+      assert.match(b.$('#trail-list').textContent, /Badge: Closer/);
+      assert.match(b.$('#trail-list').textContent, /Badge: First brick/);
+      filter.value = m.habits[0].id;
+      await filter.fire('change');
+      assert.equal(b.$$('#trail-list .trail-line').length, 10, 'monthly saving: ten lines, Jan–Oct');
+      filter.value = 'all';
+      await filter.fire('change');
+      assert.match(b.$('.rewards-rules').textContent, /points double/);
+      // Badges section: catalog with locked/unlocked states and the FI line
+      assert.equal(b.$$('#badge-grid .badge-tile').length, 13);
+      assert.match(b.$('#badge-grid .badge-tile[data-id="on-fire"]').className, /unlocked/);
+      assert.match(b.$('#badge-grid .badge-tile[data-id="fi-5"]').className, /unlocked/);
+      assert.match(b.$('#badge-grid .badge-tile[data-id="fi-10"]').className, /locked/);
+      assert.match(b.$('#badge-grid .badge-tile[data-id="fi-10"]').getAttribute('title')!, /Reach 10% of your FI number/);
+      assert.match(content.textContent, /8\.9% of the way to your FI number, FI in May 2043/);
+      noErrors();
+    });
+
+    test('claim flow: confirm dialog → claim → trail line, balance and bar update → undo today\'s claim', async () => {
+      await b.goto('rewards');
+      await b.waitFor(() => !!b.document.querySelector('.claim-reward-btn'));
+      void b.$('.claim-reward-btn').click();
+      await flush();
+      const dlg = b.$('dialog.dialog');
+      assert.match(dlg.textContent, /Claim your reward\?/);
+      assert.match(dlg.textContent, /Use 100 of your 295 points for Brunch at the coffee shop \(~\$25\)/);
+      await b.$('#dialog-confirm').click();
+      await b.waitFor(() => /Claimed today/.test(b.$('#page-content').textContent));
+      const m = (await app.get('/api/motivation', token)).body;
+      assert.equal(m.points.balance, 195);
+      assert.equal(m.claims.length, 5);
+      assert.match(b.$('#page-content').textContent, /195\s*points/);
+      assert.match(b.$('#page-content').textContent, /55 more for Dinner for two/, 'dinner is no longer affordable, so it is the next target');
+      assert.equal(b.$('.rewards-points .progress-fill').style.width, '78%');
+      assert.equal(b.$$('#reward-cards .claim-reward-btn').length, 1, 'brunch is still affordable');
+      assert.match(b.$('#reward-cards').textContent, /enjoyed ×3/);
+      assert.equal(b.document.querySelector('.nudge'), null, 'the claim silences the nudge');
+      assert.equal(b.$$('#trail-list .trail-line')[0].className.includes('reward'), true, 'newest trail line is the claim');
+      assert.match(b.$$('#trail-list .trail-line')[0].textContent, /-100/);
+      await b.$('.undo-claim').click();
+      await b.waitFor(() => !/Claimed today/.test(b.$('#page-content').textContent));
+      assert.equal((await app.get('/api/motivation', token)).body.points.balance, 295, 'golden data restored');
+      noErrors();
+    });
+
+    test('reward form: create, edit and delete round-trip', async () => {
+      await b.goto('rewards');
+      await b.waitFor(() => !!b.document.querySelector('#add-reward-btn'));
+      await b.$('#add-reward-btn').click();
+      await b.waitFor(() => !!b.document.querySelector('#reward-name'));
+      assert.equal(b.$('#reward-cost').value, '100', 'sensible default');
+      b.$('#reward-name').value = 'Massage';
+      b.$('#reward-cost').value = '150';
+      b.$('#reward-note').value = '~$70';
+      await b.$('#modal-form').fire('submit');
+      await b.waitFor(() => b.$$('#reward-cards .reward-card').length === 5);
+      const created = (await app.get('/api/rewards', token)).body.find((r: any) => r.name === 'Massage');
+      assert.equal(created.cost, 150);
+      assert.equal(b.$$('#reward-cards .reward-card')[1].textContent.includes('Massage'), true, 'sorted by cost: between brunch and dinner');
+      assert.match(b.$(`.reward-card[data-id="${created.id}"]`).textContent, /Claim/, '295 ≥ 150');
+      await b.$(`.edit-reward-btn[data-id="${created.id}"]`).click();
+      await b.waitFor(() => !!b.document.querySelector('#reward-name'));
+      assert.equal(b.$('#reward-name').value, 'Massage');
+      b.$('#reward-cost').value = '300';
+      await b.$('#modal-form').fire('submit');
+      await b.waitFor(() => /5 more/.test(b.$(`.reward-card[data-id="${created.id}"]`).textContent));
+      void b.$(`.delete-reward-btn[data-id="${created.id}"]`).click();
+      await flush();
+      assert.match(b.$('dialog.dialog').textContent, /Remove this reward/);
+      await b.$('#dialog-confirm').click();
+      await b.waitFor(() => b.$$('#reward-cards .reward-card').length === 4);
+      noErrors();
+    });
+
+    test('habit form: kind switches fields and suggestions; create, edit and delete round-trip', async () => {
+      await b.goto('rewards');
+      await b.waitFor(() => !!b.document.querySelector('#add-habit-btn'));
+      await b.$('#add-habit-btn').click();
+      await b.waitFor(() => !!b.document.querySelector('#habit-kind'));
+      await flush(2);
+      assert.equal(b.$('#habit-name').value, 'Weekly saving', 'name auto-filled');
+      assert.match(b.$('#habit-amount-help').textContent, /saved about \$900 a month/);
+      assert.equal(b.$('#habit-category-group').style.display, 'none');
+      assert.equal(b.$('#habit-account-group').style.display, '');
+      await b.$('#habit-kind button[data-kind="swap"]').click();
+      assert.equal(b.$('#habit-category-group').style.display, '');
+      assert.equal(b.$('#habit-account-group').style.display, 'none');
+      assert.equal(b.$('#habit-amount-label').textContent, 'Spending cap');
+      assert.match(b.$('#habit-name').value, /swap$/);
+      const cadence = b.$('#habit-cadence');
+      cadence.value = 'monthly';
+      await cadence.fire('change');
+      assert.match(b.$('#habit-points-help').textContent, /15 points each month — 30 once you are 4 in a row/);
+      b.$('#habit-category').value = 'Entertainment';
+      await b.$('#habit-category').fire('change');
+      b.$('#habit-amount').value = '150';
+      b.$('#habit-start').value = '2026-08-01';
+      await b.$('#modal-form').fire('submit');
+      await b.waitFor(() => !b.document.querySelector('#modal-form'));
+      await b.waitFor(() => b.$$('#habit-cards .habit-card').length === 4);
+      const created = (await app.get('/api/habits', token)).body.find((h: any) => h.category === 'Entertainment');
+      assert.ok(created, 'habit stored');
+      assert.equal(created.cadence, 'monthly');
+      assert.equal(created.amount, 150);
+      assert.equal(created.name, 'Entertainment swap');
+
+      await b.$(`.edit-habit-btn[data-id="${created.id}"]`).click();
+      await b.waitFor(() => !!b.document.querySelector('#habit-kind'));
+      await flush(2);
+      assert.equal(b.$('#habit-amount').value, '150', 'form pre-filled');
+      b.$('#habit-amount').value = '175';
+      await b.$('#modal-form').fire('submit');
+      await b.waitFor(() => !b.document.querySelector('#modal-form'));
+      await b.waitFor(() => /under \$175 a month/.test(b.$('#habit-cards').textContent));
+      assert.equal((await app.get('/api/habits', token)).body.find((h: any) => h.id === created.id).amount, 175);
+
+      void b.$(`.delete-habit-btn[data-id="${created.id}"]`).click();
+      await flush();
+      assert.match(b.$('dialog.dialog').textContent, /Delete this habit\?/);
+      await b.$('#dialog-confirm').click();
+      await b.waitFor(() => b.$$('#habit-cards .habit-card').length === 3);
+      assert.equal((await app.get('/api/habits', token)).body.length, 3, 'golden data restored');
+      noErrors();
+    });
   });
 
   describe('simulate page', () => {
@@ -355,6 +569,45 @@ describe('UI (headless) with fin', () => {
       assert.ok((b.$('#oc-chart') as any).__ctxCalls.length > 0);
       noErrors();
     });
+  });
+
+  test('regression: the URL hash follows navigation, so a "#rewards" link works right after signing in', async () => {
+    // Sign out while on Rewards (hash stays "#rewards"), sign in again (dashboard), click a "#rewards" link.
+    await b.goto('rewards');
+    assert.equal(b.window.location.hash, '#rewards');
+    await b.$('#logout-btn').click();
+    assert.ok(b.$('#login-form'));
+    b.$('#login-username').value = 'fin';
+    b.$('#login-password').value = 'folio';
+    await b.$('#login-form').fire('submit');
+    await b.waitFor(() => !!b.document.querySelector('#page-content') && /Net Worth/.test(b.document.body.textContent));
+    assert.equal(b.window.location.hash, '#dashboard', 'navigate() re-synced the hash on sign-in');
+    // Dismiss the sign-in nudge if it popped (same day → it should not, but be safe)
+    const nudge = b.document.querySelector('dialog.nudge-dialog');
+    if (nudge) await b.$('#nudge-later').click();
+    // A real browser fires hashchange only when the hash changes — which it now does
+    b.window.location.hash = '#rewards';
+    b.window.dispatchEvent({ type: 'hashchange' });
+    await b.waitFor(() => /Your rewards/.test(b.$('#page-content').textContent));
+    assert.equal(b.App.currentPage, 'rewards');
+    noErrors();
+  });
+
+  test('an expired session (e.g. after a server restart) signs the user out immediately', async () => {
+    await b.goto('dashboard');
+    b.API._token = 'stale-token-from-before-the-restart';
+    await assert.rejects(() => b.API.getDashboard(), /Session expired|Unauthorized|Invalid/);
+    await flush(3);
+    assert.equal(b.API.isLoggedIn(), false, 'token cleared');
+    assert.equal(b.window.localStorage.getItem('token'), null);
+    assert.ok(b.$('#login-form'), 'back on the sign-in form without asking the user to sign out');
+    assert.match(b.$('#toast-container').textContent, /session has expired/);
+    // sign back in for the remaining tests
+    b.$('#login-username').value = 'fin';
+    b.$('#login-password').value = 'folio';
+    await b.$('#login-form').fire('submit');
+    await b.waitFor(() => /Net Worth/.test(b.document.body.textContent));
+    noErrors();
   });
 
   test('sign out returns to the login form', async () => {

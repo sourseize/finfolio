@@ -11,8 +11,8 @@ Track your accounts, transactions, budgets, investments, and financial goals —
 ### 🔐 Authentication
 - User registration and login
 - Secure SHA-256 password hashing
-- Token-based session management (24h expiry)
-- Persistent sessions via `localStorage`
+- Token-based session management (24h expiry, in memory — a server restart ends sessions)
+- Persistent sessions via `localStorage`; an expired session signs you out immediately with a toast
 
 ### 🏦 Accounts
 - Multiple account types: `checking`, `savings`, `investment`, `credit`, `cash`
@@ -62,6 +62,16 @@ Track your accounts, transactions, budgets, investments, and financial goals —
 - Visual progress bars with percentage completion
 - Days-remaining countdown
 
+### 🏅 Rewards — habits, points, rewards (motivation)
+- **Three kinds of habit**, all scored automatically from the transactions you already record or import: *save* a target amount into savings (weekly or monthly), *invest* a target amount (weekly or monthly), or a *spending swap* — keep one category under a cap (e.g. swap the barista coffee for a home brew)
+- **Points**: 10 for a weekly save/invest, 25 for a monthly one; a spending cap earns 5 / 15. Saving and investing score the moment the target is hit; a cap scores when the period ends under it
+- **Streaks**: four in a row and the points double for as long as the streak lasts; a miss resets it
+- **Rewards are your own list**, priced in points (the suggested four: brunch 100 · dinner for two 250 · family dinner out 500 · weekend away 1 000). Claim one when you can afford it, or keep banking for a bigger one — points never expire. The bar fills towards the next reward you cannot afford yet; anything affordable is flagged *ready*. Today's claim can be undone
+- **The nudge**: after 30 days of being able to afford the cheapest reward without claiming, a once-a-day pop-up at sign-in lists everything within reach (each with how long it has been waiting), suggests the biggest, and says what banking would buy next — *Later* silences it until tomorrow, claiming clears it. An *Enjoyed so far* list keeps every claim traceable
+- **Badges** (13, inline SVG — no image files): *First step*, *Century* (100 pts), *Thousand*, *On fire* (4 in a row), *Unstoppable* (12), *Treat yourself* (first reward), six rungs towards financial independence (*First brick* 5 % → *Seedling* 10 % → *Sprout* 25 % → *Halfway tree* 50 % → *Summit in sight* 75 % → *Free* 100 % of your FI number) and *Closer* (FI date moved at least a month earlier). No points — just recognition. FI milestones are **observed**: every `/api/motivation` call runs the baseline simulation and records a rung or an earlier FI date the day it is first seen (only once there are 3+ months of history, so thin data cannot unlock them)
+- **The trail**: every scored week/month is a line — hits *and* misses — plus every reward enjoyed and every badge unlocked, with a running points balance; filter by habit, misses, rewards or badges. Points are never stored: they are recomputed from the transactions, so edits, deletions, back-dated entries and statement imports correct the trail automatically
+- **Where**: the **🏅 Rewards** page in the sidebar (reward list + claim, habit cards, badges, full trail, the rule set) and a *Habits & rewards* card on the dashboard (balance, bar, *ready* reward, this period's habits, badge strip, latest lines). The habit form suggests amounts from your last three months; the first habit seeds the suggested reward list
+
 ### 📊 Dashboard
 - **Net worth** (assets + investments − liabilities)
 - **Total balance** across cash & asset accounts, plus total liabilities
@@ -72,6 +82,7 @@ Track your accounts, transactions, budgets, investments, and financial goals —
 - **Budget health** — per-category spending vs budget
 - **Recent transactions** — last 5 entries
 - **Goal progress** — snapshot of all goals
+- **Habits & rewards** — points balance, bar towards the next reward, a reward that is ready, this week's/month's habits, latest trail lines
 
 ### 🔮 Simulate (forward-looking)
 - **Starting point** derived from your real data: cash, investments, debt and the average income / spending / investing of the last 12 complete months — every figure can be overridden ("assume I spend 3 500")
@@ -124,9 +135,12 @@ Track your accounts, transactions, budgets, investments, and financial goals —
        ├─ pages.js     (accounts, transactions)
        ├─ pages-2.js   (budgets, investments)
        ├─ pages-3.js   (goals, reports)
+       ├─ badges.js    (inline SVG badge icons)
+       ├─ page-rewards.js (rewards, habits, badges, points trail, forms, sign-in nudge)
        └─ page-simulate.js (scenario builder, projections, compare)
 
 Server-side simulation engine (src/sim/): baseline → events × economy → engine → FIRE / runway / Monte Carlo / comparison
+Server-side points engine (src/motivation/): habits × transactions → periods → streaks → points → rewards → trail; FI milestones observed from the simulator → badges
 ```
 
 ### Key Design Decisions
@@ -173,10 +187,13 @@ Open **http://localhost:3000** in your browser. Register a new account and start
 ```bash
 npm run seed                          # creates (or resets) the demo user
 npm start                             # sign in as  fin / folio
-FINFOLIO_NOW=2026-10-25 npm start     # optional: freeze the clock on the seed date
+npm start -- --now=2026-10-25         # optional: freeze the clock on the seed date (works in every shell)
+FINFOLIO_NOW=2026-10-25 npm start     # the same via the environment (Unix shells; on PowerShell use $env:FINFOLIO_NOW="2026-10-25" first)
 ```
 
-`fin` is a 40-year-old (born 1986-07-10) planning to retire at 65, with 24 months of realistic history ending on **2026-10-25**: salary and freelance income, rent, utilities, groceries, card spending with monthly pay-offs, transfers to savings and a brokerage with monthly ETF purchases, a few one-offs (laptop, car repair, Lisbon holiday), current-month budgets (one over), four goals, a profile and five saved scenarios (*Keep going*, *Buy a flat in 2028*, *Sabbatical + crash*, *Retire at 58*, *Family of four*). The seed is deterministic and re-runnable; the regression suite's golden snapshot is taken from it.
+Time-based features (which week/month is "current", streaks, the 30-day reward nudge, FI milestones) are all judged on the server's "today", so `--now` lets you walk the demo user through time: `--now=2026-09-20` → no nudge yet, `--now=2026-10-05` → the nudge fires on day 30, `--now=2026-11-30` → 86 days, 1,040 points earned all-time (balance 340) and the *Thousand* badge. The sidebar shows ⏰ and the date while the clock is frozen. Re-seed before hopping *backwards* in time, since milestones observed on a later date are persisted.
+
+`fin` is a 40-year-old (born 1986-07-10) planning to retire at 65, with 24 months of realistic history ending on **2026-10-25**: salary and freelance income, rent, utilities, groceries, card spending with monthly pay-offs, transfers to savings and a brokerage with monthly ETF purchases, a few one-offs (laptop, car repair, Lisbon holiday), current-month budgets (one over), four goals, a profile, five saved scenarios (*Keep going*, *Buy a flat in 2028*, *Sabbatical + crash*, *Retire at 58*, *Family of four*) three habits started as a New Year's resolution on 2026-01-01 (*Monthly saving* $900, *Monthly investing* $1,200 — both on a 10-month streak — and an *Eating-out swap* keeping Food & Dining under $175 a week, hit-and-miss with the Lisbon holiday week breaking a streak), the four suggested rewards, four rewards enjoyed so far (two brunches, two dinners — one in Lisbon) leaving 295 points (brunch and dinner ready, the bar fills towards the family dinner; brunch has been affordable since 5 Sep, so the sign-in nudge fires on the seed date), and three observed FI milestones (5 % reached, FI date first sighted, then moved four months earlier) — six of thirteen badges unlocked. The seed is deterministic and re-runnable; the regression suite's golden snapshot is taken from it.
 
 ### Development Mode
 
@@ -217,10 +234,10 @@ tests/
 │   ├── sim.ts       # builders for engine inputs with "flat" economies so results are hand-checkable
 │   ├── dom.ts       # dependency-free mini-DOM (parser, selectors, events, canvas stubs)
 │   └── browser.ts   # loads public/js/*.js into node:vm against the in-process server
-├── unit/            # clock, database, sim/*, statement generator, import parsers (round trip + edge cases), dedupe engine, categoriser
-├── api/             # auth, CRUD, simulation routes, seed, statement import (every scenario over HTTP)
-├── ui/              # headless page smoke + interactions (modals, builder, save/compare), import wizard smoke (SMOKE-1/2)
-└── golden/          # fin.snapshot.json + the test that diffs against it
+├── unit/            # clock, database, sim/*, motivation engine (periods, streaks, points, rewards, trail), milestones + badges, statement generator, import parsers, dedupe engine, categoriser
+├── api/             # auth, CRUD, simulation routes, seed, statement import (every scenario over HTTP), habits, rewards, claims, live FI milestones, motivation
+├── ui/              # headless page smoke + interactions (modals, builder, save/compare, rewards card/page, claim flow, habit & reward forms, badges, sign-in nudge), import wizard smoke (SMOKE-1/2)
+└── golden/          # fin.snapshot.json (dashboard, baseline, outlook, scenarios, motivation: points, rewards, trail) + the test that diffs against it
 ```
 
 The headless UI harness is not a browser (no CSS or layout); it catches runtime errors and checks that API data lands in the HTML.
@@ -358,6 +375,30 @@ Categorisation and the dedupe windows are data, not code: edit `config/import-ca
 
 The step-by-step manual validation suite is in `docs/IMPORT_TEST_SUITE.md`.
 
+### Motivation API (habits → points → rewards)
+
+All routes require a bearer token. Points are computed on every call from the user's transactions.
+
+| Method | Route | Purpose |
+|---|---|---|
+| `GET` / `POST` | `/api/habits` | List / create: `{ kind: save \| invest \| swap, cadence: weekly \| monthly, amount, name?, category? (swap), accountId? (save; omit = any savings account), startDate? (default today) }` — at most 8 habits. The first habit seeds the suggested reward list when it is empty |
+| `PUT` / `DELETE` | `/api/habits/:id` | Edit any subset (`accountId: null` unpins) / delete |
+| `GET` / `POST` | `/api/rewards` | List / create: `{ name, cost (whole points), note? ("~$60") }` — at most 8 |
+| `POST` | `/api/rewards/defaults` | Add the suggested four (only the ones not already present) |
+| `PUT` / `DELETE` | `/api/rewards/:id` | Edit / remove from the list (past claims keep their copied name and cost) |
+| `POST` | `/api/rewards/:id/claim` | Cash in, dated today → `{ claim, balance, points }`; `400` when the balance does not cover the cost |
+| `DELETE` | `/api/rewards/claims/:id` | Undo a claim made today |
+| `GET` | `/api/motivation` | `points` (earned, spent, balance, nextReward, toNextReward, progress 0–1, rewardsAvailable), `habits[]` (current period, streak, best streak, met/scored, points, last 8 periods), `rewards[]` (ready, shortBy, timesClaimed), `claims[]`, `nudge` (reward, since, days — after 30 days), `badges[]` (13, with `unlockedOn`), `fi` (today's progress / FI date / FI number, null on thin history), `ledger[]` (the trail, newest first, with running balance), `rules`, `suggestions`. Also records any FI milestone first observed today |
+
+```bash
+curl -X POST http://localhost:3000/api/habits -H 'Content-Type: application/json' -H 'Authorization: Bearer <token>' \
+  -d '{"kind":"save","cadence":"weekly","amount":250,"startDate":"2026-09-01"}'
+curl -X POST http://localhost:3000/api/rewards/<id>/claim -H 'Authorization: Bearer <token>'
+curl http://localhost:3000/api/motivation -H 'Authorization: Bearer <token>' | python3 -m json.tool
+```
+
+The manual walkthrough is in `docs/MOTIVATION_TEST_SUITE.md`.
+
 ### Build Verification
 
 ```bash
@@ -426,7 +467,7 @@ CMD ["node", "dist/server.js"]
 |---|---|---|
 | `PORT` | `3000` | HTTP server port |
 | `FINFOLIO_DATA_DIR` | `./data` | Directory holding `database.json` |
-| `FINFOLIO_NOW` | *(system clock)* | Freeze "today" (e.g. `2026-10-25`). Used by the regression suite and demo data; leave unset in normal use |
+| `FINFOLIO_NOW` | *(system clock)* | Freeze "today" (e.g. `2026-10-25`). Used by the regression suite and demo data; leave unset in normal use. `npm start -- --now=2026-10-25` does the same from the command line on any OS |
 | `FINFOLIO_MAX_BODY_MB` | `25` | Largest accepted request body (statement uploads travel as base64 inside JSON); larger requests get `413` |
 | `FINFOLIO_IMPORT_CONFIG` | `./config/import-categories.json` | Categorisation rules and dedupe windows for statement import (falls back to the compiled-in defaults when the file is missing) |
 
@@ -446,14 +487,16 @@ finfolio/
 │   │   ├── api.ts           # CRUD route handlers
 │   │   └── simulate.ts      # profile, scenarios, simulation routes
 │   ├── sim/                 # simulation engine (pure, deterministic)
+│   ├── motivation/          # points engine: habits × transactions → periods, streaks, points, rewards, trail; FI milestones, badges (pure, deterministic)
 │   ├── seed/                # demo user "fin" generator + CLI
 │   └── util/clock.ts        # frozen-clock support (FINFOLIO_NOW)
 │   ├── import/              # statement import: parsers (CSV, OFX/QFX, QIF, Open Banking JSON), dedupe engine, categoriser, config, sessions
 │   ├── testing/             # test-statement generator (statements/), gen:statements and import:file CLIs
-│   └── routes/import.ts     # preview / commit / profiles routes
+│   ├── routes/import.ts     # preview / commit / profiles routes
+│   └── routes/motivation.ts # habits + rewards CRUD, claims, GET /api/motivation
 ├── config/
 │   └── import-categories.json  # categorisation rules, MCC ranges, aliases, dedupe windows (editable)
-├── docs/                    # IMPORT_WORKBOOK.md (design, work packages) · IMPORT_TEST_SUITE.md (manual validation)
+├── docs/                    # IMPORT_WORKBOOK.md (design, work packages) · IMPORT_TEST_SUITE.md · MOTIVATION_TEST_SUITE.md (manual validation)
 ├── public/
 │   ├── index.html           # SPA shell
 │   ├── css/
@@ -467,6 +510,8 @@ finfolio/
 │       ├── page-import.js   # Statement import wizard
 │       ├── pages-2.js       # Budgets, Investments
 │       ├── pages-3.js       # Goals, Reports
+│       ├── badges.js        # Inline SVG badge icons + tiles
+│       ├── page-rewards.js  # Rewards: dashboard card, reward list + claim, habits, badges, trail, forms, sign-in nudge
 │       └── page-simulate.js # Simulate
 ├── tests/                   # regression suite (node:test, zero dependencies)
 ├── samples/                 # Created by gen:statements — test bank statements (git-ignored)

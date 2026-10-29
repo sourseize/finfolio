@@ -37,7 +37,7 @@ describe('Database', () => {
   test('init creates the file in the requested directory', async () => {
     assert.equal(db.filePath, path.join(dir, 'database.json'));
     const raw = JSON.parse(await fs.readFile(db.filePath, 'utf-8'));
-    assert.deepEqual(Object.keys(raw).sort(), ['accounts', 'budgets', 'goals', 'importBatches', 'importProfiles', 'investmentTransactions', 'investments', 'profiles', 'scenarios', 'schemaVersion', 'transactions', 'users']);
+    assert.deepEqual(Object.keys(raw).sort(), ['accounts', 'budgets', 'goals', 'habits', 'importBatches', 'importProfiles', 'investmentTransactions', 'investments', 'milestones', 'profiles', 'rewardClaims', 'rewards', 'scenarios', 'schemaVersion', 'transactions', 'users']);
   });
 
   test('persists and reloads data', async () => {
@@ -88,14 +88,18 @@ describe('Database', () => {
     }));
     const db2 = new Database();
     await db2.init(dir);
-    assert.equal(db2.schemaVersion, 3);
+    assert.equal(db2.schemaVersion, SCHEMA_VERSION);
     assert.equal(db2.getAccounts('u')[0].balance, -750, 'v1 fix-up is not re-applied to v2 data');
     assert.deepEqual(db2.getImportBatches('u'), []);
     assert.deepEqual(db2.getImportProfiles('u'), []);
     assert.equal(db2.getTransaction('t')!.import, undefined);
     const onDisk = JSON.parse(await fs.readFile(db2.filePath, 'utf-8'));
-    assert.equal(onDisk.schemaVersion, 3);
+    assert.equal(onDisk.schemaVersion, SCHEMA_VERSION);
     assert.deepEqual(onDisk.importBatches, []);
+    assert.deepEqual(onDisk.habits, [], 'v4 collection appears');
+    assert.deepEqual(onDisk.rewards, [], 'v5 collections appear');
+    assert.deepEqual(onDisk.rewardClaims, []);
+    assert.deepEqual(onDisk.milestones, [], 'v6 collection appears');
   });
 
   test('category list includes Uncategorized and the semantic categories', () => {

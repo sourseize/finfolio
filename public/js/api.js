@@ -16,9 +16,20 @@ const API = {
       err.status = res.status;
       err.code = data.code;
       err.data = data;
+      // A 401 on an authenticated call means the session is gone (expired, or the server restarted):
+      // sign out right away instead of leaving a half-rendered page asking the user to do it.
+      if (res.status === 401 && this._token && !path.startsWith('/api/auth/')) this._sessionLost();
       throw err;
     }
     return data;
+  },
+
+  _sessionLost() {
+    this.clearToken();
+    if (typeof App !== 'undefined' && App.showAuth) {
+      App.showAuth();
+      showToast('Your session has expired — please sign in again', 'info');
+    }
   },
 
   login(username, password) {
@@ -53,6 +64,20 @@ const API = {
   createGoal(data) { return this.request('POST', '/api/goals', data); },
   updateGoal(id, data) { return this.request('PUT', `/api/goals/${id}`, data); },
   deleteGoal(id) { return this.request('DELETE', `/api/goals/${id}`); },
+
+  // ── Motivation (habits → points → rewards) ──
+  getHabits() { return this.request('GET', '/api/habits'); },
+  createHabit(data) { return this.request('POST', '/api/habits', data); },
+  updateHabit(id, data) { return this.request('PUT', `/api/habits/${id}`, data); },
+  deleteHabit(id) { return this.request('DELETE', `/api/habits/${id}`); },
+  getMotivation() { return this.request('GET', '/api/motivation'); },
+  getRewards() { return this.request('GET', '/api/rewards'); },
+  createReward(data) { return this.request('POST', '/api/rewards', data); },
+  addDefaultRewards() { return this.request('POST', '/api/rewards/defaults'); },
+  updateReward(id, data) { return this.request('PUT', `/api/rewards/${id}`, data); },
+  deleteReward(id) { return this.request('DELETE', `/api/rewards/${id}`); },
+  claimReward(id) { return this.request('POST', `/api/rewards/${id}/claim`); },
+  undoRewardClaim(id) { return this.request('DELETE', `/api/rewards/claims/${id}`); },
 
   // ── Simulation ──
   getMeta() { return this.request('GET', '/api/meta'); },

@@ -16,8 +16,10 @@ async function main() {
    as of ${FIN_SEED_DATE}: ${summary.accounts} accounts, ${summary.transactions} transactions, ${summary.investments} holdings / ${summary.trades} trades,
    ${summary.budgets} budgets, ${summary.goals} goals, ${summary.scenarios} saved scenarios.
 
-   npm start                      # sign in as fin / folio
-   FINFOLIO_NOW=${FIN_SEED_DATE} npm start   # with the clock frozen at the seed date
+   npm start                         # sign in as fin / folio (real clock)
+   npm start -- --now=${FIN_SEED_DATE}   # with the clock frozen at the seed date (any OS)
+   npm start -- --now=2026-11-30     # or any other day: periods, streaks, the nudge and FI
+                                     # milestones are judged on that day; re-seed between hops
 `);
 }
 

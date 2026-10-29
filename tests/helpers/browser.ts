@@ -67,6 +67,8 @@ export function createBrowser(opts: BrowserOptions): Browser {
     alert: () => undefined,
     devicePixelRatio: 1,
     location: { hash: '', href: opts.baseUrl + '/', reload: () => undefined },
+    // replaceState keeps location.hash in step without firing hashchange (like a browser)
+    history: { replaceState: (_state: unknown, _title: string, url: string) => { sandbox.location.hash = url.startsWith('#') ? url : `#${url}`; } },
     requestAnimationFrame: (fn: () => void) => setTimeout(fn, 0),
     navigator: { userAgent: 'finfolio-test', language: 'en-US', languages: ['en-US', 'en'] },
     HTMLElement: DomElement,
@@ -102,7 +104,7 @@ export function createBrowser(opts: BrowserOptions): Browser {
     async goto(page: string) {
       const App = get('App');
       if (!document.getElementById('page-content')) App.showApp();
-      sandbox.location.hash = page;
+      sandbox.location.hash = `#${page}`;
       App.navigate(page);
       const content = document.getElementById('page-content')!;
       // Page renderers are async and not awaited by navigate(); wait until the loading placeholder is gone.

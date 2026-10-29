@@ -8,8 +8,10 @@
  * 24 months of history ending on the seed date: salary, rent, groceries,
  * utilities, card spending with monthly pay-offs, transfers to savings and a
  * brokerage with monthly ETF purchases, a few one-offs (laptop, car repair,
- * holiday, dentist), current-month budgets, goals, a profile and five saved
- * scenarios.
+ * holiday, dentist), current-month budgets, goals, a profile, five saved
+ * scenarios, three habits (a New Year's resolution from 2026-01-01) whose
+ * points trail is derived from the same transactions, a four-tier reward list,
+ * four claimed rewards and three observed FI milestones.
  *
  * Everything is generated from a fixed PRNG seed, so re-running produces the
  * same database (ids aside) — the golden regression tests rely on that.
@@ -20,12 +22,15 @@ import { mulberry32 } from '../sim/montecarlo.js';
 import { normalizeScenario } from '../sim/scenario.js';
 import { createEvent } from '../sim/events.js';
 import { addMonths, round2 } from '../sim/math.js';
+import { DEFAULT_REWARDS } from '../motivation/types.js';
 
 export const FIN_USERNAME = 'fin';
 export const FIN_PASSWORD = 'folio';
 export const FIN_SEED_DATE = '2026-10-25';
 export const FIN_BIRTH_DATE = '1986-07-10';
 export const FIN_HISTORY_MONTHS = 24;
+/** Weekly Food & Dining cap for fin's spending-swap habit. */
+export const FIN_FOOD_CAP = 175;
 
 export interface SeedSummary {
   userId: string;
@@ -36,6 +41,9 @@ export interface SeedSummary {
   budgets: number;
   goals: number;
   scenarios: number;
+  habits: number;
+  rewards: number;
+  claims: number;
   asOf: string;
 }
 
@@ -50,6 +58,10 @@ export function wipeUser(db: Database, userId: string): void {
   for (const i of db.getInvestments(userId)) db.deleteInvestment(i.id);
   for (const g of db.getGoals(userId)) db.deleteGoal(g.id);
   for (const s of db.getScenarios(userId)) db.deleteScenario(s.id);
+  for (const h of db.getHabits(userId)) db.deleteHabit(h.id);
+  for (const r of db.getRewards(userId)) db.deleteReward(r.id);
+  for (const c of db.getRewardClaims(userId)) db.deleteRewardClaim(c.id);
+  for (const m of db.getMilestones(userId)) db.deleteMilestone(m.id);
 }
 
 /**
@@ -238,6 +250,34 @@ export async function seedFin(db: Database, opts: { asOf?: string; persist?: boo
     // ── Profile ──
     db.upsertProfile(userId, { birthDate: FIN_BIRTH_DATE, retirementAge: 65, safeWithdrawalRate: 0.04, planToAge: 90 });
 
+    // ── Habits (motivation) — started as a New Year's resolution ──
+    // Saving and investing happen on the 5th of every month, so both monthly habits are
+    // met every month (streak bonus from April). The Food & Dining cap is hit-and-miss —
+    // the Lisbon holiday week and a few expensive grocery weeks break the streak.
+    db.createHabit({ userId, kind: 'save', name: 'Monthly saving', cadence: 'monthly', amount: 900, accountId: accountIds.savings, startDate: '2026-01-01' });
+    db.createHabit({ userId, kind: 'invest', name: 'Monthly investing', cadence: 'monthly', amount: 1200, startDate: '2026-01-01' });
+    db.createHabit({ userId, kind: 'swap', name: 'Eating-out swap', cadence: 'weekly', amount: FIN_FOOD_CAP, category: 'Food & Dining', startDate: '2026-01-05' });
+
+    // ── Rewards: the four default tiers, and the ones fin has cashed in so far ──
+    // Claims are dated when the running balance covered them (the API enforces this; the
+    // seed mirrors it). Ends with 295 points: brunch and dinner are ready, the bar fills towards
+    // the family dinner — and brunch has been affordable since 5 Sep, so the 30-day nudge fires.
+    const rewardIds: Record<string, string> = {};
+    for (const r of DEFAULT_REWARDS) rewardIds[r.name] = db.createReward({ userId, ...r }).id;
+    const claim = (name: string, date: string) => {
+      const r = DEFAULT_REWARDS.find(d => d.name === name)!;
+      if (date <= asOf) db.createRewardClaim({ userId, rewardId: rewardIds[name], name: r.name, cost: r.cost, note: r.note, date });
+    };
+    claim('Brunch at the coffee shop', '2026-03-07');
+    claim('Brunch at the coffee shop', '2026-05-16');
+    claim('Dinner for two', '2026-07-10'); // in Lisbon
+    claim('Dinner for two', '2026-09-05');
+
+    // ── FI milestones observed so far (the simulator puts fin at ~9% of his FI number, FI in 2043) ──
+    db.createMilestone({ userId, kind: 'fi-progress', level: 5, value: 0.0512, date: '2025-11-20', detail: '5% of your FI number' });
+    db.createMilestone({ userId, kind: 'fi-date', value: '2043-09', date: '2026-01-25', detail: 'FI date first in sight: September 2043' });
+    db.createMilestone({ userId, kind: 'fi-date', value: '2043-05', date: '2026-07-25', detail: 'FI date moved 4 months earlier — May 2043, was September 2043' });
+
     // ── Scenarios ──
     const scenarios = [
       normalizeScenario({ name: 'Keep going', description: 'No changes — current habits, moderate economy.', economy: { preset: 'moderate' }, events: [] }),
@@ -284,6 +324,9 @@ export async function seedFin(db: Database, opts: { asOf?: string; persist?: boo
       budgets: db.getBudgets(userId).length,
       goals: db.getGoals(userId).length,
       scenarios: db.getScenarios(userId).length,
+      habits: db.getHabits(userId).length,
+      rewards: db.getRewards(userId).length,
+      claims: db.getRewardClaims(userId).length,
       asOf: today(),
     };
   } finally {

@@ -1,5 +1,9 @@
 // ── GOALS ──
-App.renderGoals = async function(container) {
+App.renderGoals = function(container) {
+  return this.renderGoalList(container);
+};
+
+App.renderGoalList = async function(container) {
   container.innerHTML = '<div class="text-center text-muted mt-2">Loading goals...</div>';
   try {
     const goals = await API.getGoals();
@@ -9,6 +13,7 @@ App.renderGoals = async function(container) {
         <h1>🎯 Financial Goals</h1>
         <button class="btn btn-primary" id="add-goal-btn">+ New Goal</button>
       </div>
+      <div class="text-sm text-muted mb-2">Big targets with a deadline. The weekly and monthly habits that earn points and rewards live under <a href="#rewards">🏅 Rewards</a>.</div>
       <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
         <div class="stat-card">
           <div class="label">Total Goals</div>
@@ -77,7 +82,7 @@ App.renderGoals = async function(container) {
         try {
           await API.deleteGoal(btn.dataset.id);
           showToast('Goal deleted');
-          this.renderGoals(container);
+          this.renderGoalList(container);
         } catch (err) { showToast(err.message, 'error'); }
       });
     });
@@ -148,7 +153,7 @@ App.showGoalModal = function(goal) {
       await API.createGoal(data);
       showToast('Goal created');
     }
-    this.renderGoals(document.getElementById('page-content'));
+    this.renderGoalList(document.getElementById('page-content'));
   });
 };
 

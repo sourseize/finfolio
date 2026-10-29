@@ -873,5 +873,698 @@
         }
       ]
     }
+  },
+  "motivation": {
+    "points": {
+      "earned": 995,
+      "spent": 700,
+      "balance": 295,
+      "rewardStep": 100,
+      "toNextReward": 205,
+      "nextReward": {
+        "name": "Family dinner out",
+        "cost": 500
+      },
+      "progress": 0.59,
+      "rewardsAvailable": 2
+    },
+    "habits": [
+      {
+        "name": "Monthly saving",
+        "kind": "save",
+        "cadence": "monthly",
+        "amount": 900,
+        "streak": 10,
+        "bestStreak": 10,
+        "periodsMet": 10,
+        "periodsScored": 10,
+        "pointsEarned": 425,
+        "current": {
+          "key": "2026-10",
+          "start": "2026-10-01",
+          "end": "2026-10-31",
+          "progress": 900,
+          "target": 900,
+          "met": true,
+          "completed": false,
+          "points": 50,
+          "streak": 10,
+          "scoredOn": "2026-10-05"
+        }
+      },
+      {
+        "name": "Monthly investing",
+        "kind": "invest",
+        "cadence": "monthly",
+        "amount": 1200,
+        "streak": 10,
+        "bestStreak": 10,
+        "periodsMet": 10,
+        "periodsScored": 10,
+        "pointsEarned": 425,
+        "current": {
+          "key": "2026-10",
+          "start": "2026-10-01",
+          "end": "2026-10-31",
+          "progress": 1200,
+          "target": 1200,
+          "met": true,
+          "completed": false,
+          "points": 50,
+          "streak": 10,
+          "scoredOn": "2026-10-05"
+        }
+      },
+      {
+        "name": "Eating-out swap",
+        "kind": "swap",
+        "cadence": "weekly",
+        "amount": 175,
+        "streak": 0,
+        "bestStreak": 7,
+        "periodsMet": 24,
+        "periodsScored": 41,
+        "pointsEarned": 145,
+        "current": {
+          "key": "2026-10-19",
+          "start": "2026-10-19",
+          "end": "2026-10-25",
+          "progress": 164.19,
+          "target": 175,
+          "met": false,
+          "completed": false,
+          "points": 0,
+          "streak": 0,
+          "scoredOn": null
+        }
+      }
+    ],
+    "rewards": [
+      {
+        "name": "Brunch at the coffee shop",
+        "cost": 100,
+        "ready": true,
+        "shortBy": 0,
+        "timesClaimed": 2
+      },
+      {
+        "name": "Dinner for two",
+        "cost": 250,
+        "ready": true,
+        "shortBy": 0,
+        "timesClaimed": 2
+      },
+      {
+        "name": "Family dinner out",
+        "cost": 500,
+        "ready": false,
+        "shortBy": 205,
+        "timesClaimed": 0
+      },
+      {
+        "name": "Weekend away",
+        "cost": 1000,
+        "ready": false,
+        "shortBy": 705,
+        "timesClaimed": 0
+      }
+    ],
+    "nudge": {
+      "name": "Brunch at the coffee shop",
+      "cost": 100,
+      "since": "2026-09-05",
+      "days": 50
+    },
+    "badges": [
+      {
+        "id": "first-step",
+        "unlockedOn": "2026-01-05",
+        "detail": "The trail begins"
+      },
+      {
+        "id": "century",
+        "unlockedOn": "2026-02-05",
+        "detail": "105 points earned"
+      },
+      {
+        "id": "thousand",
+        "unlockedOn": null,
+        "detail": ""
+      },
+      {
+        "id": "on-fire",
+        "unlockedOn": "2026-03-15",
+        "detail": "4 in a row · Eating-out swap"
+      },
+      {
+        "id": "unstoppable",
+        "unlockedOn": null,
+        "detail": ""
+      },
+      {
+        "id": "treat",
+        "unlockedOn": "2026-03-07",
+        "detail": "Brunch at the coffee shop"
+      },
+      {
+        "id": "fi-5",
+        "unlockedOn": "2025-11-20",
+        "detail": "5% of your FI number"
+      },
+      {
+        "id": "fi-10",
+        "unlockedOn": null,
+        "detail": ""
+      },
+      {
+        "id": "fi-25",
+        "unlockedOn": null,
+        "detail": ""
+      },
+      {
+        "id": "fi-50",
+        "unlockedOn": null,
+        "detail": ""
+      },
+      {
+        "id": "fi-75",
+        "unlockedOn": null,
+        "detail": ""
+      },
+      {
+        "id": "fi-100",
+        "unlockedOn": null,
+        "detail": ""
+      },
+      {
+        "id": "closer",
+        "unlockedOn": "2026-07-25",
+        "detail": "FI date moved 4 months earlier — May 2043, was September 2043"
+      }
+    ],
+    "fi": {
+      "progress": 0.0893,
+      "fiDate": "2043-05",
+      "fiNumber": 1185234
+    },
+    "trail": [
+      {
+        "date": "2026-10-18",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 295
+      },
+      {
+        "date": "2026-10-11",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 295
+      },
+      {
+        "date": "2026-10-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 50,
+        "balance": 295
+      },
+      {
+        "date": "2026-10-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 50,
+        "balance": 245
+      },
+      {
+        "date": "2026-10-04",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 195
+      },
+      {
+        "date": "2026-09-27",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 190
+      },
+      {
+        "date": "2026-09-20",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 190
+      },
+      {
+        "date": "2026-09-13",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 185
+      },
+      {
+        "date": "2026-09-06",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 185
+      },
+      {
+        "date": "2026-09-05",
+        "kind": "reward",
+        "title": "Reward: Dinner for two",
+        "points": -250,
+        "balance": 180
+      },
+      {
+        "date": "2026-09-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 50,
+        "balance": 430
+      },
+      {
+        "date": "2026-09-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 50,
+        "balance": 380
+      },
+      {
+        "date": "2026-08-30",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 330
+      },
+      {
+        "date": "2026-08-23",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 325
+      },
+      {
+        "date": "2026-08-16",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 325
+      },
+      {
+        "date": "2026-08-09",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 10,
+        "balance": 325
+      },
+      {
+        "date": "2026-08-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 50,
+        "balance": 315
+      },
+      {
+        "date": "2026-08-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 50,
+        "balance": 265
+      },
+      {
+        "date": "2026-08-02",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 215
+      },
+      {
+        "date": "2026-07-26",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 210
+      },
+      {
+        "date": "2026-07-25",
+        "kind": "milestone",
+        "title": "Badge: Closer",
+        "points": 0,
+        "balance": 205
+      },
+      {
+        "date": "2026-07-19",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 205
+      },
+      {
+        "date": "2026-07-12",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 200
+      },
+      {
+        "date": "2026-07-10",
+        "kind": "reward",
+        "title": "Reward: Dinner for two",
+        "points": -250,
+        "balance": 200
+      },
+      {
+        "date": "2026-07-05",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 450
+      },
+      {
+        "date": "2026-07-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 50,
+        "balance": 445
+      },
+      {
+        "date": "2026-07-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 50,
+        "balance": 395
+      },
+      {
+        "date": "2026-06-28",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 345
+      },
+      {
+        "date": "2026-06-21",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 340
+      },
+      {
+        "date": "2026-06-14",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 340
+      },
+      {
+        "date": "2026-06-07",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 335
+      },
+      {
+        "date": "2026-06-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 50,
+        "balance": 330
+      },
+      {
+        "date": "2026-06-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 50,
+        "balance": 280
+      },
+      {
+        "date": "2026-05-31",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 230
+      },
+      {
+        "date": "2026-05-24",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 225
+      },
+      {
+        "date": "2026-05-17",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 225
+      },
+      {
+        "date": "2026-05-16",
+        "kind": "reward",
+        "title": "Reward: Brunch at the coffee shop",
+        "points": -100,
+        "balance": 220
+      },
+      {
+        "date": "2026-05-10",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 320
+      },
+      {
+        "date": "2026-05-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 50,
+        "balance": 320
+      },
+      {
+        "date": "2026-05-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 50,
+        "balance": 270
+      },
+      {
+        "date": "2026-05-03",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 220
+      },
+      {
+        "date": "2026-04-26",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 215
+      },
+      {
+        "date": "2026-04-19",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 215
+      },
+      {
+        "date": "2026-04-12",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 210
+      },
+      {
+        "date": "2026-04-05",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 10,
+        "balance": 210
+      },
+      {
+        "date": "2026-04-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 50,
+        "balance": 200
+      },
+      {
+        "date": "2026-04-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 50,
+        "balance": 150
+      },
+      {
+        "date": "2026-03-29",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 10,
+        "balance": 100
+      },
+      {
+        "date": "2026-03-22",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 10,
+        "balance": 90
+      },
+      {
+        "date": "2026-03-15",
+        "kind": "milestone",
+        "title": "Badge: On fire",
+        "points": 0,
+        "balance": 80
+      },
+      {
+        "date": "2026-03-15",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 10,
+        "balance": 80
+      },
+      {
+        "date": "2026-03-08",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 70
+      },
+      {
+        "date": "2026-03-07",
+        "kind": "reward",
+        "title": "Reward: Brunch at the coffee shop",
+        "points": -100,
+        "balance": 65
+      },
+      {
+        "date": "2026-03-07",
+        "kind": "milestone",
+        "title": "Badge: Treat yourself",
+        "points": 0,
+        "balance": 165
+      },
+      {
+        "date": "2026-03-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 25,
+        "balance": 165
+      },
+      {
+        "date": "2026-03-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 25,
+        "balance": 140
+      },
+      {
+        "date": "2026-03-01",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 115
+      },
+      {
+        "date": "2026-02-22",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 110
+      },
+      {
+        "date": "2026-02-15",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 105
+      },
+      {
+        "date": "2026-02-08",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 105
+      },
+      {
+        "date": "2026-02-05",
+        "kind": "milestone",
+        "title": "Badge: Century",
+        "points": 0,
+        "balance": 105
+      },
+      {
+        "date": "2026-02-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 25,
+        "balance": 105
+      },
+      {
+        "date": "2026-02-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 25,
+        "balance": 80
+      },
+      {
+        "date": "2026-02-01",
+        "kind": "habit",
+        "title": "Eating-out swap",
+        "points": 5,
+        "balance": 55
+      },
+      {
+        "date": "2026-01-25",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 50
+      },
+      {
+        "date": "2026-01-18",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 50
+      },
+      {
+        "date": "2026-01-11",
+        "kind": "miss",
+        "title": "Eating-out swap — missed",
+        "points": 0,
+        "balance": 50
+      },
+      {
+        "date": "2026-01-05",
+        "kind": "milestone",
+        "title": "Badge: First step",
+        "points": 0,
+        "balance": 50
+      },
+      {
+        "date": "2026-01-05",
+        "kind": "habit",
+        "title": "Monthly investing",
+        "points": 25,
+        "balance": 50
+      },
+      {
+        "date": "2026-01-05",
+        "kind": "habit",
+        "title": "Monthly saving",
+        "points": 25,
+        "balance": 25
+      },
+      {
+        "date": "2025-11-20",
+        "kind": "milestone",
+        "title": "Badge: First brick",
+        "points": 0,
+        "balance": 0
+      }
+    ]
   }
 }

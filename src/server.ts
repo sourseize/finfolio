@@ -2,11 +2,12 @@ import http from 'node:http';
 import { pathToFileURL } from 'node:url';
 import { db } from './db/database.js';
 import { router } from './server/router.js';
-import { isClockFrozen, today } from './util/clock.js';
+import { isClockFrozen, setClock, today } from './util/clock.js';
 import { loadImportConfig, resolveImportConfigPath } from './import/config.js';
 import './routes/api.js'; // Side-effect: registers routes
 import './routes/simulate.js';
 import './routes/import.js';
+import './routes/motivation.js';
 
 export interface StartOptions {
   /** TCP port. Use 0 to let the OS pick a free port (tests). Default: $PORT or 3000. */
@@ -52,7 +53,7 @@ export async function startServer(opts: StartOptions = {}): Promise<RunningServe
   if (!opts.quiet) {
     console.log('📦 Database loaded from', db.filePath);
     console.log('🏷️  Import categories from', resolveImportConfigPath());
-    if (isClockFrozen()) console.log(`⏰ Clock frozen at ${today()} (FINFOLIO_NOW)`);
+    if (isClockFrozen()) console.log(`⏰ Clock frozen at ${today()} (--now / FINFOLIO_NOW)`);
     console.log(`
 ╔══════════════════════════════════════════════╗
 ║     📊 FinFolio - Investment & Budgeting    ║
@@ -82,7 +83,22 @@ const isDirectRun = (() => {
   }
 })();
 
+/**
+ * `--now=YYYY-MM-DD` (or `--now YYYY-MM-DD`) freezes the clock like FINFOLIO_NOW does, but works
+ * on every shell: `npm start -- --now=2026-11-30`. (`FINFOLIO_NOW=… npm start` is a Unix-only syntax.)
+ */
+export function nowFromArgs(argv: string[]): string | null {
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith('--now=')) return a.slice('--now='.length);
+    if (a === '--now' && argv[i + 1]) return argv[i + 1];
+  }
+  return null;
+}
+
 if (isDirectRun) {
+  const now = nowFromArgs(process.argv.slice(2));
+  if (now) setClock(now);
   startServer().catch(err => {
     console.error(err);
     process.exit(1);

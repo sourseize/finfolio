@@ -25,6 +25,8 @@ interface Snapshot {
   baseline: Record<string, unknown>;
   outlook: Record<string, unknown>;
   scenarios: Record<string, { summary: unknown; yearlyNetWorth: number[]; montecarlo: unknown; goals: unknown }>;
+  /** Habits → points: balance, per-habit tallies and the whole trail (dates, points, running balance). */
+  motivation?: { points: unknown; habits: unknown[]; rewards: unknown[]; nudge: unknown; badges: unknown[]; fi: unknown; trail: unknown[] };
 }
 
 async function capture(app: TestApp, token: string): Promise<Snapshot> {
@@ -51,11 +53,21 @@ async function capture(app: TestApp, token: string): Promise<Snapshot> {
       goals: run.goals.map((g: any) => ({ name: g.name, status: g.status, fundedBy: g.fundedBy, allocatedMonthly: g.allocatedMonthly })),
     };
   }
+  const motivation = (await app.get('/api/motivation', token)).body;
   return {
     dashboard: { ...dashboard, budgetHealth: dash.budgetHealth, topExpenseCategories: dash.topExpenseCategories },
     baseline: { ...baselineCore, expenseByCategory: detail.expenseByCategory, window: [detail.windowStart, detail.windowEnd] },
     outlook: outlookCore,
     scenarios,
+    motivation: {
+      points: { ...motivation.points, nextReward: motivation.points.nextReward && { name: motivation.points.nextReward.name, cost: motivation.points.nextReward.cost } },
+      habits: motivation.habits.map((h: any) => ({ name: h.name, kind: h.kind, cadence: h.cadence, amount: h.amount, streak: h.streak, bestStreak: h.bestStreak, periodsMet: h.periodsMet, periodsScored: h.periodsScored, pointsEarned: h.pointsEarned, current: h.current })),
+      rewards: motivation.rewards.map((r: any) => ({ name: r.name, cost: r.cost, ready: r.ready, shortBy: r.shortBy, timesClaimed: r.timesClaimed })),
+      nudge: motivation.nudge && { name: motivation.nudge.name, cost: motivation.nudge.cost, since: motivation.nudge.since, days: motivation.nudge.days },
+      badges: motivation.badges.map((b: any) => ({ id: b.id, unlockedOn: b.unlockedOn, detail: b.detail })),
+      fi: motivation.fi,
+      trail: motivation.ledger.map((e: any) => ({ date: e.date, kind: e.kind, title: e.title, points: e.points, balance: e.balance })),
+    },
   };
 }
 
@@ -91,5 +103,17 @@ describe('Golden: fin', () => {
       assert.ok(s.yearlyNetWorth.length >= 49, name);
       assert.ok(s.yearlyNetWorth[0] < s.yearlyNetWorth[20], `${name}: net worth grows over 20 years`);
     }
+    const m: any = snap.motivation;
+    assert.equal(m.habits.length, 3);
+    assert.equal(m.points.earned, m.habits.reduce((sum: number, h: any) => sum + h.pointsEarned, 0), 'earned is the sum of the habit tallies');
+    assert.equal(m.points.balance, m.points.earned - m.points.spent);
+    assert.equal(m.trail[0].balance, m.points.balance, 'the trail ends on the balance');
+    assert.ok(m.trail.some((e: any) => e.kind === 'miss'), 'the trail shows misses, not only wins');
+    assert.equal(m.trail.filter((e: any) => e.kind === 'reward').length, 4, 'four rewards enjoyed');
+    assert.ok(m.trail.every((e: any) => e.balance >= 0), 'never claimed more than earned');
+    assert.equal(m.badges.length, 13);
+    assert.equal(m.badges.filter((b: any) => b.unlockedOn).length, 6, 'six badges unlocked, seven to aim for');
+    assert.equal(m.trail.filter((e: any) => e.kind === 'milestone').length, 6, 'one trail line per badge');
+    assert.ok(m.nudge, 'the seed date is inside the nudge window');
   });
 });

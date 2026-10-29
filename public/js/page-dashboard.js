@@ -39,6 +39,8 @@ App.renderDashboard = async function(container) {
         </div>
       </div>
 
+      <div class="mb-2" id="rewards-row"></div>
+
       <div class="grid grid-2 gap-2 mb-2" id="outlook-row">
         <div class="card outlook-card"><div class="text-muted text-sm">Loading outlook…</div></div>
         <div class="card outlook-card"><div class="text-muted text-sm">Loading outlook…</div></div>
@@ -74,8 +76,9 @@ App.renderDashboard = async function(container) {
       </div>
     `;
 
-    // Forward-looking outlook (runway + FIRE) — rendered independently so a failure never blocks the dashboard
+    // Forward-looking outlook (runway + FIRE) and the habits/points card — rendered independently so a failure never blocks the dashboard
     this.renderOutlook(document.getElementById('outlook-row'));
+    this.renderRewardsCard(document.getElementById('rewards-row'));
 
     // Doughnut chart
     const expData = data.topExpenseCategories;

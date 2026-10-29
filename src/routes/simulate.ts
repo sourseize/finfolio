@@ -292,6 +292,23 @@ router.post('/api/simulate/opportunity-cost', async (req, res, _match, body) => 
   });
 });
 
+/** Months of activity before FI milestones are trusted — a week of data makes the FI number meaningless. */
+export const FI_MIN_HISTORY_MONTHS = 3;
+
+/**
+ * Today's FI snapshot on current habits (baseline scenario), or null while the
+ * history is too thin to mean anything (fewer than FI_MIN_HISTORY_MONTHS months
+ * with activity, or no income / no spending). Used by the motivation routes to
+ * observe FI milestones.
+ */
+export function fiSnapshotFor(userId: string): { progress: number; fiDate: string | null; fiNumber: number } | null {
+  const { goals: _g, ...input } = buildInput(userId, baselineScenario());
+  const b = input.baseline;
+  if (!(b.monthlyIncome > 0 && b.monthlyExpenses > 0) || b.detail.incomeMonths < FI_MIN_HISTORY_MONTHS) return null;
+  const { fire } = simulate(input).summary;
+  return { progress: fire.progress, fiDate: fire.fiDate, fiNumber: fire.fiNumber };
+}
+
 /** Compact forward-looking numbers for the dashboard (baseline scenario, no Monte Carlo). */
 router.get('/api/simulate/outlook', async (req, res) => {
   const userId = (req as any).userId;

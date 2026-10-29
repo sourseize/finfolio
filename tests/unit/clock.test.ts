@@ -1,3 +1,4 @@
+import { nowFromArgs } from '../../src/server.js';
 import { test, describe, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { now, today, nowIso, setClock, isClockFrozen, getClockOverride } from '../../src/util/clock.js';
@@ -51,5 +52,15 @@ describe('clock', () => {
   test('rejects an invalid FINFOLIO_NOW', () => {
     process.env.FINFOLIO_NOW = 'not-a-date';
     assert.throws(() => now(), /not a valid date/);
+  });
+});
+
+describe('--now command-line flag (cross-platform alternative to FINFOLIO_NOW)', () => {
+  test('parses --now=DATE and --now DATE, ignores the rest', () => {
+    assert.equal(nowFromArgs(['--now=2026-11-30']), '2026-11-30');
+    assert.equal(nowFromArgs(['--quiet', '--now', '2026-10-05']), '2026-10-05');
+    assert.equal(nowFromArgs(['--port=3001']), null);
+    assert.equal(nowFromArgs([]), null);
+    assert.equal(nowFromArgs(['--now']), null, 'dangling flag is ignored');
   });
 });

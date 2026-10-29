@@ -24,6 +24,9 @@ describe('Demo user "fin"', () => {
     assert.equal(first.goals, 4);
     assert.equal(first.scenarios, 5);
     assert.equal(first.budgets, 7);
+    assert.equal(first.habits, 3);
+    assert.equal(first.rewards, 4);
+    assert.equal(first.claims, 4);
     assert.ok(first.transactions > 500, `transactions: ${first.transactions}`);
     assert.ok(first.trades > 60, `trades: ${first.trades}`);
   });
