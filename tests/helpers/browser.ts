@@ -60,6 +60,7 @@ export function createBrowser(opts: BrowserOptions): Browser {
     fetch: (url: string, init?: RequestInit) => fetch(url.startsWith('http') ? url : opts.baseUrl + url, init),
     setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask,
     Intl, Date, Math, JSON, Number, String, Boolean, Array, Object, Map, Set, Promise, Error, RegExp, URLSearchParams, URL,
+    Uint8Array, ArrayBuffer, TextEncoder, TextDecoder, btoa, atob,
     parseFloat, parseInt, isNaN, isFinite, encodeURIComponent, decodeURIComponent, structuredClone,
     confirm: () => true,
     prompt: (_msg: string, def?: string) => def ?? 'Scenario',
@@ -67,7 +68,7 @@ export function createBrowser(opts: BrowserOptions): Browser {
     devicePixelRatio: 1,
     location: { hash: '', href: opts.baseUrl + '/', reload: () => undefined },
     requestAnimationFrame: (fn: () => void) => setTimeout(fn, 0),
-    navigator: { userAgent: 'finfolio-test' },
+    navigator: { userAgent: 'finfolio-test', language: 'en-US', languages: ['en-US', 'en'] },
     HTMLElement: DomElement,
   };
   sandbox.window = sandbox;

@@ -11,7 +11,13 @@ const API = {
       body: body ? JSON.stringify(body) : undefined,
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Request failed');
+    if (!res.ok) {
+      const err = new Error(data.error || 'Request failed');
+      err.status = res.status;
+      err.code = data.code;
+      err.data = data;
+      throw err;
+    }
     return data;
   },
 
@@ -31,6 +37,7 @@ const API = {
     return this.request('GET', `/api/transactions?${params}`);
   },
   createTransaction(data) { return this.request('POST', '/api/transactions', data); },
+  updateTransaction(id, data) { return this.request('PUT', `/api/transactions/${id}`, data); },
   deleteTransaction(id) { return this.request('DELETE', `/api/transactions/${id}`); },
   getBudgets() { return this.request('GET', '/api/budgets'); },
   createBudget(data) { return this.request('POST', '/api/budgets', data); },
@@ -61,6 +68,13 @@ const API = {
   createScenario(data) { return this.request('POST', '/api/scenarios', data); },
   updateScenario(id, data) { return this.request('PUT', `/api/scenarios/${id}`, data); },
   deleteScenario(id) { return this.request('DELETE', `/api/scenarios/${id}`); },
+
+  // ── Statement import ──
+  getImportFormats() { return this.request('GET', '/api/import/formats'); },
+  importPreview(payload) { return this.request('POST', '/api/import/preview', payload); },
+  importCommit(payload) { return this.request('POST', '/api/import/commit', payload); },
+  getImportProfiles() { return this.request('GET', '/api/import/profiles'); },
+  deleteImportProfile(id) { return this.request('DELETE', `/api/import/profiles/${id}`); },
 
   setToken(token) {
     this._token = token;

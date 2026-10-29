@@ -118,6 +118,7 @@ const App = {
             <div class="sidebar-link active" data-page="dashboard">📊 <span>Dashboard</span></div>
             <div class="sidebar-link" data-page="accounts">🏦 <span>Accounts</span></div>
             <div class="sidebar-link" data-page="transactions">💳 <span>Transactions</span></div>
+            <div class="sidebar-link" data-page="import">⬆️ <span>Import</span></div>
             <div class="sidebar-link" data-page="budgets">📋 <span>Budgets</span></div>
             <div class="sidebar-link" data-page="investments">📈 <span>Investments</span></div>
             <div class="sidebar-link" data-page="goals">🎯 <span>Goals</span></div>
@@ -149,14 +150,21 @@ const App = {
     });
   },
 
-  navigate(page) {
+  /**
+   * Navigate to a page. `target` may carry a query string: 'import?account=<id>'
+   * → page 'import' with App.pageParams = { account: '<id>' }.
+   */
+  navigate(target) {
+    const [page, query] = String(target || 'dashboard').split('?');
     this.currentPage = page;
+    this.pageParams = Object.fromEntries(new URLSearchParams(query || ''));
     $$('.sidebar-link').forEach(l => l.classList.toggle('active', l.dataset.page === page));
     const content = document.getElementById('page-content');
     switch (page) {
       case 'dashboard': this.renderDashboard(content); break;
       case 'accounts': this.renderAccounts(content); break;
       case 'transactions': this.renderTransactions(content); break;
+      case 'import': this.renderImport(content); break;
       case 'budgets': this.renderBudgets(content); break;
       case 'investments': this.renderInvestments(content); break;
       case 'goals': this.renderGoals(content); break;

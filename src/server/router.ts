@@ -13,6 +13,13 @@ interface Route {
   auth: boolean;
 }
 
+/** Largest accepted request body (statement uploads are base64 inside JSON). Override with FINFOLIO_MAX_BODY_MB. */
+export const MAX_BODY_BYTES = Math.max(1, parseInt(process.env.FINFOLIO_MAX_BODY_MB || '25', 10) || 25) * 1024 * 1024;
+
+class BodyTooLarge extends Error {
+  constructor() { super('Request body too large'); }
+}
+
 export class Router {
   private routes: Route[] = [];
   private sessions: Map<string, { userId: string; expires: number }> = new Map();
@@ -91,7 +98,16 @@ export class Router {
     // Parse JSON body
     let body: any = undefined;
     if (req.method === 'POST' || req.method === 'PUT') {
-      body = await this.parseBody(req);
+      try {
+        body = await this.parseBody(req);
+      } catch (err) {
+        if (err instanceof BodyTooLarge) {
+          res.writeHead(413, { 'Content-Type': 'application/json', Connection: 'close' });
+          res.end(JSON.stringify({ error: `Request body too large (limit ${Math.round(MAX_BODY_BYTES / 1024 / 1024)} MB)` }));
+          return;
+        }
+        throw err;
+      }
     }
 
     // Find matching route
@@ -134,10 +150,25 @@ export class Router {
   }
 
   private async parseBody(req: http.IncomingMessage): Promise<any> {
+    const declared = parseInt(req.headers['content-length'] || '0', 10);
+    if (declared > MAX_BODY_BYTES) throw new BodyTooLarge();
     return new Promise((resolve, reject) => {
       const chunks: Buffer[] = [];
-      req.on('data', (chunk: Buffer) => chunks.push(chunk));
+      let received = 0;
+      let failed = false;
+      req.on('data', (chunk: Buffer) => {
+        if (failed) return;
+        received += chunk.length;
+        if (received > MAX_BODY_BYTES) {
+          failed = true;
+          reject(new BodyTooLarge());
+          req.resume(); // drain what is left so the connection can close cleanly
+          return;
+        }
+        chunks.push(chunk);
+      });
       req.on('end', () => {
+        if (failed) return;
         const raw = Buffer.concat(chunks).toString();
         if (!raw) return resolve(undefined);
         try {

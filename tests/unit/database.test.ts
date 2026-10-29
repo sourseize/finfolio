@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { Database, resolveDataDir, SCHEMA_VERSION, signedBalance, isLiabilityAccount } from '../../src/db/database.js';
+import { Database, resolveDataDir, SCHEMA_VERSION, signedBalance, isLiabilityAccount, TRANSACTION_CATEGORIES, UNCATEGORIZED_CATEGORY } from '../../src/db/database.js';
 import { setClock } from '../../src/util/clock.js';
 
 describe('Database', () => {
@@ -37,7 +37,7 @@ describe('Database', () => {
   test('init creates the file in the requested directory', async () => {
     assert.equal(db.filePath, path.join(dir, 'database.json'));
     const raw = JSON.parse(await fs.readFile(db.filePath, 'utf-8'));
-    assert.deepEqual(Object.keys(raw).sort(), ['accounts', 'budgets', 'goals', 'investmentTransactions', 'investments', 'profiles', 'scenarios', 'schemaVersion', 'transactions', 'users']);
+    assert.deepEqual(Object.keys(raw).sort(), ['accounts', 'budgets', 'goals', 'importBatches', 'importProfiles', 'investmentTransactions', 'investments', 'profiles', 'scenarios', 'schemaVersion', 'transactions', 'users']);
   });
 
   test('persists and reloads data', async () => {
@@ -77,6 +77,93 @@ describe('Database', () => {
     const onDisk = JSON.parse(await fs.readFile(db2.filePath, 'utf-8'));
     assert.equal(onDisk.schemaVersion, SCHEMA_VERSION, 'migration persisted');
     assert.equal(onDisk.accounts[0].balance, 750);
+  });
+
+  test('migrates v2 data: import collections appear, everything else untouched', async () => {
+    await fs.writeFile(db.filePath, JSON.stringify({
+      schemaVersion: 2,
+      users: [],
+      accounts: [{ id: 'cc', userId: 'u', name: 'Card', type: 'credit', balance: -750, currency: 'USD', createdAt: '' }],
+      transactions: [{ id: 't', accountId: 'cc', userId: 'u', type: 'expense', category: 'Other', amount: 5, description: '', date: '2026-10-01', tags: [] }],
+    }));
+    const db2 = new Database();
+    await db2.init(dir);
+    assert.equal(db2.schemaVersion, 3);
+    assert.equal(db2.getAccounts('u')[0].balance, -750, 'v1 fix-up is not re-applied to v2 data');
+    assert.deepEqual(db2.getImportBatches('u'), []);
+    assert.deepEqual(db2.getImportProfiles('u'), []);
+    assert.equal(db2.getTransaction('t')!.import, undefined);
+    const onDisk = JSON.parse(await fs.readFile(db2.filePath, 'utf-8'));
+    assert.equal(onDisk.schemaVersion, 3);
+    assert.deepEqual(onDisk.importBatches, []);
+  });
+
+  test('category list includes Uncategorized and the semantic categories', () => {
+    assert.ok(TRANSACTION_CATEGORIES.includes(UNCATEGORIZED_CATEGORY));
+    assert.ok(TRANSACTION_CATEGORIES.includes('Transfer'));
+    assert.ok(TRANSACTION_CATEGORIES.includes('Investment'));
+    assert.equal(new Set(TRANSACTION_CATEGORIES).size, TRANSACTION_CATEGORIES.length, 'no duplicates');
+  });
+
+  test('updateTransaction keeps balances consistent across amount, type and account changes', () => {
+    const user = db.createUser('upd', 'pw')!;
+    const chk = db.createAccount({ userId: user.id, name: 'Chk', type: 'checking', balance: 1000, currency: 'USD' });
+    const card = db.createAccount({ userId: user.id, name: 'Card', type: 'credit', balance: 100, currency: 'USD' });
+    const t = db.createTransaction({ userId: user.id, accountId: chk.id, type: 'expense', category: 'Other', amount: 50, description: 'x', date: '2026-10-01', tags: [] });
+    assert.equal(db.getAccount(chk.id)!.balance, 950);
+
+    // amount only
+    db.updateTransaction(t.id, { amount: 80 });
+    assert.equal(db.getAccount(chk.id)!.balance, 920);
+
+    // flip to income
+    db.updateTransaction(t.id, { type: 'income' });
+    assert.equal(db.getAccount(chk.id)!.balance, 1080);
+
+    // move to the credit card: income on a liability reduces the amount owed
+    const moved = db.updateTransaction(t.id, { accountId: card.id })!;
+    assert.equal(db.getAccount(chk.id)!.balance, 1000, 'old account restored');
+    assert.equal(db.getAccount(card.id)!.balance, 20, 'card owes 100 - 80');
+    assert.equal(moved.accountId, card.id);
+    assert.equal(moved.userId, user.id);
+
+    // category / description / date do not touch balances
+    db.updateTransaction(t.id, { category: 'Gift', description: 'y', date: '2026-10-02' });
+    assert.equal(db.getAccount(card.id)!.balance, 20);
+    assert.equal(db.getTransaction(t.id)!.category, 'Gift');
+
+    assert.equal(db.updateTransaction('missing', { amount: 1 }), null);
+  });
+
+  test('import bookkeeping: batches by hash, profiles by header signature, batchId filter', async () => {
+    const user = db.createUser('imp', 'pw')!;
+    const acc = db.createAccount({ userId: user.id, name: 'Chk', type: 'checking', balance: 0, currency: 'USD' });
+    const batch = db.createImportBatch({ userId: user.id, accountId: acc.id, format: 'csv', filename: 'sep.csv', fileHash: 'abc', dateFrom: '2026-09-01', dateTo: '2026-09-30', counts: { imported: 1, recorded: 0, skipped: 0, excluded: 0 } });
+    assert.equal(batch.importedAt, '2026-10-25T12:00:00.000Z');
+    assert.equal(db.findImportBatchByHash(user.id, 'abc')!.id, batch.id);
+    assert.equal(db.findImportBatchByHash('someone-else', 'abc'), undefined);
+
+    db.createTransaction({ userId: user.id, accountId: acc.id, type: 'expense', category: 'Other', amount: 1, description: '', date: '2026-09-02', tags: [], import: { batchId: batch.id, source: 'csv', fingerprint: 'f1', rawDescription: 'RAW' } });
+    db.createTransaction({ userId: user.id, accountId: acc.id, type: 'expense', category: 'Other', amount: 2, description: '', date: '2026-09-03', tags: [] });
+    assert.deepEqual(db.getTransactions(user.id, { batchId: batch.id }).map(t => t.amount), [1]);
+
+    const p = db.upsertImportProfile({ userId: user.id, headerSignature: 'sig', delimiter: ',', dateOrder: 'MDY', numberFormat: 'point', columns: { date: 0, description: 1, amount: 2 } });
+    const p2 = db.upsertImportProfile({ userId: user.id, headerSignature: 'sig', delimiter: ',', dateOrder: 'DMY', numberFormat: 'point', columns: { date: 0, description: 1, amount: 2 } });
+    assert.equal(p2.id, p.id, 'same signature replaces');
+    assert.equal(db.findImportProfile(user.id, 'sig')!.dateOrder, 'DMY');
+    assert.equal(db.getImportProfiles(user.id).length, 1);
+
+    await db.persist();
+    const db2 = new Database();
+    await db2.init(dir);
+    assert.equal(db2.getImportBatches(user.id).length, 1);
+    assert.equal(db2.getTransactions(user.id, { batchId: batch.id })[0].import!.rawDescription, 'RAW');
+    assert.equal(db2.deleteImportProfile(p.id), true);
+    assert.equal(db2.deleteImportProfile(p.id), false);
+
+    // deleting the account drops its batches
+    db.deleteAccount(acc.id);
+    assert.equal(db.getImportBatches(user.id).length, 0);
   });
 
   test('liability helpers', () => {

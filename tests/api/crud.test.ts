@@ -85,6 +85,80 @@ describe('API: CRUD', () => {
     });
   });
 
+  describe('transaction editing (PUT)', () => {
+    let token: string;
+    let otherToken: string;
+    let chk: string;
+    let card: string;
+    before(async () => {
+      token = (await app.register('edit-user', 'pw')).token;
+      otherToken = (await app.register('edit-other', 'pw')).token;
+      chk = (await app.post('/api/accounts', { name: 'Chk', type: 'checking', balance: 1000 }, token)).body.id;
+      card = (await app.post('/api/accounts', { name: 'Card', type: 'credit', balance: 100 }, token)).body.id;
+    });
+
+    test('validates input and ownership', async () => {
+      const t = (await app.post('/api/transactions', { accountId: chk, type: 'expense', amount: 50, category: 'Other', date: '2026-10-01' }, token)).body;
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { amount: 1 }, otherToken)).status, 404, 'other users cannot see it');
+      assert.equal((await app.put('/api/transactions/nope', { amount: 1 }, token)).status, 404);
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { amount: -3 }, token)).status, 400);
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { amount: 'abc' }, token)).status, 400);
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { type: 'transfer' }, token)).status, 400);
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { category: 'Not a category' }, token)).status, 400);
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { date: '01/10/2026' }, token)).status, 400);
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { date: '2026-13-45' }, token)).status, 400);
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { tags: 'x' }, token)).status, 400);
+      const otherAcc = (await app.post('/api/accounts', { name: 'Theirs', type: 'checking' }, otherToken)).body.id;
+      assert.equal((await app.put(`/api/transactions/${t.id}`, { accountId: otherAcc }, token)).status, 400, 'cannot move onto another user\'s account');
+      assert.equal((await app.get(`/api/accounts/${chk}`, token)).body.balance, 950, 'nothing changed');
+      await app.del(`/api/transactions/${t.id}`, token);
+    });
+
+    test('re-categorising an imported Uncategorized row and moving between accounts keeps balances and budgets right', async () => {
+      await app.post('/api/budgets', { category: 'Food & Dining', amount: 300 }, token);
+      await app.post('/api/budgets', { category: 'Shopping', amount: 300 }, token);
+      const t = (await app.post('/api/transactions', { accountId: chk, type: 'expense', amount: 40, category: 'Uncategorized', description: 'TESCO', date: '2026-10-03' }, token)).body;
+      assert.equal(t.category, 'Uncategorized');
+
+      const r1 = await app.put(`/api/transactions/${t.id}`, { category: 'Food & Dining', description: 'Tesco groceries' }, token);
+      assert.equal(r1.status, 200);
+      assert.equal(r1.body.category, 'Food & Dining');
+      assert.equal(r1.body.description, 'Tesco groceries');
+      let budgets = (await app.get('/api/budgets', token)).body;
+      assert.equal(budgets.find((b: any) => b.category === 'Food & Dining').spent, 40);
+
+      // change category + amount + move onto the credit card in one go
+      const r2 = await app.put(`/api/transactions/${t.id}`, { category: 'Shopping', amount: 60, accountId: card }, token);
+      assert.equal(r2.status, 200);
+      budgets = (await app.get('/api/budgets', token)).body;
+      assert.equal(budgets.find((b: any) => b.category === 'Food & Dining').spent, 0, 'old budget released');
+      assert.equal(budgets.find((b: any) => b.category === 'Shopping').spent, 60, 'new budget charged');
+      assert.equal((await app.get(`/api/accounts/${chk}`, token)).body.balance, 1000, 'checking restored');
+      assert.equal((await app.get(`/api/accounts/${card}`, token)).body.balance, 160, 'card owes 100 + 60');
+
+      // moving the date out of the budget month releases it too
+      await app.put(`/api/transactions/${t.id}`, { date: '2026-09-30' }, token);
+      budgets = (await app.get('/api/budgets', token)).body;
+      assert.equal(budgets.find((b: any) => b.category === 'Shopping').spent, 0);
+
+      const list = await app.get(`/api/transactions?accountId=${card}`, token);
+      assert.equal(list.body.length, 1);
+      assert.equal(list.body[0].date, '2026-09-30');
+      assert.equal((await app.get('/api/transactions?batchId=none', token)).body.length, 0, 'batchId filter');
+    });
+  });
+
+  describe('request limits', () => {
+    test('oversized JSON bodies are rejected with 413', async () => {
+      const token = (await app.register('big-user', 'pw')).token;
+      const res = await app.post('/api/accounts', { name: 'x'.repeat(26 * 1024 * 1024), type: 'checking' }, token);
+      assert.equal(res.status, 413);
+      assert.match(res.body.error, /too large/);
+      // the server is still healthy afterwards
+      assert.equal((await app.get('/api/accounts', token)).status, 200);
+    });
+  });
+
   describe('budgets', () => {
     let token: string;
     let accountId: string;

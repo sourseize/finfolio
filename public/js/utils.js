@@ -24,6 +24,10 @@ function formatCompact(amount, currency = 'USD') {
 /** Category semantics (mirrors the server): transfers are never income/spending; 'Investment' expenses are saving. */
 const TRANSFER_CATEGORY = 'Transfer';
 const INVESTMENT_CATEGORY = 'Investment';
+/** Imported rows nothing recognises land here; re-categorise from the transactions list. */
+const UNCATEGORIZED_CATEGORY = 'Uncategorized';
+/** Mirrors TRANSACTION_CATEGORIES on the server. */
+const TRANSACTION_CATEGORIES = ['Food & Dining','Transportation','Housing','Utilities','Entertainment','Shopping','Healthcare','Education','Salary','Freelance',INVESTMENT_CATEGORY,'Gift',TRANSFER_CATEGORY,'Other',UNCATEGORIZED_CATEGORY];
 function isIncomeTxn(t) { return t.type === 'income' && t.category !== TRANSFER_CATEGORY; }
 function isSpendingTxn(t) { return t.type === 'expense' && t.category !== TRANSFER_CATEGORY && t.category !== INVESTMENT_CATEGORY; }
 function isTransferTxn(t) { return t.category === TRANSFER_CATEGORY || (t.type === 'expense' && t.category === INVESTMENT_CATEGORY); }

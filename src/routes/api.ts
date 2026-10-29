@@ -1,11 +1,19 @@
 import { router } from '../server/router.js';
-import { db } from '../db/database.js';
+import { db, TRANSACTION_CATEGORIES, type Transaction } from '../db/database.js';
 import { now, nowIso, today, isClockFrozen } from '../util/clock.js';
 import type { ServerResponse, IncomingMessage } from 'node:http';
 
 function json(res: ServerResponse, data: any, status = 200) {
   res.writeHead(status, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify(data));
+}
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Refresh the budget total for the month a transaction falls in. */
+function recalcBudgetFor(userId: string, txn: Pick<Transaction, 'category' | 'date'>) {
+  const d = new Date(txn.date);
+  db.recalculateBudgetSpent(userId, txn.category, d.getMonth(), d.getFullYear());
 }
 
 // ── Meta ──
@@ -91,6 +99,7 @@ router.get('/api/transactions', async (req, res) => {
   if (url.searchParams.has('from')) filters.from = url.searchParams.get('from')!;
   if (url.searchParams.has('to')) filters.to = url.searchParams.get('to')!;
   if (url.searchParams.has('limit')) filters.limit = parseInt(url.searchParams.get('limit')!);
+  if (url.searchParams.has('batchId')) filters.batchId = url.searchParams.get('batchId')!;
   json(res, db.getTransactions(userId, filters));
 });
 
@@ -109,11 +118,57 @@ router.post('/api/transactions', async (req, res, _match, body) => {
     date: body.date || today(),
     tags: body.tags || [],
   });
-  // Recalculate budgets
-  const d = new Date(txn.date);
-  db.recalculateBudgetSpent(userId, txn.category, d.getMonth(), d.getFullYear());
+  recalcBudgetFor(userId, txn);
   await db.persist();
   json(res, txn, 201);
+});
+
+/**
+ * Edit a transaction (account, type, amount, category, date, description, tags).
+ * Balances of the old and new account and the budgets of the old and new
+ * category/month are kept in sync. Import bookkeeping (`import`) is read-only here.
+ */
+router.put('/api/transactions/:id', async (req, res, match, body) => {
+  const userId = (req as any).userId;
+  const existing = db.getTransaction(match[1]);
+  if (!existing || existing.userId !== userId) return json(res, { error: 'Not found' }, 404);
+  if (!body || typeof body !== 'object') return json(res, { error: 'Body required' }, 400);
+
+  const updates: Partial<Transaction> = {};
+  if (body.accountId !== undefined) {
+    const account = db.getAccount(body.accountId);
+    if (!account || account.userId !== userId) return json(res, { error: 'Unknown account' }, 400);
+    updates.accountId = body.accountId;
+  }
+  if (body.type !== undefined) {
+    if (body.type !== 'income' && body.type !== 'expense') return json(res, { error: 'type must be income or expense' }, 400);
+    updates.type = body.type;
+  }
+  if (body.amount !== undefined) {
+    const amount = Number(body.amount);
+    if (!Number.isFinite(amount) || amount <= 0) return json(res, { error: 'amount must be a positive number' }, 400);
+    updates.amount = amount;
+  }
+  if (body.category !== undefined) {
+    if (typeof body.category !== 'string' || !TRANSACTION_CATEGORIES.includes(body.category)) return json(res, { error: 'Unknown category' }, 400);
+    updates.category = body.category;
+  }
+  if (body.date !== undefined) {
+    if (typeof body.date !== 'string' || !ISO_DATE.test(body.date) || Number.isNaN(new Date(body.date).getTime())) return json(res, { error: 'date must be YYYY-MM-DD' }, 400);
+    updates.date = body.date;
+  }
+  if (body.description !== undefined) updates.description = String(body.description);
+  if (body.tags !== undefined) {
+    if (!Array.isArray(body.tags)) return json(res, { error: 'tags must be an array' }, 400);
+    updates.tags = body.tags.map(String);
+  }
+
+  const before = { category: existing.category, date: existing.date };
+  const txn = db.updateTransaction(existing.id, updates)!;
+  recalcBudgetFor(userId, before);
+  recalcBudgetFor(userId, txn);
+  await db.persist();
+  json(res, txn);
 });
 
 router.delete('/api/transactions/:id', async (req, res, match) => {

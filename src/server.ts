@@ -3,8 +3,10 @@ import { pathToFileURL } from 'node:url';
 import { db } from './db/database.js';
 import { router } from './server/router.js';
 import { isClockFrozen, today } from './util/clock.js';
+import { loadImportConfig, resolveImportConfigPath } from './import/config.js';
 import './routes/api.js'; // Side-effect: registers routes
 import './routes/simulate.js';
+import './routes/import.js';
 
 export interface StartOptions {
   /** TCP port. Use 0 to let the OS pick a free port (tests). Default: $PORT or 3000. */
@@ -31,6 +33,7 @@ export async function startServer(opts: StartOptions = {}): Promise<RunningServe
   const port = opts.port ?? parseInt(process.env.PORT || '3000', 10);
 
   await db.init(opts.dataDir);
+  loadImportConfig(); // fail fast on a broken categorisation config
 
   const server = http.createServer((req, res) => router.handle(req, res));
 
@@ -48,6 +51,7 @@ export async function startServer(opts: StartOptions = {}): Promise<RunningServe
 
   if (!opts.quiet) {
     console.log('📦 Database loaded from', db.filePath);
+    console.log('🏷️  Import categories from', resolveImportConfigPath());
     if (isClockFrozen()) console.log(`⏰ Clock frozen at ${today()} (FINFOLIO_NOW)`);
     console.log(`
 ╔══════════════════════════════════════════════╗

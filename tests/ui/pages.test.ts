@@ -105,6 +105,50 @@ describe('UI (headless) with fin', () => {
     noErrors();
   });
 
+  test('transactions page: edit a transaction and re-categorise to/from Uncategorized', async () => {
+    await b.goto('transactions');
+    const firstRow = b.$$('#txn-table-body tr')[0];
+    const id = firstRow.getAttribute('data-id')!;
+    const before = (await app.get('/api/transactions', token)).body.find((t: any) => t.id === id);
+    assert.ok(b.$('#txn-table-body .edit-txn-btn'), 'edit buttons rendered');
+
+    await b.$(`.edit-txn-btn[data-id="${id}"]`).click();
+    await b.waitFor(() => !!b.document.querySelector('#modal-form'));
+    assert.match(b.document.body.textContent, /Edit Transaction/);
+    assert.equal(b.$('#txn-amount').value, String(before.amount), 'form pre-filled');
+    assert.equal(b.$('#txn-category').value, before.category);
+    assert.ok(b.$$('#txn-category option').some(o => o.value === 'Uncategorized'), 'Uncategorized is offered');
+
+    b.$('#txn-category').value = 'Uncategorized';
+    b.$('#txn-desc').value = 'edited via ui';
+    await b.$('#modal-form').fire('submit');
+    await b.waitFor(() => !b.document.querySelector('#modal-form'));
+    await b.waitFor(() => /edited via ui/.test(b.document.body.textContent));
+    assert.ok(b.$$('#txn-table-body .badge-uncategorized').length >= 1, 'dashed badge for Uncategorized');
+
+    const after = (await app.get('/api/transactions', token)).body.find((t: any) => t.id === id);
+    assert.equal(after.category, 'Uncategorized');
+    assert.equal(after.description, 'edited via ui');
+    assert.equal(after.amount, before.amount);
+
+    // put it back so the golden data stays intact for later tests
+    await app.put(`/api/transactions/${id}`, { category: before.category, description: before.description }, token);
+    noErrors();
+  });
+
+  test('transactions page: 🔗 marker for rows matched from a skipped statement row', async () => {
+    // Simulate what the importer will write on "Skip: already recorded" (WP3) and check the list shows it.
+    const txn = (await app.get('/api/transactions?limit=1', token)).body[0];
+    const stored = db.getTransaction(txn.id)!;
+    stored.import = { source: 'csv', fingerprint: 'f', rawDescription: 'BANK TEXT', matchedFrom: { filename: 'sep.csv', date: txn.date, amount: txn.amount, rawDescription: 'BANK TEXT', matchedAt: '2026-10-25T12:00:00.000Z' } };
+    await b.goto('transactions');
+    const marker = b.$(`#txn-table-body tr[data-id="${txn.id}"] .txn-matched`);
+    assert.match(marker.getAttribute('title')!, /sep\.csv/);
+    assert.match(marker.getAttribute('title')!, /BANK TEXT/);
+    delete stored.import;
+    noErrors();
+  });
+
   test('budgets, investments, goals, reports render', async () => {
     let content = await b.goto('budgets');
     assert.ok(b.$$('#budgets-list .card').length === 7);

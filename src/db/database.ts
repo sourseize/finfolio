@@ -28,6 +28,34 @@ export interface Account {
   createdAt: string;
 }
 
+export type ImportSource = 'csv' | 'ofx' | 'qif' | 'openbanking';
+
+/**
+ * Bookkeeping attached to a transaction by the statement importer.
+ * Written when a row is imported, or — `matchedFrom` — when the user skips an
+ * imported row because this (possibly hand-entered) transaction already
+ * records it. Both cases let later imports recognise the row automatically.
+ */
+export interface TransactionImportMeta {
+  /** Import batch that created this transaction (absent when only stamped via `matchedFrom`). */
+  batchId?: string;
+  source: ImportSource;
+  /** Bank-assigned unique id (OFX FITID, Open Banking TransactionId …). */
+  externalId?: string;
+  /** sha256(accountId | date | type | amountCents | normalisedDescription). */
+  fingerprint: string;
+  /** Description exactly as the bank exported it. */
+  rawDescription: string;
+  /** Set when the user confirmed an imported row as "already recorded = this transaction". */
+  matchedFrom?: {
+    filename: string;
+    date: string;
+    amount: number;
+    rawDescription: string;
+    matchedAt: string;
+  };
+}
+
 export interface Transaction {
   id: string;
   accountId: string;
@@ -38,6 +66,47 @@ export interface Transaction {
   description: string;
   date: string;
   tags: string[];
+  import?: TransactionImportMeta;
+}
+
+/** One committed statement file. Internal bookkeeping: exact-file detection and the post-import link. */
+export interface ImportBatch {
+  id: string;
+  userId: string;
+  accountId: string;
+  format: ImportSource;
+  filename: string;
+  /** sha256 of the uploaded bytes. */
+  fileHash: string;
+  importedAt: string;
+  dateFrom: string;
+  dateTo: string;
+  counts: { imported: number; recorded: number; skipped: number; excluded: number };
+  /** What the balance-reconciliation step changed on the account, if anything. */
+  balanceAdjustment?: number;
+}
+
+/** A remembered CSV column mapping, re-applied when a file with the same header signature is uploaded. */
+export interface ImportProfile {
+  id: string;
+  userId: string;
+  headerSignature: string;
+  delimiter: string;
+  dateOrder: 'YMD' | 'DMY' | 'MDY';
+  numberFormat: 'point' | 'comma';
+  columns: {
+    date: number;
+    description: number;
+    amount?: number;
+    debit?: number;
+    credit?: number;
+    balance?: number;
+    category?: number;
+    currency?: number;
+    reference?: number;
+  };
+  createdAt: string;
+  lastUsedAt: string;
 }
 
 export interface Budget {
@@ -112,6 +181,14 @@ export interface StoredScenario extends Scenario {
  */
 export const TRANSFER_CATEGORY = 'Transfer';
 export const INVESTMENT_CATEGORY = 'Investment';
+/** Default for imported rows no rule recognises; the user re-categorises from the transactions list. */
+export const UNCATEGORIZED_CATEGORY = 'Uncategorized';
+
+/** Every category a transaction may carry (mirrored by the UI in utils.js). */
+export const TRANSACTION_CATEGORIES: readonly string[] = [
+  'Food & Dining', 'Transportation', 'Housing', 'Utilities', 'Entertainment', 'Shopping', 'Healthcare',
+  'Education', 'Salary', 'Freelance', INVESTMENT_CATEGORY, 'Gift', TRANSFER_CATEGORY, 'Other', UNCATEGORIZED_CATEGORY,
+];
 
 /** True when the transaction counts as take-home income. */
 export function isIncomeTxn(t: Pick<Transaction, 'type' | 'category'>): boolean {
@@ -124,7 +201,7 @@ export function isSpendingTxn(t: Pick<Transaction, 'type' | 'category'>): boolea
 }
 
 /** Bump when stored data needs a migration (see `migrate`). */
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 /** True for account types whose balance represents money owed. */
 export function isLiabilityAccount(account: Pick<Account, 'type'>): boolean {
@@ -154,6 +231,8 @@ interface DBData {
   goals: Goal[];
   profiles: UserProfile[];
   scenarios: StoredScenario[];
+  importBatches: ImportBatch[];
+  importProfiles: ImportProfile[];
 }
 
 /**
@@ -185,6 +264,8 @@ export class Database {
       goals: [],
       profiles: [],
       scenarios: [],
+      importBatches: [],
+      importProfiles: [],
     };
   }
 
@@ -211,6 +292,9 @@ export class Database {
    *
    * v1 → v2: credit balances were implicitly "negative = owed" (expenses subtracted).
    *          They are now stored as a positive amount owed.
+   * v2 → v3: statement import — `importBatches` and `importProfiles` collections
+   *          (created empty by `getDefaultData`) and the optional `import` block on
+   *          transactions. Nothing to rewrite; the version is bumped.
    */
   migrate(): boolean {
     let changed = false;
@@ -305,12 +389,14 @@ export class Database {
     if (idx === -1) return false;
     this.data.accounts.splice(idx, 1);
     this.data.transactions = this.data.transactions.filter(t => t.accountId !== id);
+    this.data.importBatches = this.data.importBatches.filter(b => b.accountId !== id);
     return true;
   }
 
-  getTransactions(userId: string, filters?: { accountId?: string; category?: string; from?: string; to?: string; limit?: number }): Transaction[] {
+  getTransactions(userId: string, filters?: { accountId?: string; category?: string; from?: string; to?: string; limit?: number; batchId?: string }): Transaction[] {
     let txns = this.data.transactions.filter(t => t.userId === userId);
     if (filters?.accountId) txns = txns.filter(t => t.accountId === filters.accountId);
+    if (filters?.batchId) txns = txns.filter(t => t.import?.batchId === filters.batchId);
     if (filters?.category) txns = txns.filter(t => t.category === filters.category);
     if (filters?.from) txns = txns.filter(t => t.date >= filters.from!);
     if (filters?.to) txns = txns.filter(t => t.date <= filters.to!);
@@ -325,6 +411,29 @@ export class Database {
     const account = this.data.accounts.find(a => a.id === txn.accountId);
     if (account) applyTransactionToBalance(account, txn, 1);
     return newTxn;
+  }
+
+  getTransaction(id: string): Transaction | undefined {
+    return this.data.transactions.find(t => t.id === id);
+  }
+
+  /**
+   * Edit a transaction. The old balance effect is reversed on the old account and
+   * the new effect applied on the (possibly different) new account, so balances
+   * stay consistent whatever changed. Budget totals are the caller's concern
+   * (see `recalculateBudgetSpent`), as for create/delete.
+   */
+  updateTransaction(id: string, updates: Partial<Pick<Transaction, 'accountId' | 'type' | 'category' | 'amount' | 'description' | 'date' | 'tags'>>): Transaction | null {
+    const idx = this.data.transactions.findIndex(t => t.id === id);
+    if (idx === -1) return null;
+    const prev = this.data.transactions[idx];
+    const next: Transaction = { ...prev, ...updates, id: prev.id, userId: prev.userId };
+    const oldAccount = this.data.accounts.find(a => a.id === prev.accountId);
+    if (oldAccount) applyTransactionToBalance(oldAccount, prev, -1);
+    const newAccount = this.data.accounts.find(a => a.id === next.accountId);
+    if (newAccount) applyTransactionToBalance(newAccount, next, 1);
+    this.data.transactions[idx] = next;
+    return next;
   }
 
   deleteTransaction(id: string): boolean {
@@ -501,6 +610,51 @@ export class Database {
     const idx = this.data.scenarios.findIndex(s => s.id === id);
     if (idx === -1) return false;
     this.data.scenarios.splice(idx, 1);
+    return true;
+  }
+
+  // ── Statement import bookkeeping ──
+
+  getImportBatches(userId: string): ImportBatch[] {
+    return this.data.importBatches.filter(b => b.userId === userId);
+  }
+
+  findImportBatchByHash(userId: string, fileHash: string): ImportBatch | undefined {
+    return this.data.importBatches.find(b => b.userId === userId && b.fileHash === fileHash);
+  }
+
+  createImportBatch(batch: Omit<ImportBatch, 'id' | 'importedAt'>): ImportBatch {
+    const record: ImportBatch = { ...batch, id: crypto.randomUUID(), importedAt: nowIso() };
+    this.data.importBatches.push(record);
+    return record;
+  }
+
+  getImportProfiles(userId: string): ImportProfile[] {
+    return this.data.importProfiles.filter(p => p.userId === userId);
+  }
+
+  findImportProfile(userId: string, headerSignature: string): ImportProfile | undefined {
+    return this.data.importProfiles.find(p => p.userId === userId && p.headerSignature === headerSignature);
+  }
+
+  /** Create or replace the profile for a header signature; bumps `lastUsedAt`. */
+  upsertImportProfile(profile: Omit<ImportProfile, 'id' | 'createdAt' | 'lastUsedAt'>): ImportProfile {
+    const ts = nowIso();
+    const idx = this.data.importProfiles.findIndex(p => p.userId === profile.userId && p.headerSignature === profile.headerSignature);
+    if (idx === -1) {
+      const record: ImportProfile = { ...profile, id: crypto.randomUUID(), createdAt: ts, lastUsedAt: ts };
+      this.data.importProfiles.push(record);
+      return record;
+    }
+    const prev = this.data.importProfiles[idx];
+    this.data.importProfiles[idx] = { ...profile, id: prev.id, createdAt: prev.createdAt, lastUsedAt: ts };
+    return this.data.importProfiles[idx];
+  }
+
+  deleteImportProfile(id: string): boolean {
+    const idx = this.data.importProfiles.findIndex(p => p.id === id);
+    if (idx === -1) return false;
+    this.data.importProfiles.splice(idx, 1);
     return true;
   }
 

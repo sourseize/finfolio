@@ -25,8 +25,20 @@ Track your accounts, transactions, budgets, investments, and financial goals —
 - Income and expense tracking with categories
 - Filter by account, category, date range
 - Auto-calculates budget spending when transactions are added
-- Supported categories: Food & Dining, Transportation, Housing, Utilities, Entertainment, Shopping, Healthcare, Education, Salary, Freelance, Investment, Gift, Transfer, Other
+- Supported categories: Food & Dining, Transportation, Housing, Utilities, Entertainment, Shopping, Healthcare, Education, Salary, Freelance, Investment, Gift, Transfer, Other, Uncategorized
+- Edit any transaction in place (account, type, amount, category, date, description) — balances and budgets follow
+- **`Uncategorized`** is where imported statement rows land when no rule recognises them; re-categorise them from the list whenever you like (they count as spending until then)
 - **`Transfer`** is money moved between your own accounts (card pay-offs, savings top-ups) — never counted as income or spending. An **`Investment`** expense is money put into investments (saving, not spending); `Investment` income is dividends/interest
+
+### ⬆ Statement import
+- Import bank statements as **CSV/TSV** (any bank layout — delimiter, header, columns, date order, number format and sign convention are inferred and can be corrected), **OFX 1.x/2.x & QFX**, **QIF** and **Open Banking JSON** (UK OBIE, Berlin Group, Plaid-style)
+- **Duplicate detection** that never guesses: a row is skipped automatically only on a 100 % match (bank transaction id, or same date + amount + description); the same amount and description 1–2 days apart, or an identical row earlier in the same upload, is put in front of you for a **Keep / Skip** decision. Skipping stamps the recorded transaction (🔗) so it is recognised next time
+- **Exclusions that protect your data**: rows in another currency than the account, pending rows (unless asked), rows dated after today, unparseable rows — never written
+- **Transfer pairing**: the other leg on another account within 3 days → categorised `Transfer`, not flagged as a duplicate
+- **Static categorisation** (`config/import-categories.json`: keyword rules, merchant category codes, ISO 20022 bank codes, Quicken/Mint/YNAB/Plaid aliases); anything unknown lands in `Uncategorized` for you to fix from the list
+- **Balance reconciliation**: the statement's closing balance next to the computed one, with *keep / set to statement / enter* options
+- Remembered CSV mappings per header layout; exact-file detection ("this file was imported on …")
+- **Import page wizard**: *Upload & account* → *Mapping* (CSV only, live re-preview) → *Needs attention* (a shrinking Keep / Skip list — rows disappear as you decide, nothing else nags) → *Confirm* (counts, balance reconciliation, one Import button). Reachable from the sidebar, the Transactions page and every account card
 
 ### 📋 Budgets
 - Monthly, weekly, or yearly budget periods
@@ -191,6 +203,8 @@ npm run test:ui           # headless UI: every page rendered with fin's data in 
 npm run test:golden       # fin's dashboard, baseline and all five scenarios vs tests/golden/fin.snapshot.json
 npm run test:update-golden  # re-baseline the snapshot after an intentional change (review the diff!)
 npm run test:watch        # re-run on change
+npm run gen:statements    # write the test bank statements to samples/statements/ (see below)
+npm run test:smoke        # hotfix gate: the two import journeys through the real UI + page smoke (~10 s incl. compile)
 npm run typecheck         # tsc --noEmit for app and tests (strict for tests)
 ```
 
@@ -203,13 +217,33 @@ tests/
 │   ├── sim.ts       # builders for engine inputs with "flat" economies so results are hand-checkable
 │   ├── dom.ts       # dependency-free mini-DOM (parser, selectors, events, canvas stubs)
 │   └── browser.ts   # loads public/js/*.js into node:vm against the in-process server
-├── unit/            # clock, database, sim/* (math, economy, events, baseline, engine, Monte Carlo, metrics)
-├── api/             # auth, CRUD, simulation routes, seed
-├── ui/              # headless page smoke + interactions (modals, builder, save/compare)
+├── unit/            # clock, database, sim/*, statement generator, import parsers (round trip + edge cases), dedupe engine, categoriser
+├── api/             # auth, CRUD, simulation routes, seed, statement import (every scenario over HTTP)
+├── ui/              # headless page smoke + interactions (modals, builder, save/compare), import wizard smoke (SMOKE-1/2)
 └── golden/          # fin.snapshot.json + the test that diffs against it
 ```
 
 The headless UI harness is not a browser (no CSS or layout); it catches runtime errors and checks that API data lands in the HTML.
+
+### Test bank statements
+
+`npm run gen:statements` renders twelve import scenarios from the demo user's data into
+`samples/statements/` (git-ignored) — the same files the regression suite parses in memory:
+
+| Scenario | What it exercises |
+|---|---|
+| S1 clean · S2 same statement in other formats | exact copies of `fin`'s September checking statement: CSV (US/UK), OFX 1.x/2.x, QFX, QIF (three date styles), Open Banking JSON (UK OBIE, Berlin Group, Plaid-style); S2 adds bank-style noise (POS prefixes, masked card numbers, references, embedded dates) and carried categories/MCCs |
+| S3 overlap + catch-up | a 20 Sep – 25 Oct window overlapping S1, with six October rows `fin` never entered — the file to use to see rows *imported into the demo user* |
+| S4 near-duplicates · S5 repeats | planted rows around the 2-day rule, a verbatim repeat, two same-amount coffees |
+| S6 foreign currency · S7 pending | EUR rows on a USD statement, a GBP file, pending rows |
+| S8 messy CSV | preamble lines, BOM, CRLF, quoted newlines, `(1,234.56)`, DR/CR, German `;`/`1.234,56`, UTF-16, ambiguous DD/MM dates |
+| S9 transfer pair · S10 credit card | checking + card for the same month; a card statement alone |
+| S11 invalid | garbage, empty, truncated OFX, brokerage QIF/OFX, JSON without transactions |
+| S12 fresh account | three months for an account not in the demo data |
+
+Every file ships with its expected import outcome in `samples/statements/README.md`. The
+generator (`src/testing/statements/`) is also what the round-trip tests use: each file is
+parsed back by `src/import/` and compared field by field with the statement it was written from.
 
 ### Manual API walkthrough
 
@@ -242,6 +276,12 @@ curl -X POST http://localhost:3000/api/transactions \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer <token>' \
   -d '{"accountId":"<account-id>","type":"expense","amount":45.50,"category":"Food & Dining","description":"Lunch"}'
+
+# 3b. Edit it (any subset of accountId, type, amount, category, date, description, tags)
+curl -X PUT http://localhost:3000/api/transactions/<txn-id> \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <token>' \
+  -d '{"category":"Food & Dining","description":"Lunch with team"}'
 
 # 4. Create a budget
 curl -X POST http://localhost:3000/api/budgets \
@@ -294,6 +334,29 @@ curl -X POST http://localhost:3000/api/simulate \
 ```
 
 The response contains `baseline`, `profile`, the normalised `scenario`, `result` (`months`, `yearly`, `summary` with `fire` and `runway`), `montecarlo` (P10–P90 bands, success and FI probabilities) and `goals` feasibility.
+
+### Statement import API
+
+All routes except `/api/import/formats` require a bearer token. Files travel as base64 inside JSON (25 MB request cap).
+
+| Method | Route | Purpose |
+|---|---|---|
+| `GET` | `/api/import/formats` | Supported formats, categories, dedupe thresholds, limits (public) |
+| `POST` | `/api/import/preview` | `{ accountId, localeHint?, files: [{ name, content }], options?: { includePending?, mappings?: { [fileIndex]: { dateOrder?, numberFormat?, delimiter?, headerRow?, columns?, signConvention? } } } }` → `previewId`, per-file facts (format, detected account/currency/period/closing balance, CSV mapping, exact-file banner, currency block, parse error), `rows[]` with `status: new | recorded | possible | excluded`, the matched transaction and rule (`R1 R2 P1 P2`), category and source, transfer pairing; `summary`; `balance` |
+| `POST` | `/api/import/preview` | `{ previewId, accountId?, options? }` — re-run on the cached upload (mapping / pending toggle / other account) |
+| `POST` | `/api/import/commit` | `{ previewId, decisions: { [rowIdx]: "keep" \| "skip" }, balance?: { mode: "keep" \| "statement" \| "manual", value? }, saveProfile? }` → batch ids, counts, final balance. `409` while a *possible* row is undecided, `410` when the preview expired |
+| `GET` / `DELETE` | `/api/import/profiles[/:id]` | Remembered CSV mappings |
+
+Black-box client (same API the browser uses):
+
+```bash
+npm run import:file -- --file samples/statements/S4/everyday-checking-2026-09.ofx1.ofx --account "Everyday Checking"
+npm run import:file -- --user qa --password qa-pass --account "QA Checking" --file statement.csv --locale en-GB --commit --decide skip --balance statement
+```
+
+Categorisation and the dedupe windows are data, not code: edit `config/import-categories.json` (or point `FINFOLIO_IMPORT_CONFIG` at your own copy). The server validates it at startup and refuses to start on an unknown category or a broken pattern.
+
+The step-by-step manual validation suite is in `docs/IMPORT_TEST_SUITE.md`.
 
 ### Build Verification
 
@@ -364,6 +427,8 @@ CMD ["node", "dist/server.js"]
 | `PORT` | `3000` | HTTP server port |
 | `FINFOLIO_DATA_DIR` | `./data` | Directory holding `database.json` |
 | `FINFOLIO_NOW` | *(system clock)* | Freeze "today" (e.g. `2026-10-25`). Used by the regression suite and demo data; leave unset in normal use |
+| `FINFOLIO_MAX_BODY_MB` | `25` | Largest accepted request body (statement uploads travel as base64 inside JSON); larger requests get `413` |
+| `FINFOLIO_IMPORT_CONFIG` | `./config/import-categories.json` | Categorisation rules and dedupe windows for statement import (falls back to the compiled-in defaults when the file is missing) |
 
 ---
 
@@ -383,6 +448,12 @@ finfolio/
 │   ├── sim/                 # simulation engine (pure, deterministic)
 │   ├── seed/                # demo user "fin" generator + CLI
 │   └── util/clock.ts        # frozen-clock support (FINFOLIO_NOW)
+│   ├── import/              # statement import: parsers (CSV, OFX/QFX, QIF, Open Banking JSON), dedupe engine, categoriser, config, sessions
+│   ├── testing/             # test-statement generator (statements/), gen:statements and import:file CLIs
+│   └── routes/import.ts     # preview / commit / profiles routes
+├── config/
+│   └── import-categories.json  # categorisation rules, MCC ranges, aliases, dedupe windows (editable)
+├── docs/                    # IMPORT_WORKBOOK.md (design, work packages) · IMPORT_TEST_SUITE.md (manual validation)
 ├── public/
 │   ├── index.html           # SPA shell
 │   ├── css/
@@ -393,10 +464,12 @@ finfolio/
 │       ├── app-core.js      # App shell, auth, navigation
 │       ├── page-dashboard.js
 │       ├── pages.js         # Accounts, Transactions
+│       ├── page-import.js   # Statement import wizard
 │       ├── pages-2.js       # Budgets, Investments
 │       ├── pages-3.js       # Goals, Reports
 │       └── page-simulate.js # Simulate
 ├── tests/                   # regression suite (node:test, zero dependencies)
+├── samples/                 # Created by gen:statements — test bank statements (git-ignored)
 ├── data/                    # Created at runtime — JSON database
 ├── dist/                    # Compiled JavaScript output
 ├── Dockerfile
