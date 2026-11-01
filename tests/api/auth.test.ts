@@ -1,5 +1,7 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { launch, type TestApp, TEST_TODAY } from '../helpers/server.js';
 
 describe('API: meta & auth', () => {
@@ -25,6 +27,12 @@ describe('API: meta & auth', () => {
     const js = await app.get('/js/api.js');
     assert.equal(js.status, 200);
     assert.match(js.headers.get('content-type') || '', /javascript/);
+  });
+
+  test('regression: registering persists the user immediately (a restart before the first write must not lose it)', async () => {
+    await app.register('persisted', 'pw');
+    const raw = JSON.parse(await fs.readFile(path.join(app.dataDir, 'database.json'), 'utf-8'));
+    assert.ok(raw.users.some((u: any) => u.username === 'persisted'), 'user is on disk right after registering');
   });
 
   test('register → login round-trip', async () => {

@@ -1,0 +1,4940 @@
+{
+  "fin": {
+    "format": "finfolio-compare",
+    "version": 1,
+    "exportedAt": "2026-10-25T12:00:00.000Z",
+    "asOf": "2026-10-25",
+    "label": "Fin",
+    "currency": "USD",
+    "app": {
+      "name": "finfolio",
+      "version": "1.0.0"
+    },
+    "checksum": "sha256:01ab033eb174cf5564a39140183812774b835bbfacb2e66a5bcb3c45dcbdbb1b",
+    "data": {
+      "profile": {
+        "age": 40,
+        "retirementAge": 65,
+        "safeWithdrawalRate": 0.04,
+        "planToAge": 90
+      },
+      "position": {
+        "netWorth": 105898.58,
+        "liquid": 36430.4,
+        "invested": 70386,
+        "debt": 917.82,
+        "holdingsValue": 68236,
+        "accountsByType": {
+          "checking": {
+            "count": 1,
+            "balance": 7850.4
+          },
+          "savings": {
+            "count": 1,
+            "balance": 28400
+          },
+          "credit": {
+            "count": 1,
+            "balance": 917.82
+          },
+          "investment": {
+            "count": 1,
+            "balance": 2150
+          },
+          "cash": {
+            "count": 1,
+            "balance": 180
+          }
+        }
+      },
+      "cashflow": {
+        "lookbackMonths": 12,
+        "hasHistory": true,
+        "historyMonths": 25,
+        "windowStart": "2025-10",
+        "windowEnd": "2026-09",
+        "monthlyIncome": 7089.44,
+        "monthlyExpenses": 3950.78,
+        "monthlySaved": 3138.66,
+        "monthlyInvested": 1200,
+        "savingsRate": 0.4427,
+        "investingRate": 0.1693,
+        "expenseByCategory": {
+          "Housing": {
+            "monthly": 1981.67,
+            "share": 0.5016
+          },
+          "Food & Dining": {
+            "monthly": 734.71,
+            "share": 0.186
+          },
+          "Utilities": {
+            "monthly": 287.03,
+            "share": 0.0727
+          },
+          "Entertainment": {
+            "monthly": 271.08,
+            "share": 0.0686
+          },
+          "Transportation": {
+            "monthly": 226.97,
+            "share": 0.0574
+          },
+          "Shopping": {
+            "monthly": 184.55,
+            "share": 0.0467
+          },
+          "Other": {
+            "monthly": 128,
+            "share": 0.0324
+          },
+          "Healthcare": {
+            "monthly": 68.94,
+            "share": 0.0174
+          },
+          "Gift": {
+            "monthly": 38.75,
+            "share": 0.0098
+          },
+          "Education": {
+            "monthly": 29.08,
+            "share": 0.0074
+          }
+        },
+        "series": [
+          {
+            "month": "2024-10",
+            "income": 6175.34,
+            "spending": 3354.78,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2820.56
+          },
+          {
+            "month": "2024-11",
+            "income": 7342.73,
+            "spending": 4954.86,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2387.87
+          },
+          {
+            "month": "2024-12",
+            "income": 6162.32,
+            "spending": 3896.2,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2266.12
+          },
+          {
+            "month": "2025-01",
+            "income": 6182.22,
+            "spending": 3512.64,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2669.58
+          },
+          {
+            "month": "2025-02",
+            "income": 6886.87,
+            "spending": 3358.29,
+            "invested": 1200,
+            "saved": 900,
+            "net": 3528.58
+          },
+          {
+            "month": "2025-03",
+            "income": 6171.08,
+            "spending": 3671.09,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2499.99
+          },
+          {
+            "month": "2025-04",
+            "income": 6172.51,
+            "spending": 3374.23,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2798.28
+          },
+          {
+            "month": "2025-05",
+            "income": 7494.96,
+            "spending": 3976.27,
+            "invested": 1200,
+            "saved": 900,
+            "net": 3518.69
+          },
+          {
+            "month": "2025-06",
+            "income": 6177.55,
+            "spending": 3430.06,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2747.49
+          },
+          {
+            "month": "2025-07",
+            "income": 6466.69,
+            "spending": 3487.99,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2978.7
+          },
+          {
+            "month": "2025-08",
+            "income": 7643.23,
+            "spending": 3383.47,
+            "invested": 1200,
+            "saved": 900,
+            "net": 4259.76
+          },
+          {
+            "month": "2025-09",
+            "income": 6162.92,
+            "spending": 3835.24,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2327.68
+          },
+          {
+            "month": "2025-10",
+            "income": 6166.58,
+            "spending": 3603.05,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2563.53
+          },
+          {
+            "month": "2025-11",
+            "income": 7113.86,
+            "spending": 3490.07,
+            "invested": 1200,
+            "saved": 900,
+            "net": 3623.79
+          },
+          {
+            "month": "2025-12",
+            "income": 9365.63,
+            "spending": 4153.99,
+            "invested": 1200,
+            "saved": 3900,
+            "net": 5211.64
+          },
+          {
+            "month": "2026-01",
+            "income": 6474.94,
+            "spending": 3736.79,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2738.15
+          },
+          {
+            "month": "2026-02",
+            "income": 7654.49,
+            "spending": 3428.48,
+            "invested": 1200,
+            "saved": 900,
+            "net": 4226.01
+          },
+          {
+            "month": "2026-03",
+            "income": 6493.94,
+            "spending": 4351.1,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2142.84
+          },
+          {
+            "month": "2026-04",
+            "income": 6479.51,
+            "spending": 3881.65,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2597.86
+          },
+          {
+            "month": "2026-05",
+            "income": 7740.6,
+            "spending": 3606.14,
+            "invested": 1200,
+            "saved": 900,
+            "net": 4134.46
+          },
+          {
+            "month": "2026-06",
+            "income": 6487.58,
+            "spending": 3577.81,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2909.77
+          },
+          {
+            "month": "2026-07",
+            "income": 6769.7,
+            "spending": 6261.93,
+            "invested": 1200,
+            "saved": 900,
+            "net": 507.77
+          },
+          {
+            "month": "2026-08",
+            "income": 7856.72,
+            "spending": 3613.61,
+            "invested": 1200,
+            "saved": 900,
+            "net": 4243.11
+          },
+          {
+            "month": "2026-09",
+            "income": 6469.67,
+            "spending": 3704.69,
+            "invested": 1200,
+            "saved": 900,
+            "net": 2764.98
+          }
+        ]
+      },
+      "budgets": {
+        "month": "2026-10",
+        "items": [
+          {
+            "category": "Food & Dining",
+            "budgeted": 750,
+            "spent": 773.56
+          },
+          {
+            "category": "Transportation",
+            "budgeted": 260,
+            "spent": 127.88
+          },
+          {
+            "category": "Entertainment",
+            "budgeted": 180,
+            "spent": 62.84
+          },
+          {
+            "category": "Shopping",
+            "budgeted": 300,
+            "spent": 43.42
+          },
+          {
+            "category": "Utilities",
+            "budgeted": 260,
+            "spent": 323.62
+          },
+          {
+            "category": "Housing",
+            "budgeted": 1950,
+            "spent": 1950
+          },
+          {
+            "category": "Healthcare",
+            "budgeted": 150,
+            "spent": 160.11
+          }
+        ]
+      },
+      "investments": {
+        "count": 5,
+        "value": 68236,
+        "cost": 56045.79,
+        "gainPct": 0.2175,
+        "byType": {
+          "etf": 0.6807,
+          "crypto": 0.1484,
+          "bond": 0.0862,
+          "stock": 0.0848
+        },
+        "topHoldingShare": 0.4831,
+        "holdings": [
+          {
+            "symbol": "VTI",
+            "type": "etf",
+            "value": 32964,
+            "cost": 26768.49,
+            "weight": 0.4831
+          },
+          {
+            "symbol": "VXUS",
+            "type": "etf",
+            "value": 13482,
+            "cost": 11955.3,
+            "weight": 0.1976
+          },
+          {
+            "symbol": "BTC",
+            "type": "crypto",
+            "value": 10125,
+            "cost": 7265,
+            "weight": 0.1484
+          },
+          {
+            "symbol": "BND",
+            "type": "bond",
+            "value": 5880,
+            "cost": 5792,
+            "weight": 0.0862
+          },
+          {
+            "symbol": "AAPL",
+            "type": "stock",
+            "value": 5785,
+            "cost": 4265,
+            "weight": 0.0848
+          }
+        ]
+      },
+      "goals": [
+        {
+          "name": "Emergency fund (6 months)",
+          "category": "Emergency",
+          "priority": "high",
+          "target": 25000,
+          "current": 18500,
+          "deadline": "2027-06-30",
+          "progress": 0.74,
+          "status": "on_track",
+          "fundedBy": "2027-06"
+        },
+        {
+          "name": "Flat deposit",
+          "category": "House",
+          "priority": "medium",
+          "target": 84000,
+          "current": 22000,
+          "deadline": "2029-12-31",
+          "progress": 0.2619,
+          "status": "at_risk",
+          "fundedBy": "2031-06"
+        },
+        {
+          "name": "Japan trip",
+          "category": "Travel",
+          "priority": "low",
+          "target": 4500,
+          "current": 900,
+          "deadline": "2027-10-01",
+          "progress": 0.2,
+          "status": "unreachable",
+          "fundedBy": null
+        },
+        {
+          "name": "Retire at 65",
+          "category": "Retirement",
+          "priority": "medium",
+          "target": 1500000,
+          "current": 0,
+          "deadline": "2051-07-10",
+          "progress": 0,
+          "status": "unreachable",
+          "fundedBy": null
+        }
+      ],
+      "motivation": {
+        "enabled": true,
+        "pointsEarned": 995,
+        "pointsSpent": 700,
+        "balance": 295,
+        "rewardsClaimed": 4,
+        "habits": [
+          {
+            "kind": "save",
+            "name": "Monthly saving",
+            "cadence": "monthly",
+            "amount": 900,
+            "streak": 10,
+            "bestStreak": 10,
+            "periodsMet": 10,
+            "periodsScored": 10,
+            "hitRate": 1,
+            "pointsEarned": 425
+          },
+          {
+            "kind": "invest",
+            "name": "Monthly investing",
+            "cadence": "monthly",
+            "amount": 1200,
+            "streak": 10,
+            "bestStreak": 10,
+            "periodsMet": 10,
+            "periodsScored": 10,
+            "hitRate": 1,
+            "pointsEarned": 425
+          },
+          {
+            "kind": "swap",
+            "name": "Eating-out swap",
+            "cadence": "weekly",
+            "amount": 175,
+            "category": "Food & Dining",
+            "streak": 0,
+            "bestStreak": 7,
+            "periodsMet": 24,
+            "periodsScored": 41,
+            "hitRate": 0.5854,
+            "pointsEarned": 145
+          }
+        ],
+        "badges": [
+          {
+            "key": "first-step",
+            "name": "First step",
+            "unlockedOn": "2026-01-05"
+          },
+          {
+            "key": "century",
+            "name": "Century",
+            "unlockedOn": "2026-02-05"
+          },
+          {
+            "key": "thousand",
+            "name": "Thousand",
+            "unlockedOn": null
+          },
+          {
+            "key": "on-fire",
+            "name": "On fire",
+            "unlockedOn": "2026-03-15"
+          },
+          {
+            "key": "unstoppable",
+            "name": "Unstoppable",
+            "unlockedOn": null
+          },
+          {
+            "key": "treat",
+            "name": "Treat yourself",
+            "unlockedOn": "2026-03-07"
+          },
+          {
+            "key": "fi-5",
+            "name": "First brick",
+            "unlockedOn": "2025-11-20"
+          },
+          {
+            "key": "fi-10",
+            "name": "Seedling",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-25",
+            "name": "Sprout",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-50",
+            "name": "Halfway tree",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-75",
+            "name": "Summit in sight",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-100",
+            "name": "Free",
+            "unlockedOn": null
+          },
+          {
+            "key": "closer",
+            "name": "Closer",
+            "unlockedOn": "2026-07-25"
+          }
+        ],
+        "badgesUnlocked": 6
+      },
+      "outlook": {
+        "hasHistory": true,
+        "fire": {
+          "fiNumber": 1185234,
+          "progress": 0.0893,
+          "fiDate": "2043-05",
+          "fiAge": 56.83,
+          "coastFiMonth": 114,
+          "fiByRetirement": true,
+          "retirementAge": 65
+        },
+        "runway": {
+          "cashMonths": 9.22,
+          "totalMonths": 26.8,
+          "simulatedMonths": 28
+        },
+        "netWorthAtRetirement": 3911741.41,
+        "endNetWorth": 13871095.44,
+        "endRealNetWorth": 4069041.43,
+        "yearly": [
+          {
+            "year": 2027,
+            "age": 41.17,
+            "netWorth": 151825.36,
+            "realNetWorth": 148427.41
+          },
+          {
+            "year": 2028,
+            "age": 42.17,
+            "netWorth": 202391.14,
+            "realNetWorth": 193035.6
+          },
+          {
+            "year": 2029,
+            "age": 43.17,
+            "netWorth": 257955.67,
+            "realNetWorth": 240030.89
+          },
+          {
+            "year": 2030,
+            "age": 44.17,
+            "netWorth": 318919.19,
+            "realNetWorth": 289520.18
+          },
+          {
+            "year": 2031,
+            "age": 45.17,
+            "netWorth": 385711.58,
+            "realNetWorth": 341615.06
+          },
+          {
+            "year": 2032,
+            "age": 46.17,
+            "netWorth": 458794.56,
+            "realNetWorth": 396432.02
+          },
+          {
+            "year": 2033,
+            "age": 47.17,
+            "netWorth": 538663.97,
+            "realNetWorth": 454092.71
+          },
+          {
+            "year": 2034,
+            "age": 48.17,
+            "netWorth": 625852.17,
+            "realNetWorth": 514724.09
+          },
+          {
+            "year": 2035,
+            "age": 49.17,
+            "netWorth": 720930.7,
+            "realNetWorth": 578458.74
+          },
+          {
+            "year": 2036,
+            "age": 50.17,
+            "netWorth": 824513.06,
+            "realNetWorth": 645435.04
+          },
+          {
+            "year": 2037,
+            "age": 51.17,
+            "netWorth": 937257.72,
+            "realNetWorth": 715797.48
+          },
+          {
+            "year": 2038,
+            "age": 52.17,
+            "netWorth": 1059871.35,
+            "realNetWorth": 789696.89
+          },
+          {
+            "year": 2039,
+            "age": 53.17,
+            "netWorth": 1193112.23,
+            "realNetWorth": 867290.73
+          },
+          {
+            "year": 2040,
+            "age": 54.17,
+            "netWorth": 1337793.95,
+            "realNetWorth": 948743.4
+          },
+          {
+            "year": 2041,
+            "age": 55.17,
+            "netWorth": 1494789.35,
+            "realNetWorth": 1034226.52
+          },
+          {
+            "year": 2042,
+            "age": 56.17,
+            "netWorth": 1665034.73,
+            "realNetWorth": 1123919.24
+          },
+          {
+            "year": 2043,
+            "age": 57.17,
+            "netWorth": 1849534.41,
+            "realNetWorth": 1218008.61
+          },
+          {
+            "year": 2044,
+            "age": 58.17,
+            "netWorth": 2049365.51,
+            "realNetWorth": 1316689.89
+          },
+          {
+            "year": 2045,
+            "age": 59.17,
+            "netWorth": 2265683.19,
+            "realNetWorth": 1420166.93
+          },
+          {
+            "year": 2046,
+            "age": 60.17,
+            "netWorth": 2499726.14,
+            "realNetWorth": 1528652.53
+          },
+          {
+            "year": 2047,
+            "age": 61.17,
+            "netWorth": 2752822.55,
+            "realNetWorth": 1642368.85
+          },
+          {
+            "year": 2048,
+            "age": 62.17,
+            "netWorth": 3026396.45,
+            "realNetWorth": 1761547.81
+          },
+          {
+            "year": 2049,
+            "age": 63.17,
+            "netWorth": 3321974.52,
+            "realNetWorth": 1886431.54
+          },
+          {
+            "year": 2050,
+            "age": 64.17,
+            "netWorth": 3641193.37,
+            "realNetWorth": 2017272.79
+          },
+          {
+            "year": 2051,
+            "age": 65.17,
+            "netWorth": 3941168.71,
+            "realNetWorth": 2130208.17
+          },
+          {
+            "year": 2052,
+            "age": 66.17,
+            "netWorth": 4124737.51,
+            "realNetWorth": 2175051.13
+          },
+          {
+            "year": 2053,
+            "age": 67.17,
+            "netWorth": 4318943.61,
+            "realNetWorth": 2221911.84
+          },
+          {
+            "year": 2054,
+            "age": 68.17,
+            "netWorth": 4524381.01,
+            "realNetWorth": 2270829.85
+          },
+          {
+            "year": 2055,
+            "age": 69.17,
+            "netWorth": 4741776.8,
+            "realNetWorth": 2321895.48
+          },
+          {
+            "year": 2056,
+            "age": 70.17,
+            "netWorth": 4971907.53,
+            "realNetWorth": 2375203.02
+          },
+          {
+            "year": 2057,
+            "age": 71.17,
+            "netWorth": 5215602.56,
+            "realNetWorth": 2430850.88
+          },
+          {
+            "year": 2058,
+            "age": 72.17,
+            "netWorth": 5473747.79,
+            "realNetWorth": 2488941.83
+          },
+          {
+            "year": 2059,
+            "age": 73.17,
+            "netWorth": 5747289.51,
+            "realNetWorth": 2549583.1
+          },
+          {
+            "year": 2060,
+            "age": 74.17,
+            "netWorth": 6037238.64,
+            "realNetWorth": 2612886.68
+          },
+          {
+            "year": 2061,
+            "age": 75.17,
+            "netWorth": 6344675.17,
+            "realNetWorth": 2678969.44
+          },
+          {
+            "year": 2062,
+            "age": 76.17,
+            "netWorth": 6670753.01,
+            "realNetWorth": 2747953.39
+          },
+          {
+            "year": 2063,
+            "age": 77.17,
+            "netWorth": 7016705.06,
+            "realNetWorth": 2819965.91
+          },
+          {
+            "year": 2064,
+            "age": 78.17,
+            "netWorth": 7383848.74,
+            "realNetWorth": 2895139.95
+          },
+          {
+            "year": 2065,
+            "age": 79.17,
+            "netWorth": 7773591.83,
+            "realNetWorth": 2973614.31
+          },
+          {
+            "year": 2066,
+            "age": 80.17,
+            "netWorth": 8187438.78,
+            "realNetWorth": 3055533.89
+          },
+          {
+            "year": 2067,
+            "age": 81.17,
+            "netWorth": 8626997.41,
+            "realNetWorth": 3141049.95
+          },
+          {
+            "year": 2068,
+            "age": 82.17,
+            "netWorth": 9093986.09,
+            "realNetWorth": 3230320.36
+          },
+          {
+            "year": 2069,
+            "age": 83.17,
+            "netWorth": 9590241.45,
+            "realNetWorth": 3323509.96
+          },
+          {
+            "year": 2070,
+            "age": 84.17,
+            "netWorth": 10117726.59,
+            "realNetWorth": 3420790.82
+          },
+          {
+            "year": 2071,
+            "age": 85.17,
+            "netWorth": 10678539.9,
+            "realNetWorth": 3522342.54
+          },
+          {
+            "year": 2072,
+            "age": 86.17,
+            "netWorth": 11274924.45,
+            "realNetWorth": 3628352.62
+          },
+          {
+            "year": 2073,
+            "age": 87.17,
+            "netWorth": 11909278.08,
+            "realNetWorth": 3739016.81
+          },
+          {
+            "year": 2074,
+            "age": 88.17,
+            "netWorth": 12584164.2,
+            "realNetWorth": 3854539.43
+          },
+          {
+            "year": 2075,
+            "age": 89.17,
+            "netWorth": 13302323.26,
+            "realNetWorth": 3975133.78
+          },
+          {
+            "year": 2076,
+            "age": 89.92,
+            "netWorth": 13871095.44,
+            "realNetWorth": 4069041.43
+          }
+        ],
+        "montecarlo": {
+          "trials": 300,
+          "seed": 42,
+          "successProbability": 0.89,
+          "fiByRetirementProbability": 0.9167,
+          "endNetWorth": {
+            "p10": -101513.12,
+            "p50": 7335794.3,
+            "p90": 36016393.6
+          }
+        }
+      }
+    }
+  },
+  "penny": {
+    "format": "finfolio-compare",
+    "version": 1,
+    "exportedAt": "2026-10-25T12:00:00.000Z",
+    "asOf": "2026-10-25",
+    "label": "Penny",
+    "currency": "USD",
+    "app": {
+      "name": "finfolio",
+      "version": "1.0.0"
+    },
+    "checksum": "sha256:40b553f9a8e0cd1cfc3eac5a205b149ae4b0c68b7401185f4bb33c47f2d44f6e",
+    "data": {
+      "profile": {
+        "age": 33,
+        "retirementAge": 60,
+        "safeWithdrawalRate": 0.035,
+        "planToAge": 90
+      },
+      "position": {
+        "netWorth": 26645.15,
+        "liquid": 10855.75,
+        "invested": 27950,
+        "debt": 12160.6,
+        "holdingsValue": 27640,
+        "accountsByType": {
+          "checking": {
+            "count": 1,
+            "balance": 2610.75
+          },
+          "savings": {
+            "count": 1,
+            "balance": 8200
+          },
+          "credit": {
+            "count": 2,
+            "balance": 12160.6
+          },
+          "investment": {
+            "count": 1,
+            "balance": 310
+          },
+          "cash": {
+            "count": 1,
+            "balance": 45
+          }
+        }
+      },
+      "cashflow": {
+        "lookbackMonths": 12,
+        "hasHistory": true,
+        "historyMonths": 19,
+        "windowStart": "2025-10",
+        "windowEnd": "2026-09",
+        "monthlyIncome": 4904.2,
+        "monthlyExpenses": 3075.6,
+        "monthlySaved": 1828.6,
+        "monthlyInvested": 350,
+        "savingsRate": 0.3729,
+        "investingRate": 0.0714,
+        "expenseByCategory": {
+          "Housing": {
+            "monthly": 1482.5,
+            "share": 0.482
+          },
+          "Food & Dining": {
+            "monthly": 564.91,
+            "share": 0.1837
+          },
+          "Utilities": {
+            "monthly": 171.43,
+            "share": 0.0557
+          },
+          "Gift": {
+            "monthly": 168.33,
+            "share": 0.0547
+          },
+          "Transportation": {
+            "monthly": 156.06,
+            "share": 0.0507
+          },
+          "Healthcare": {
+            "monthly": 153.56,
+            "share": 0.0499
+          },
+          "Entertainment": {
+            "monthly": 150.27,
+            "share": 0.0489
+          },
+          "Shopping": {
+            "monthly": 123.81,
+            "share": 0.0403
+          },
+          "Other": {
+            "monthly": 81,
+            "share": 0.0263
+          },
+          "Education": {
+            "monthly": 23.74,
+            "share": 0.0077
+          }
+        },
+        "series": [
+          {
+            "month": "2025-04",
+            "income": 4676.24,
+            "spending": 3047.71,
+            "invested": 350,
+            "saved": 600,
+            "net": 1628.53
+          },
+          {
+            "month": "2025-05",
+            "income": 5053.61,
+            "spending": 3841.51,
+            "invested": 350,
+            "saved": 600,
+            "net": 1212.1
+          },
+          {
+            "month": "2025-06",
+            "income": 4668.67,
+            "spending": 2993.46,
+            "invested": 350,
+            "saved": 750,
+            "net": 1675.21
+          },
+          {
+            "month": "2025-07",
+            "income": 4865.84,
+            "spending": 2892.63,
+            "invested": 350,
+            "saved": 600,
+            "net": 1973.21
+          },
+          {
+            "month": "2025-08",
+            "income": 4667.35,
+            "spending": 3280.11,
+            "invested": 350,
+            "saved": 600,
+            "net": 1387.24
+          },
+          {
+            "month": "2025-09",
+            "income": 4911.12,
+            "spending": 2927.4,
+            "invested": 350,
+            "saved": 750,
+            "net": 1983.72
+          },
+          {
+            "month": "2025-10",
+            "income": 4674.92,
+            "spending": 2955.91,
+            "invested": 350,
+            "saved": 600,
+            "net": 1719.01
+          },
+          {
+            "month": "2025-11",
+            "income": 4903.47,
+            "spending": 3111.42,
+            "invested": 350,
+            "saved": 600,
+            "net": 1792.05
+          },
+          {
+            "month": "2025-12",
+            "income": 4671.06,
+            "spending": 3195.9,
+            "invested": 350,
+            "saved": 750,
+            "net": 1475.16
+          },
+          {
+            "month": "2026-01",
+            "income": 5056.07,
+            "spending": 3155.42,
+            "invested": 350,
+            "saved": 600,
+            "net": 1900.65
+          },
+          {
+            "month": "2026-02",
+            "income": 4666.06,
+            "spending": 3195.34,
+            "invested": 350,
+            "saved": 600,
+            "net": 1470.72
+          },
+          {
+            "month": "2026-03",
+            "income": 5123.19,
+            "spending": 3003.75,
+            "invested": 350,
+            "saved": 750,
+            "net": 2119.44
+          },
+          {
+            "month": "2026-04",
+            "income": 4679.24,
+            "spending": 3037.65,
+            "invested": 350,
+            "saved": 300,
+            "net": 1641.59
+          },
+          {
+            "month": "2026-05",
+            "income": 5088.83,
+            "spending": 2952.47,
+            "invested": 350,
+            "saved": 600,
+            "net": 2136.36
+          },
+          {
+            "month": "2026-06",
+            "income": 4677.44,
+            "spending": 3595.3,
+            "invested": 350,
+            "saved": 750,
+            "net": 1082.14
+          },
+          {
+            "month": "2026-07",
+            "income": 5114.81,
+            "spending": 2820.53,
+            "invested": 350,
+            "saved": 600,
+            "net": 2294.28
+          },
+          {
+            "month": "2026-08",
+            "income": 4919.02,
+            "spending": 2954.88,
+            "invested": 350,
+            "saved": 750,
+            "net": 1964.14
+          },
+          {
+            "month": "2026-09",
+            "income": 5276.3,
+            "spending": 2928.63,
+            "invested": 350,
+            "saved": 600,
+            "net": 2347.67
+          }
+        ]
+      },
+      "budgets": {
+        "month": "2026-10",
+        "items": [
+          {
+            "category": "Food & Dining",
+            "budgeted": 520,
+            "spent": 557.57
+          },
+          {
+            "category": "Transportation",
+            "budgeted": 160,
+            "spent": 152.12
+          },
+          {
+            "category": "Entertainment",
+            "budgeted": 140,
+            "spent": 127.8
+          },
+          {
+            "category": "Shopping",
+            "budgeted": 120,
+            "spent": 150.86
+          },
+          {
+            "category": "Utilities",
+            "budgeted": 180,
+            "spent": 165.18
+          },
+          {
+            "category": "Housing",
+            "budgeted": 1470,
+            "spent": 1470
+          }
+        ]
+      },
+      "investments": {
+        "count": 3,
+        "value": 27640,
+        "cost": 23295.38,
+        "gainPct": 0.1865,
+        "byType": {
+          "etf": 0.8936,
+          "bond": 0.1064
+        },
+        "topHoldingShare": 0.5928,
+        "holdings": [
+          {
+            "symbol": "VT",
+            "type": "etf",
+            "value": 16384,
+            "cost": 13201.92,
+            "weight": 0.5928
+          },
+          {
+            "symbol": "SCHD",
+            "type": "etf",
+            "value": 8316,
+            "cost": 7181.46,
+            "weight": 0.3009
+          },
+          {
+            "symbol": "BND",
+            "type": "bond",
+            "value": 2940,
+            "cost": 2912,
+            "weight": 0.1064
+          }
+        ]
+      },
+      "goals": [
+        {
+          "name": "Student loan gone",
+          "category": "Debt",
+          "priority": "high",
+          "target": 12000,
+          "current": 2220,
+          "deadline": "2029-12-31",
+          "progress": 0.185,
+          "status": "on_track",
+          "fundedBy": "2029-12"
+        },
+        {
+          "name": "Emergency fund (3 months)",
+          "category": "Emergency",
+          "priority": "high",
+          "target": 8500,
+          "current": 8200,
+          "deadline": "2026-12-31",
+          "progress": 0.9647,
+          "status": "on_track",
+          "fundedBy": "2026-12"
+        },
+        {
+          "name": "Deposit for my own place",
+          "category": "House",
+          "priority": "medium",
+          "target": 30000,
+          "current": 4000,
+          "deadline": "2030-06-30",
+          "progress": 0.1333,
+          "status": "on_track",
+          "fundedBy": "2030-06"
+        },
+        {
+          "name": "Cycling trip — Norway",
+          "category": "Travel",
+          "priority": "low",
+          "target": 1800,
+          "current": 600,
+          "deadline": "2027-07-01",
+          "progress": 0.3333,
+          "status": "on_track",
+          "fundedBy": "2027-07"
+        }
+      ],
+      "motivation": {
+        "enabled": true,
+        "pointsEarned": 780,
+        "pointsSpent": 450,
+        "balance": 330,
+        "rewardsClaimed": 3,
+        "habits": [
+          {
+            "kind": "save",
+            "name": "Weekly saving",
+            "cadence": "weekly",
+            "amount": 150,
+            "streak": 26,
+            "bestStreak": 26,
+            "periodsMet": 32,
+            "periodsScored": 34,
+            "hitRate": 0.9412,
+            "pointsEarned": 580
+          },
+          {
+            "kind": "swap",
+            "name": "Shopping swap",
+            "cadence": "weekly",
+            "amount": 60,
+            "category": "Shopping",
+            "streak": 8,
+            "bestStreak": 8,
+            "periodsMet": 28,
+            "periodsScored": 33,
+            "hitRate": 0.8485,
+            "pointsEarned": 200
+          }
+        ],
+        "badges": [
+          {
+            "key": "first-step",
+            "name": "First step",
+            "unlockedOn": "2026-03-02"
+          },
+          {
+            "key": "century",
+            "name": "Century",
+            "unlockedOn": "2026-04-06"
+          },
+          {
+            "key": "thousand",
+            "name": "Thousand",
+            "unlockedOn": null
+          },
+          {
+            "key": "on-fire",
+            "name": "On fire",
+            "unlockedOn": "2026-03-23"
+          },
+          {
+            "key": "unstoppable",
+            "name": "Unstoppable",
+            "unlockedOn": "2026-07-13"
+          },
+          {
+            "key": "treat",
+            "name": "Treat yourself",
+            "unlockedOn": "2026-06-13"
+          },
+          {
+            "key": "fi-5",
+            "name": "First brick",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-10",
+            "name": "Seedling",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-25",
+            "name": "Sprout",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-50",
+            "name": "Halfway tree",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-75",
+            "name": "Summit in sight",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-100",
+            "name": "Free",
+            "unlockedOn": null
+          },
+          {
+            "key": "closer",
+            "name": "Closer",
+            "unlockedOn": null
+          }
+        ],
+        "badgesUnlocked": 5
+      },
+      "outlook": {
+        "hasHistory": true,
+        "fire": {
+          "fiNumber": 1054491.43,
+          "progress": 0.0253,
+          "fiDate": "2050-04",
+          "fiAge": 57.08,
+          "coastFiMonth": 232,
+          "fiByRetirement": true,
+          "retirementAge": 60
+        },
+        "runway": {
+          "cashMonths": 3.53,
+          "totalMonths": 8.66,
+          "simulatedMonths": 10
+        },
+        "netWorthAtRetirement": 2461012.14,
+        "endNetWorth": 9560561.49,
+        "endRealNetWorth": 2378878.8,
+        "yearly": [
+          {
+            "year": 2027,
+            "age": 34.5,
+            "netWorth": 51072.9,
+            "realNetWorth": 49929.85
+          },
+          {
+            "year": 2028,
+            "age": 35.5,
+            "netWorth": 77749.35,
+            "realNetWorth": 74155.38
+          },
+          {
+            "year": 2029,
+            "age": 36.5,
+            "netWorth": 107188.58,
+            "realNetWorth": 99740.28
+          },
+          {
+            "year": 2030,
+            "age": 37.5,
+            "netWorth": 139616.73,
+            "realNetWorth": 126746.41
+          },
+          {
+            "year": 2031,
+            "age": 38.5,
+            "netWorth": 175276.09,
+            "realNetWorth": 155237.63
+          },
+          {
+            "year": 2032,
+            "age": 39.5,
+            "netWorth": 214427.02,
+            "realNetWorth": 185280.61
+          },
+          {
+            "year": 2033,
+            "age": 40.5,
+            "netWorth": 257349.24,
+            "realNetWorth": 216944.92
+          },
+          {
+            "year": 2034,
+            "age": 41.5,
+            "netWorth": 304343.3,
+            "realNetWorth": 250303.24
+          },
+          {
+            "year": 2035,
+            "age": 42.5,
+            "netWorth": 355731.97,
+            "realNetWorth": 285431.41
+          },
+          {
+            "year": 2036,
+            "age": 43.5,
+            "netWorth": 411861.92,
+            "realNetWorth": 322408.62
+          },
+          {
+            "year": 2037,
+            "age": 44.5,
+            "netWorth": 473105.42,
+            "realNetWorth": 361317.55
+          },
+          {
+            "year": 2038,
+            "age": 45.5,
+            "netWorth": 539862.11,
+            "realNetWorth": 402244.51
+          },
+          {
+            "year": 2039,
+            "age": 46.5,
+            "netWorth": 612561.07,
+            "realNetWorth": 445279.6
+          },
+          {
+            "year": 2040,
+            "age": 47.5,
+            "netWorth": 691662.82,
+            "realNetWorth": 490516.9
+          },
+          {
+            "year": 2041,
+            "age": 48.5,
+            "netWorth": 777661.65,
+            "realNetWorth": 538054.61
+          },
+          {
+            "year": 2042,
+            "age": 49.5,
+            "netWorth": 871087.98,
+            "realNetWorth": 587995.26
+          },
+          {
+            "year": 2043,
+            "age": 50.5,
+            "netWorth": 972510.96,
+            "realNetWorth": 640445.9
+          },
+          {
+            "year": 2044,
+            "age": 51.5,
+            "netWorth": 1082541.25,
+            "realNetWorth": 695518.26
+          },
+          {
+            "year": 2045,
+            "age": 52.5,
+            "netWorth": 1201833.95,
+            "realNetWorth": 753328.99
+          },
+          {
+            "year": 2046,
+            "age": 53.5,
+            "netWorth": 1331091.76,
+            "realNetWorth": 813999.88
+          },
+          {
+            "year": 2047,
+            "age": 54.5,
+            "netWorth": 1471068.43,
+            "realNetWorth": 877658.08
+          },
+          {
+            "year": 2048,
+            "age": 55.5,
+            "netWorth": 1622572.31,
+            "realNetWorth": 944436.31
+          },
+          {
+            "year": 2049,
+            "age": 56.5,
+            "netWorth": 1786470.3,
+            "realNetWorth": 1014473.14
+          },
+          {
+            "year": 2050,
+            "age": 57.5,
+            "netWorth": 1963691.97,
+            "realNetWorth": 1087913.21
+          },
+          {
+            "year": 2051,
+            "age": 58.5,
+            "netWorth": 2155234.04,
+            "realNetWorth": 1164907.55
+          },
+          {
+            "year": 2052,
+            "age": 59.5,
+            "netWorth": 2362165.13,
+            "realNetWorth": 1245613.8
+          },
+          {
+            "year": 2053,
+            "age": 60.5,
+            "netWorth": 2509050.77,
+            "realNetWorth": 1290799.35
+          },
+          {
+            "year": 2054,
+            "age": 61.5,
+            "netWorth": 2609258.52,
+            "realNetWorth": 1309611.66
+          },
+          {
+            "year": 2055,
+            "age": 62.5,
+            "netWorth": 2714595.16,
+            "realNetWorth": 1329249.88
+          },
+          {
+            "year": 2056,
+            "age": 63.5,
+            "netWorth": 2825372.59,
+            "realNetWorth": 1349750.26
+          },
+          {
+            "year": 2057,
+            "age": 64.5,
+            "netWorth": 2941923.33,
+            "realNetWorth": 1371150.66
+          },
+          {
+            "year": 2058,
+            "age": 65.5,
+            "netWorth": 3064601.98,
+            "realNetWorth": 1393490.59
+          },
+          {
+            "year": 2059,
+            "age": 66.5,
+            "netWorth": 3193786.75,
+            "realNetWorth": 1416811.3
+          },
+          {
+            "year": 2060,
+            "age": 67.5,
+            "netWorth": 3329881.01,
+            "realNetWorth": 1441155.84
+          },
+          {
+            "year": 2061,
+            "age": 68.5,
+            "netWorth": 3473315.1,
+            "realNetWorth": 1466569.17
+          },
+          {
+            "year": 2062,
+            "age": 69.5,
+            "netWorth": 3624548.14,
+            "realNetWorth": 1493098.2
+          },
+          {
+            "year": 2063,
+            "age": 70.5,
+            "netWorth": 3784070.01,
+            "realNetWorth": 1520791.93
+          },
+          {
+            "year": 2064,
+            "age": 71.5,
+            "netWorth": 3952403.51,
+            "realNetWorth": 1549701.47
+          },
+          {
+            "year": 2065,
+            "age": 72.5,
+            "netWorth": 4130106.56,
+            "realNetWorth": 1579880.22
+          },
+          {
+            "year": 2066,
+            "age": 73.5,
+            "netWorth": 4317774.69,
+            "realNetWorth": 1611383.89
+          },
+          {
+            "year": 2067,
+            "age": 74.5,
+            "netWorth": 4516043.62,
+            "realNetWorth": 1644270.64
+          },
+          {
+            "year": 2068,
+            "age": 75.5,
+            "netWorth": 4725591.98,
+            "realNetWorth": 1678601.2
+          },
+          {
+            "year": 2069,
+            "age": 76.5,
+            "netWorth": 4947144.37,
+            "realNetWorth": 1714438.96
+          },
+          {
+            "year": 2070,
+            "age": 77.5,
+            "netWorth": 5181474.44,
+            "realNetWorth": 1751850.08
+          },
+          {
+            "year": 2071,
+            "age": 78.5,
+            "netWorth": 5429408.37,
+            "realNetWorth": 1790903.65
+          },
+          {
+            "year": 2072,
+            "age": 79.5,
+            "netWorth": 5691828.44,
+            "realNetWorth": 1831671.76
+          },
+          {
+            "year": 2073,
+            "age": 80.5,
+            "netWorth": 5969676.95,
+            "realNetWorth": 1874229.68
+          },
+          {
+            "year": 2074,
+            "age": 81.5,
+            "netWorth": 6263960.38,
+            "realNetWorth": 1918656.01
+          },
+          {
+            "year": 2075,
+            "age": 82.5,
+            "netWorth": 6575753.79,
+            "realNetWorth": 1965032.76
+          },
+          {
+            "year": 2076,
+            "age": 83.5,
+            "netWorth": 6906205.64,
+            "realNetWorth": 2013445.56
+          },
+          {
+            "year": 2077,
+            "age": 84.5,
+            "netWorth": 7256542.86,
+            "realNetWorth": 2063983.8
+          },
+          {
+            "year": 2078,
+            "age": 85.5,
+            "netWorth": 7628076.25,
+            "realNetWorth": 2116740.8
+          },
+          {
+            "year": 2079,
+            "age": 86.5,
+            "netWorth": 8022206.36,
+            "realNetWorth": 2171813.95
+          },
+          {
+            "year": 2080,
+            "age": 87.5,
+            "netWorth": 8440429.7,
+            "realNetWorth": 2229304.95
+          },
+          {
+            "year": 2081,
+            "age": 88.5,
+            "netWorth": 8884345.39,
+            "realNetWorth": 2289319.95
+          },
+          {
+            "year": 2082,
+            "age": 89.5,
+            "netWorth": 9355662.32,
+            "realNetWorth": 2351969.75
+          },
+          {
+            "year": 2083,
+            "age": 89.92,
+            "netWorth": 9560561.49,
+            "realNetWorth": 2378878.8
+          }
+        ],
+        "montecarlo": {
+          "trials": 300,
+          "seed": 42,
+          "successProbability": 0.76,
+          "fiByRetirementProbability": 0.6833,
+          "endNetWorth": {
+            "p10": -1435030.87,
+            "p50": 4149715.42,
+            "p90": 25972586.3
+          }
+        }
+      }
+    }
+  },
+  "anonymousA": {
+    "format": "finfolio-compare",
+    "version": 1,
+    "exportedAt": "2026-10-25T09:00:00.000Z",
+    "asOf": "2026-10-25",
+    "label": "Anonymous A",
+    "currency": "USD",
+    "app": {
+      "name": "finfolio",
+      "version": "1.0.0"
+    },
+    "checksum": "sha256:223f26a8c276c3d86803a7c1106e4901b9f51b3a73ceb5b79e0ca89089ba6090",
+    "data": {
+      "profile": {
+        "age": 47,
+        "retirementAge": 62,
+        "safeWithdrawalRate": 0.04,
+        "planToAge": 92
+      },
+      "position": {
+        "netWorth": 175026,
+        "liquid": 21200,
+        "invested": 168326,
+        "debt": 14500,
+        "holdingsValue": 166426,
+        "accountsByType": {
+          "checking": {
+            "count": 1,
+            "balance": 6200
+          },
+          "savings": {
+            "count": 1,
+            "balance": 15000
+          },
+          "investment": {
+            "count": 1,
+            "balance": 1900
+          },
+          "credit": {
+            "count": 2,
+            "balance": 14500
+          }
+        }
+      },
+      "cashflow": {
+        "lookbackMonths": 12,
+        "hasHistory": true,
+        "historyMonths": 25,
+        "windowStart": "2025-10",
+        "windowEnd": "2026-09",
+        "monthlyIncome": 11944.6,
+        "monthlyExpenses": 8529.96,
+        "monthlySaved": 3414.64,
+        "monthlyInvested": 1500,
+        "savingsRate": 0.2859,
+        "investingRate": 0.1256,
+        "expenseByCategory": {
+          "Housing": {
+            "monthly": 3600,
+            "share": 0.422
+          },
+          "Food & Dining": {
+            "monthly": 1192.38,
+            "share": 0.1398
+          },
+          "Entertainment": {
+            "monthly": 1044.74,
+            "share": 0.1225
+          },
+          "Shopping": {
+            "monthly": 941.4,
+            "share": 0.1104
+          },
+          "Utilities": {
+            "monthly": 471.25,
+            "share": 0.0552
+          },
+          "Other": {
+            "monthly": 405,
+            "share": 0.0475
+          },
+          "Transportation": {
+            "monthly": 325.09,
+            "share": 0.0381
+          },
+          "Healthcare": {
+            "monthly": 250.09,
+            "share": 0.0293
+          },
+          "Education": {
+            "monthly": 150,
+            "share": 0.0176
+          },
+          "Gift": {
+            "monthly": 150,
+            "share": 0.0176
+          }
+        },
+        "series": [
+          {
+            "month": "2024-10",
+            "income": 11229.76,
+            "spending": 8099.56,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3130.2
+          },
+          {
+            "month": "2024-11",
+            "income": 11238.95,
+            "spending": 7793.02,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3445.93
+          },
+          {
+            "month": "2024-12",
+            "income": 11237.83,
+            "spending": 7550.63,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3687.2
+          },
+          {
+            "month": "2025-01",
+            "income": 11238.75,
+            "spending": 8000.14,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3238.61
+          },
+          {
+            "month": "2025-02",
+            "income": 11235.88,
+            "spending": 7550.04,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3685.84
+          },
+          {
+            "month": "2025-03",
+            "income": 19240.54,
+            "spending": 7833.32,
+            "invested": 1500,
+            "saved": 800,
+            "net": 11407.22
+          },
+          {
+            "month": "2025-04",
+            "income": 11236.81,
+            "spending": 7224.43,
+            "invested": 1500,
+            "saved": 800,
+            "net": 4012.38
+          },
+          {
+            "month": "2025-05",
+            "income": 11234.51,
+            "spending": 7576.88,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3657.63
+          },
+          {
+            "month": "2025-06",
+            "income": 11228.02,
+            "spending": 7281.82,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3946.2
+          },
+          {
+            "month": "2025-07",
+            "income": 11229.41,
+            "spending": 7921.56,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3307.85
+          },
+          {
+            "month": "2025-08",
+            "income": 11244.77,
+            "spending": 7618.14,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3626.63
+          },
+          {
+            "month": "2025-09",
+            "income": 11239.56,
+            "spending": 7828.21,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3411.35
+          },
+          {
+            "month": "2025-10",
+            "income": 11242.78,
+            "spending": 7703.16,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3539.62
+          },
+          {
+            "month": "2025-11",
+            "income": 11229.36,
+            "spending": 10654.58,
+            "invested": 1500,
+            "saved": 800,
+            "net": 574.78
+          },
+          {
+            "month": "2025-12",
+            "income": 11244.72,
+            "spending": 7536.83,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3707.89
+          },
+          {
+            "month": "2026-01",
+            "income": 11229.24,
+            "spending": 7572.96,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3656.28
+          },
+          {
+            "month": "2026-02",
+            "income": 11233.52,
+            "spending": 8885.81,
+            "invested": 1500,
+            "saved": 800,
+            "net": 2347.71
+          },
+          {
+            "month": "2026-03",
+            "income": 19741.35,
+            "spending": 7781.12,
+            "invested": 1500,
+            "saved": 800,
+            "net": 11960.23
+          },
+          {
+            "month": "2026-04",
+            "income": 11240.58,
+            "spending": 7731.05,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3509.53
+          },
+          {
+            "month": "2026-05",
+            "income": 11231.31,
+            "spending": 7675.24,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3556.07
+          },
+          {
+            "month": "2026-06",
+            "income": 11231.84,
+            "spending": 7569.98,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3661.86
+          },
+          {
+            "month": "2026-07",
+            "income": 11238.02,
+            "spending": 7585.35,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3652.67
+          },
+          {
+            "month": "2026-08",
+            "income": 11232.99,
+            "spending": 13935.66,
+            "invested": 1500,
+            "saved": 800,
+            "net": -2702.67
+          },
+          {
+            "month": "2026-09",
+            "income": 11239.46,
+            "spending": 7727.82,
+            "invested": 1500,
+            "saved": 800,
+            "net": 3511.64
+          }
+        ]
+      },
+      "budgets": {
+        "month": "2026-10",
+        "items": [
+          {
+            "category": "Food & Dining",
+            "budgeted": 1000,
+            "spent": 1010.12
+          },
+          {
+            "category": "Entertainment",
+            "budgeted": 600,
+            "spent": 683.5
+          },
+          {
+            "category": "Shopping",
+            "budgeted": 800,
+            "spent": 751.64
+          },
+          {
+            "category": "Transportation",
+            "budgeted": 700,
+            "spent": 269.83
+          },
+          {
+            "category": "Utilities",
+            "budgeted": 450,
+            "spent": 452.29
+          }
+        ]
+      },
+      "investments": {
+        "count": 6,
+        "value": 166426,
+        "cost": 131408.4,
+        "gainPct": 0.2665,
+        "byType": {
+          "etf": 0.6706,
+          "stock": 0.1852,
+          "bond": 0.0883,
+          "crypto": 0.0559
+        },
+        "topHoldingShare": 0.4687,
+        "holdings": [
+          {
+            "symbol": "VOO",
+            "type": "etf",
+            "value": 78000,
+            "cost": 62826,
+            "weight": 0.4687
+          },
+          {
+            "symbol": "QQQ",
+            "type": "etf",
+            "value": 33600,
+            "cost": 25782.4,
+            "weight": 0.2019
+          },
+          {
+            "symbol": "AAPL",
+            "type": "stock",
+            "value": 20826,
+            "cost": 12600,
+            "weight": 0.1251
+          },
+          {
+            "symbol": "BND",
+            "type": "bond",
+            "value": 14700,
+            "cost": 14600,
+            "weight": 0.0883
+          },
+          {
+            "symbol": "TSLA",
+            "type": "stock",
+            "value": 10000,
+            "cost": 8400,
+            "weight": 0.0601
+          },
+          {
+            "symbol": "ETH",
+            "type": "crypto",
+            "value": 9300,
+            "cost": 7200,
+            "weight": 0.0559
+          }
+        ]
+      },
+      "goals": [
+        {
+          "name": "Kids' college fund",
+          "category": "Education",
+          "priority": "high",
+          "target": 120000,
+          "current": 38000,
+          "deadline": "2034-09-01",
+          "progress": 0.3167,
+          "status": "on_track",
+          "fundedBy": "2034-09"
+        },
+        {
+          "name": "Pay off the car",
+          "category": "Debt",
+          "priority": "medium",
+          "target": 22000,
+          "current": 7500,
+          "deadline": "2028-06-30",
+          "progress": 0.3409,
+          "status": "unreachable",
+          "fundedBy": null
+        },
+        {
+          "name": "Kitchen renovation",
+          "category": "House",
+          "priority": "medium",
+          "target": 35000,
+          "current": 12000,
+          "deadline": "2027-09-30",
+          "progress": 0.3429,
+          "status": "at_risk",
+          "fundedBy": "2028-06"
+        },
+        {
+          "name": "Retire at 62",
+          "category": "Retirement",
+          "priority": "low",
+          "target": 2500000,
+          "current": 0,
+          "deadline": "2041-05-14",
+          "progress": 0,
+          "status": "unreachable",
+          "fundedBy": null
+        }
+      ],
+      "motivation": {
+        "enabled": true,
+        "pointsEarned": 585,
+        "pointsSpent": 350,
+        "balance": 235,
+        "rewardsClaimed": 2,
+        "habits": [
+          {
+            "kind": "invest",
+            "name": "Monthly investing",
+            "cadence": "monthly",
+            "amount": 1500,
+            "streak": 12,
+            "bestStreak": 12,
+            "periodsMet": 12,
+            "periodsScored": 12,
+            "hitRate": 1,
+            "pointsEarned": 525
+          },
+          {
+            "kind": "swap",
+            "name": "Entertainment cap",
+            "cadence": "monthly",
+            "amount": 500,
+            "category": "Entertainment",
+            "streak": 0,
+            "bestStreak": 1,
+            "periodsMet": 4,
+            "periodsScored": 11,
+            "hitRate": 0.3636,
+            "pointsEarned": 60
+          }
+        ],
+        "badges": [
+          {
+            "key": "first-step",
+            "name": "First step",
+            "unlockedOn": "2025-11-05"
+          },
+          {
+            "key": "century",
+            "name": "Century",
+            "unlockedOn": "2026-01-31"
+          },
+          {
+            "key": "thousand",
+            "name": "Thousand",
+            "unlockedOn": null
+          },
+          {
+            "key": "on-fire",
+            "name": "On fire",
+            "unlockedOn": "2026-02-05"
+          },
+          {
+            "key": "unstoppable",
+            "name": "Unstoppable",
+            "unlockedOn": "2026-10-05"
+          },
+          {
+            "key": "treat",
+            "name": "Treat yourself",
+            "unlockedOn": "2026-06-20"
+          },
+          {
+            "key": "fi-5",
+            "name": "First brick",
+            "unlockedOn": "2026-02-25"
+          },
+          {
+            "key": "fi-10",
+            "name": "Seedling",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-25",
+            "name": "Sprout",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-50",
+            "name": "Halfway tree",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-75",
+            "name": "Summit in sight",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-100",
+            "name": "Free",
+            "unlockedOn": null
+          },
+          {
+            "key": "closer",
+            "name": "Closer",
+            "unlockedOn": null
+          }
+        ],
+        "badgesUnlocked": 6
+      },
+      "outlook": {
+        "hasHistory": true,
+        "fire": {
+          "fiNumber": 2558988,
+          "progress": 0.0684,
+          "fiDate": null,
+          "fiAge": null,
+          "coastFiMonth": null,
+          "fiByRetirement": false,
+          "retirementAge": 62
+        },
+        "runway": {
+          "cashMonths": 2.49,
+          "totalMonths": 20.52,
+          "simulatedMonths": 21
+        },
+        "netWorthAtRetirement": 1727995.62,
+        "endNetWorth": -3552021,
+        "endRealNetWorth": -1183759.6,
+        "yearly": [
+          {
+            "year": 2027,
+            "age": 48.33,
+            "netWorth": 229418.39,
+            "realNetWorth": 224283.86
+          },
+          {
+            "year": 2028,
+            "age": 49.33,
+            "netWorth": 288424.88,
+            "realNetWorth": 275092.43
+          },
+          {
+            "year": 2029,
+            "age": 50.33,
+            "netWorth": 352987.77,
+            "realNetWorth": 328459.41
+          },
+          {
+            "year": 2030,
+            "age": 51.33,
+            "netWorth": 423978.9,
+            "realNetWorth": 384895.15
+          },
+          {
+            "year": 2031,
+            "age": 52.33,
+            "netWorth": 501919.95,
+            "realNetWorth": 444537.89
+          },
+          {
+            "year": 2032,
+            "age": 53.33,
+            "netWorth": 587371.64,
+            "realNetWorth": 507532.01
+          },
+          {
+            "year": 2033,
+            "age": 54.33,
+            "netWorth": 680936.52,
+            "realNetWorth": 574028.2
+          },
+          {
+            "year": 2034,
+            "age": 55.33,
+            "netWorth": 783262.02,
+            "realNetWorth": 644183.81
+          },
+          {
+            "year": 2035,
+            "age": 56.33,
+            "netWorth": 895043.66,
+            "realNetWorth": 718163.1
+          },
+          {
+            "year": 2036,
+            "age": 57.33,
+            "netWorth": 1017028.5,
+            "realNetWorth": 796137.58
+          },
+          {
+            "year": 2037,
+            "age": 58.33,
+            "netWorth": 1150018.87,
+            "realNetWorth": 878286.28
+          },
+          {
+            "year": 2038,
+            "age": 59.33,
+            "netWorth": 1294876.31,
+            "realNetWorth": 964796.14
+          },
+          {
+            "year": 2039,
+            "age": 60.33,
+            "netWorth": 1452525.86,
+            "realNetWorth": 1055862.29
+          },
+          {
+            "year": 2040,
+            "age": 61.33,
+            "netWorth": 1623960.55,
+            "realNetWorth": 1151688.46
+          },
+          {
+            "year": 2041,
+            "age": 62.33,
+            "netWorth": 1717053.55,
+            "realNetWorth": 1188008.41
+          },
+          {
+            "year": 2042,
+            "age": 63.33,
+            "netWorth": 1681704.21,
+            "realNetWorth": 1135171.35
+          },
+          {
+            "year": 2043,
+            "age": 64.33,
+            "netWorth": 1639991.84,
+            "realNetWorth": 1080014.61
+          },
+          {
+            "year": 2044,
+            "age": 65.33,
+            "netWorth": 1591373.81,
+            "realNetWorth": 1022436.36
+          },
+          {
+            "year": 2045,
+            "age": 66.33,
+            "netWorth": 1535267.09,
+            "realNetWorth": 962330.28
+          },
+          {
+            "year": 2046,
+            "age": 67.33,
+            "netWorth": 1471045.32,
+            "realNetWorth": 899585.4
+          },
+          {
+            "year": 2047,
+            "age": 68.33,
+            "netWorth": 1398035.77,
+            "realNetWorth": 834085.87
+          },
+          {
+            "year": 2048,
+            "age": 69.33,
+            "netWorth": 1315515.98,
+            "realNetWorth": 765710.75
+          },
+          {
+            "year": 2049,
+            "age": 70.33,
+            "netWorth": 1222710.25,
+            "realNetWorth": 694333.79
+          },
+          {
+            "year": 2050,
+            "age": 71.33,
+            "netWorth": 1118785.82,
+            "realNetWorth": 619823.21
+          },
+          {
+            "year": 2051,
+            "age": 72.33,
+            "netWorth": 1002848.82,
+            "realNetWorth": 542041.44
+          },
+          {
+            "year": 2052,
+            "age": 73.33,
+            "netWorth": 873939.94,
+            "realNetWorth": 460844.85
+          },
+          {
+            "year": 2053,
+            "age": 74.33,
+            "netWorth": 731029.72,
+            "realNetWorth": 376083.54
+          },
+          {
+            "year": 2054,
+            "age": 75.33,
+            "netWorth": 573013.65,
+            "realNetWorth": 287601
+          },
+          {
+            "year": 2055,
+            "age": 76.33,
+            "netWorth": 398706.74,
+            "realNetWorth": 195233.86
+          },
+          {
+            "year": 2056,
+            "age": 77.33,
+            "netWorth": 206837.9,
+            "realNetWorth": 98811.57
+          },
+          {
+            "year": 2057,
+            "age": 78.33,
+            "netWorth": -3933.97,
+            "realNetWorth": -1833.52
+          },
+          {
+            "year": 2058,
+            "age": 79.33,
+            "netWorth": -226518.07,
+            "realNetWorth": -102998.95
+          },
+          {
+            "year": 2059,
+            "age": 80.33,
+            "netWorth": -454666.76,
+            "realNetWorth": -201696.94
+          },
+          {
+            "year": 2060,
+            "age": 81.33,
+            "netWorth": -688519.18,
+            "realNetWorth": -297987.66
+          },
+          {
+            "year": 2061,
+            "age": 82.33,
+            "netWorth": -928217.9,
+            "realNetWorth": -391929.82
+          },
+          {
+            "year": 2062,
+            "age": 83.33,
+            "netWorth": -1173909.1,
+            "realNetWorth": -483580.71
+          },
+          {
+            "year": 2063,
+            "age": 84.33,
+            "netWorth": -1425742.57,
+            "realNetWorth": -572996.22
+          },
+          {
+            "year": 2064,
+            "age": 85.33,
+            "netWorth": -1683871.88,
+            "realNetWorth": -660230.85
+          },
+          {
+            "year": 2065,
+            "age": 86.33,
+            "netWorth": -1948454.43,
+            "realNetWorth": -745337.82
+          },
+          {
+            "year": 2066,
+            "age": 87.33,
+            "netWorth": -2219651.53,
+            "realNetWorth": -828369
+          },
+          {
+            "year": 2067,
+            "age": 88.33,
+            "netWorth": -2497628.57,
+            "realNetWorth": -909375.04
+          },
+          {
+            "year": 2068,
+            "age": 89.33,
+            "netWorth": -2782555.03,
+            "realNetWorth": -988405.31
+          },
+          {
+            "year": 2069,
+            "age": 90.33,
+            "netWorth": -3074604.65,
+            "realNetWorth": -1065508.02
+          },
+          {
+            "year": 2070,
+            "age": 91.33,
+            "netWorth": -3373955.51,
+            "realNetWorth": -1140730.18
+          },
+          {
+            "year": 2071,
+            "age": 91.92,
+            "netWorth": -3552021,
+            "realNetWorth": -1183759.6
+          }
+        ],
+        "montecarlo": {
+          "trials": 300,
+          "seed": 42,
+          "successProbability": 0.1267,
+          "fiByRetirementProbability": 0.0367,
+          "endNetWorth": {
+            "p10": -5418917.24,
+            "p50": -4341949.62,
+            "p90": 2454186.29
+          }
+        }
+      }
+    }
+  },
+  "anonymousB": {
+    "format": "finfolio-compare",
+    "version": 1,
+    "exportedAt": "2026-10-25T09:00:00.000Z",
+    "asOf": "2026-10-25",
+    "label": "Anonymous B",
+    "currency": "USD",
+    "app": {
+      "name": "finfolio",
+      "version": "1.0.0"
+    },
+    "checksum": "sha256:d86d484f371e8e006f181c7db3a7ab076eee0da0757bda4c18c1f1ef1a9b7f4e",
+    "data": {
+      "profile": {
+        "age": 52,
+        "retirementAge": 67,
+        "safeWithdrawalRate": 0.035,
+        "planToAge": 90
+      },
+      "position": {
+        "netWorth": 113749,
+        "liquid": 29020,
+        "invested": 84729,
+        "debt": 0,
+        "holdingsValue": 84129,
+        "accountsByType": {
+          "checking": {
+            "count": 1,
+            "balance": 2900
+          },
+          "savings": {
+            "count": 1,
+            "balance": 26000
+          },
+          "investment": {
+            "count": 1,
+            "balance": 600
+          },
+          "cash": {
+            "count": 1,
+            "balance": 120
+          }
+        }
+      },
+      "cashflow": {
+        "lookbackMonths": 12,
+        "hasHistory": true,
+        "historyMonths": 26,
+        "windowStart": "2025-10",
+        "windowEnd": "2026-09",
+        "monthlyIncome": 4066.12,
+        "monthlyExpenses": 2392.46,
+        "monthlySaved": 1673.66,
+        "monthlyInvested": 800,
+        "savingsRate": 0.4116,
+        "investingRate": 0.1967,
+        "expenseByCategory": {
+          "Housing": {
+            "monthly": 1100,
+            "share": 0.4598
+          },
+          "Food & Dining": {
+            "monthly": 409.58,
+            "share": 0.1712
+          },
+          "Utilities": {
+            "monthly": 231.51,
+            "share": 0.0968
+          },
+          "Shopping": {
+            "monthly": 143.81,
+            "share": 0.0601
+          },
+          "Transportation": {
+            "monthly": 140,
+            "share": 0.0585
+          },
+          "Entertainment": {
+            "monthly": 131.8,
+            "share": 0.0551
+          },
+          "Healthcare": {
+            "monthly": 125.76,
+            "share": 0.0526
+          },
+          "Other": {
+            "monthly": 70,
+            "share": 0.0293
+          },
+          "Gift": {
+            "monthly": 40,
+            "share": 0.0167
+          }
+        },
+        "series": [
+          {
+            "month": "2024-10",
+            "income": 4017.32,
+            "spending": 2164.33,
+            "invested": 800,
+            "saved": 600,
+            "net": 1852.99
+          },
+          {
+            "month": "2024-11",
+            "income": 4029.36,
+            "spending": 2222.63,
+            "invested": 800,
+            "saved": 600,
+            "net": 1806.73
+          },
+          {
+            "month": "2024-12",
+            "income": 4019.69,
+            "spending": 2252.85,
+            "invested": 800,
+            "saved": 750,
+            "net": 1766.84
+          },
+          {
+            "month": "2025-01",
+            "income": 4028.03,
+            "spending": 2198.45,
+            "invested": 800,
+            "saved": 600,
+            "net": 1829.58
+          },
+          {
+            "month": "2025-02",
+            "income": 4020.16,
+            "spending": 2216.27,
+            "invested": 800,
+            "saved": 600,
+            "net": 1803.89
+          },
+          {
+            "month": "2025-03",
+            "income": 4026.23,
+            "spending": 2238.06,
+            "invested": 800,
+            "saved": 750,
+            "net": 1788.17
+          },
+          {
+            "month": "2025-04",
+            "income": 4020.69,
+            "spending": 2259.85,
+            "invested": 800,
+            "saved": 600,
+            "net": 1760.84
+          },
+          {
+            "month": "2025-05",
+            "income": 4007.53,
+            "spending": 2289.82,
+            "invested": 800,
+            "saved": 600,
+            "net": 1717.71
+          },
+          {
+            "month": "2025-06",
+            "income": 4025.95,
+            "spending": 2268.27,
+            "invested": 800,
+            "saved": 750,
+            "net": 1757.68
+          },
+          {
+            "month": "2025-07",
+            "income": 4019.18,
+            "spending": 2100.24,
+            "invested": 800,
+            "saved": 600,
+            "net": 1918.94
+          },
+          {
+            "month": "2025-08",
+            "income": 4020.86,
+            "spending": 2609.31,
+            "invested": 800,
+            "saved": 600,
+            "net": 1411.55
+          },
+          {
+            "month": "2025-09",
+            "income": 4027.33,
+            "spending": 2305.5,
+            "invested": 800,
+            "saved": 750,
+            "net": 1721.83
+          },
+          {
+            "month": "2025-10",
+            "income": 4018.33,
+            "spending": 2208.54,
+            "invested": 800,
+            "saved": 600,
+            "net": 1809.79
+          },
+          {
+            "month": "2025-11",
+            "income": 4011.63,
+            "spending": 2313.48,
+            "invested": 800,
+            "saved": 600,
+            "net": 1698.15
+          },
+          {
+            "month": "2025-12",
+            "income": 4028.73,
+            "spending": 2156.25,
+            "invested": 800,
+            "saved": 750,
+            "net": 1872.48
+          },
+          {
+            "month": "2026-01",
+            "income": 4013.98,
+            "spending": 2934.08,
+            "invested": 800,
+            "saved": 600,
+            "net": 1079.9
+          },
+          {
+            "month": "2026-02",
+            "income": 4006.07,
+            "spending": 2263.05,
+            "invested": 800,
+            "saved": 600,
+            "net": 1743.02
+          },
+          {
+            "month": "2026-03",
+            "income": 4006.84,
+            "spending": 2244.25,
+            "invested": 800,
+            "saved": 750,
+            "net": 1762.59
+          },
+          {
+            "month": "2026-04",
+            "income": 4012.52,
+            "spending": 2334.74,
+            "invested": 800,
+            "saved": 600,
+            "net": 1677.78
+          },
+          {
+            "month": "2026-05",
+            "income": 4622.62,
+            "spending": 2294.83,
+            "invested": 800,
+            "saved": 600,
+            "net": 2327.79
+          },
+          {
+            "month": "2026-06",
+            "income": 4027.4,
+            "spending": 3173.06,
+            "invested": 800,
+            "saved": 750,
+            "net": 854.34
+          },
+          {
+            "month": "2026-07",
+            "income": 4025.58,
+            "spending": 2291.04,
+            "invested": 800,
+            "saved": 600,
+            "net": 1734.54
+          },
+          {
+            "month": "2026-08",
+            "income": 4012.73,
+            "spending": 2251.64,
+            "invested": 800,
+            "saved": 750,
+            "net": 1761.09
+          },
+          {
+            "month": "2026-09",
+            "income": 4006.99,
+            "spending": 2244.53,
+            "invested": 800,
+            "saved": 600,
+            "net": 1762.46
+          }
+        ]
+      },
+      "budgets": {
+        "month": "2026-10",
+        "items": [
+          {
+            "category": "Food & Dining",
+            "budgeted": 400,
+            "spent": 399.67
+          },
+          {
+            "category": "Utilities",
+            "budgeted": 220,
+            "spent": 256.85
+          },
+          {
+            "category": "Entertainment",
+            "budgeted": 80,
+            "spent": 59.43
+          },
+          {
+            "category": "Shopping",
+            "budgeted": 80,
+            "spent": 116.76
+          }
+        ]
+      },
+      "investments": {
+        "count": 3,
+        "value": 84129,
+        "cost": 67753.8,
+        "gainPct": 0.2417,
+        "byType": {
+          "etf": 0.9039,
+          "bond": 0.0961
+        },
+        "topHoldingShare": 0.8123,
+        "holdings": [
+          {
+            "symbol": "VTI",
+            "type": "etf",
+            "value": 68340,
+            "cost": 53233.8,
+            "weight": 0.8123
+          },
+          {
+            "symbol": "BND",
+            "type": "bond",
+            "value": 8085,
+            "cost": 7920,
+            "weight": 0.0961
+          },
+          {
+            "symbol": "VXUS",
+            "type": "etf",
+            "value": 7704,
+            "cost": 6600,
+            "weight": 0.0916
+          }
+        ]
+      },
+      "goals": [
+        {
+          "name": "Retire at 67",
+          "category": "Retirement",
+          "priority": "high",
+          "target": 900000,
+          "current": 56000,
+          "deadline": "2041-09-30",
+          "progress": 0.0622,
+          "status": "at_risk",
+          "fundedBy": "2157-06"
+        },
+        {
+          "name": "Roof repair",
+          "category": "House",
+          "priority": "high",
+          "target": 9000,
+          "current": 6500,
+          "deadline": "2027-04-30",
+          "progress": 0.7222,
+          "status": "on_track",
+          "fundedBy": "2027-04"
+        },
+        {
+          "name": "Visit family in New Zealand",
+          "category": "Travel",
+          "priority": "medium",
+          "target": 5500,
+          "current": 2100,
+          "deadline": "2027-12-20",
+          "progress": 0.3818,
+          "status": "unreachable",
+          "fundedBy": null
+        }
+      ],
+      "motivation": {
+        "enabled": true,
+        "pointsEarned": 2205,
+        "pointsSpent": 1200,
+        "balance": 1005,
+        "rewardsClaimed": 5,
+        "habits": [
+          {
+            "kind": "save",
+            "name": "Weekly saving",
+            "cadence": "weekly",
+            "amount": 150,
+            "streak": 73,
+            "bestStreak": 73,
+            "periodsMet": 73,
+            "periodsScored": 73,
+            "hitRate": 1,
+            "pointsEarned": 1430
+          },
+          {
+            "kind": "invest",
+            "name": "Monthly pension top-up",
+            "cadence": "monthly",
+            "amount": 800,
+            "streak": 17,
+            "bestStreak": 17,
+            "periodsMet": 17,
+            "periodsScored": 17,
+            "hitRate": 1,
+            "pointsEarned": 775
+          }
+        ],
+        "badges": [
+          {
+            "key": "first-step",
+            "name": "First step",
+            "unlockedOn": "2025-06-02"
+          },
+          {
+            "key": "century",
+            "name": "Century",
+            "unlockedOn": "2025-07-05"
+          },
+          {
+            "key": "thousand",
+            "name": "Thousand",
+            "unlockedOn": "2026-02-02"
+          },
+          {
+            "key": "on-fire",
+            "name": "On fire",
+            "unlockedOn": "2025-06-23"
+          },
+          {
+            "key": "unstoppable",
+            "name": "Unstoppable",
+            "unlockedOn": "2025-08-18"
+          },
+          {
+            "key": "treat",
+            "name": "Treat yourself",
+            "unlockedOn": "2025-09-06"
+          },
+          {
+            "key": "fi-5",
+            "name": "First brick",
+            "unlockedOn": "2024-12-25"
+          },
+          {
+            "key": "fi-10",
+            "name": "Seedling",
+            "unlockedOn": "2026-06-25"
+          },
+          {
+            "key": "fi-25",
+            "name": "Sprout",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-50",
+            "name": "Halfway tree",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-75",
+            "name": "Summit in sight",
+            "unlockedOn": null
+          },
+          {
+            "key": "fi-100",
+            "name": "Free",
+            "unlockedOn": null
+          },
+          {
+            "key": "closer",
+            "name": "Closer",
+            "unlockedOn": null
+          }
+        ],
+        "badgesUnlocked": 8
+      },
+      "outlook": {
+        "hasHistory": true,
+        "fire": {
+          "fiNumber": 820272,
+          "progress": 0.1387,
+          "fiDate": null,
+          "fiAge": null,
+          "coastFiMonth": null,
+          "fiByRetirement": false,
+          "retirementAge": 66.92
+        },
+        "runway": {
+          "cashMonths": 12.13,
+          "totalMonths": 47.54,
+          "simulatedMonths": 51
+        },
+        "netWorthAtRetirement": 949767.78,
+        "endNetWorth": 1613690.59,
+        "endRealNetWorth": 634016.69,
+        "yearly": [
+          {
+            "year": 2027,
+            "age": 52.92,
+            "netWorth": 142177.92,
+            "realNetWorth": 138995.88
+          },
+          {
+            "year": 2028,
+            "age": 53.92,
+            "netWorth": 173365.06,
+            "realNetWorth": 165351.26
+          },
+          {
+            "year": 2029,
+            "age": 54.92,
+            "netWorth": 207530.41,
+            "realNetWorth": 193109.57
+          },
+          {
+            "year": 2030,
+            "age": 55.92,
+            "netWorth": 244910.24,
+            "realNetWorth": 222333.62
+          },
+          {
+            "year": 2031,
+            "age": 56.92,
+            "netWorth": 285758.31,
+            "realNetWorth": 253088.96
+          },
+          {
+            "year": 2032,
+            "age": 57.92,
+            "netWorth": 330347.09,
+            "realNetWorth": 285444.02
+          },
+          {
+            "year": 2033,
+            "age": 58.92,
+            "netWorth": 378969.14,
+            "realNetWorth": 319470.26
+          },
+          {
+            "year": 2034,
+            "age": 59.92,
+            "netWorth": 431938.49,
+            "realNetWorth": 355242.27
+          },
+          {
+            "year": 2035,
+            "age": 60.92,
+            "netWorth": 489592.25,
+            "realNetWorth": 392837.92
+          },
+          {
+            "year": 2036,
+            "age": 61.92,
+            "netWorth": 552292.2,
+            "realNetWorth": 432338.5
+          },
+          {
+            "year": 2037,
+            "age": 62.92,
+            "netWorth": 620426.59,
+            "realNetWorth": 473828.89
+          },
+          {
+            "year": 2038,
+            "age": 63.92,
+            "netWorth": 694412,
+            "realNetWorth": 517397.69
+          },
+          {
+            "year": 2039,
+            "age": 64.92,
+            "netWorth": 774695.4,
+            "realNetWorth": 563137.41
+          },
+          {
+            "year": 2040,
+            "age": 65.92,
+            "netWorth": 861756.26,
+            "realNetWorth": 611144.61
+          },
+          {
+            "year": 2041,
+            "age": 66.92,
+            "netWorth": 949767.78,
+            "realNetWorth": 657132.74
+          },
+          {
+            "year": 2042,
+            "age": 67.92,
+            "netWorth": 972478.56,
+            "realNetWorth": 656435.18
+          },
+          {
+            "year": 2043,
+            "age": 68.92,
+            "netWorth": 995835.1,
+            "realNetWorth": 655805.98
+          },
+          {
+            "year": 2044,
+            "age": 69.92,
+            "netWorth": 1019708.68,
+            "realNetWorth": 655149.17
+          },
+          {
+            "year": 2045,
+            "age": 70.92,
+            "netWorth": 1044107.53,
+            "realNetWorth": 654463.51
+          },
+          {
+            "year": 2046,
+            "age": 71.92,
+            "netWorth": 1069039.78,
+            "realNetWorth": 653747.76
+          },
+          {
+            "year": 2047,
+            "age": 72.92,
+            "netWorth": 1094513.41,
+            "realNetWorth": 653000.58
+          },
+          {
+            "year": 2048,
+            "age": 73.92,
+            "netWorth": 1120536.21,
+            "realNetWorth": 652220.6
+          },
+          {
+            "year": 2049,
+            "age": 74.92,
+            "netWorth": 1147115.78,
+            "realNetWorth": 651406.38
+          },
+          {
+            "year": 2050,
+            "age": 75.92,
+            "netWorth": 1174259.47,
+            "realNetWorth": 650556.41
+          },
+          {
+            "year": 2051,
+            "age": 76.92,
+            "netWorth": 1201974.36,
+            "realNetWorth": 649669.12
+          },
+          {
+            "year": 2052,
+            "age": 77.92,
+            "netWorth": 1230267.21,
+            "realNetWorth": 648742.88
+          },
+          {
+            "year": 2053,
+            "age": 78.92,
+            "netWorth": 1259144.43,
+            "realNetWorth": 647775.98
+          },
+          {
+            "year": 2054,
+            "age": 79.92,
+            "netWorth": 1288612.01,
+            "realNetWorth": 646766.62
+          },
+          {
+            "year": 2055,
+            "age": 80.92,
+            "netWorth": 1318675.51,
+            "realNetWorth": 645712.96
+          },
+          {
+            "year": 2056,
+            "age": 81.92,
+            "netWorth": 1349339.98,
+            "realNetWorth": 644613.03
+          },
+          {
+            "year": 2057,
+            "age": 82.92,
+            "netWorth": 1380609.88,
+            "realNetWorth": 643464.82
+          },
+          {
+            "year": 2058,
+            "age": 83.92,
+            "netWorth": 1412489.08,
+            "realNetWorth": 642266.19
+          },
+          {
+            "year": 2059,
+            "age": 84.92,
+            "netWorth": 1444980.74,
+            "realNetWorth": 641014.95
+          },
+          {
+            "year": 2060,
+            "age": 85.92,
+            "netWorth": 1478087.25,
+            "realNetWorth": 639708.77
+          },
+          {
+            "year": 2061,
+            "age": 86.92,
+            "netWorth": 1511810.16,
+            "realNetWorth": 638345.24
+          },
+          {
+            "year": 2062,
+            "age": 87.92,
+            "netWorth": 1546150.1,
+            "realNetWorth": 636921.86
+          },
+          {
+            "year": 2063,
+            "age": 88.92,
+            "netWorth": 1581106.66,
+            "realNetWorth": 635435.98
+          },
+          {
+            "year": 2064,
+            "age": 89.83,
+            "netWorth": 1613690.59,
+            "realNetWorth": 634016.69
+          }
+        ],
+        "montecarlo": {
+          "trials": 300,
+          "seed": 42,
+          "successProbability": 0.6133,
+          "fiByRetirementProbability": 0.2767,
+          "endNetWorth": {
+            "p10": -632737.54,
+            "p50": 485638.59,
+            "p90": 4508363.3
+          }
+        }
+      }
+    }
+  },
+  "finVsPenny": {
+    "generatedAt": "2026-10-25T12:00:00.000Z",
+    "labels": {
+      "mine": "You",
+      "theirs": "Penny"
+    },
+    "asOf": {
+      "mine": "2026-10-25",
+      "theirs": "2026-10-25",
+      "daysApart": 0
+    },
+    "currency": {
+      "mine": "USD",
+      "theirs": "USD",
+      "same": true
+    },
+    "profile": {
+      "mine": {
+        "age": 40,
+        "retirementAge": 65,
+        "safeWithdrawalRate": 0.04,
+        "planToAge": 90
+      },
+      "theirs": {
+        "age": 33,
+        "retirementAge": 60,
+        "safeWithdrawalRate": 0.035,
+        "planToAge": 90
+      }
+    },
+    "warnings": [],
+    "score": {
+      "mine": 21,
+      "theirs": 3,
+      "ties": 1,
+      "scored": 25
+    },
+    "metrics": [
+      {
+        "key": "netWorth",
+        "group": "position",
+        "label": "Net worth",
+        "unit": "money",
+        "mine": 105898.58,
+        "theirs": 26645.15,
+        "delta": 79253.43,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "liquid",
+        "group": "position",
+        "label": "Cash & savings",
+        "unit": "money",
+        "mine": 36430.4,
+        "theirs": 10855.75,
+        "delta": 25574.65,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "invested",
+        "group": "position",
+        "label": "Invested",
+        "unit": "money",
+        "mine": 70386,
+        "theirs": 27950,
+        "delta": 42436,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "debt",
+        "group": "position",
+        "label": "Debt",
+        "unit": "money",
+        "mine": 917.82,
+        "theirs": 12160.6,
+        "delta": -11242.78,
+        "betterIs": "lower",
+        "leader": "mine"
+      },
+      {
+        "key": "debtToAssets",
+        "group": "position",
+        "label": "Debt as a share of assets",
+        "unit": "percent",
+        "mine": 0.0086,
+        "theirs": 0.3134,
+        "delta": -0.3048,
+        "betterIs": "lower",
+        "leader": "mine"
+      },
+      {
+        "key": "monthlyIncome",
+        "group": "cashflow",
+        "label": "Monthly income",
+        "unit": "money",
+        "mine": 7089.44,
+        "theirs": 4904.2,
+        "delta": 2185.24,
+        "betterIs": "neutral",
+        "leader": null,
+        "note": "circumstance, not scored"
+      },
+      {
+        "key": "monthlyExpenses",
+        "group": "cashflow",
+        "label": "Monthly spending",
+        "unit": "money",
+        "mine": 3950.78,
+        "theirs": 3075.6,
+        "delta": 875.18,
+        "betterIs": "neutral",
+        "leader": null,
+        "note": "circumstance, not scored"
+      },
+      {
+        "key": "monthlySaved",
+        "group": "cashflow",
+        "label": "Saved per month",
+        "unit": "money",
+        "mine": 3138.66,
+        "theirs": 1828.6,
+        "delta": 1310.06,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "savingsRate",
+        "group": "cashflow",
+        "label": "Savings rate",
+        "unit": "percent",
+        "mine": 0.4427,
+        "theirs": 0.3729,
+        "delta": 0.0698,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "monthlyInvested",
+        "group": "cashflow",
+        "label": "Invested per month",
+        "unit": "money",
+        "mine": 1200,
+        "theirs": 350,
+        "delta": 850,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "investingRate",
+        "group": "cashflow",
+        "label": "Investing rate",
+        "unit": "percent",
+        "mine": 0.1693,
+        "theirs": 0.0714,
+        "delta": 0.0979,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "cashMonths",
+        "group": "cashflow",
+        "label": "Emergency fund (months of spending in cash)",
+        "unit": "months",
+        "mine": 9.22,
+        "theirs": 3.53,
+        "delta": 5.69,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "holdingsValue",
+        "group": "investments",
+        "label": "Portfolio value",
+        "unit": "money",
+        "mine": 68236,
+        "theirs": 27640,
+        "delta": 40596,
+        "betterIs": "neutral",
+        "leader": null,
+        "note": "level, not scored"
+      },
+      {
+        "key": "holdingsCount",
+        "group": "investments",
+        "label": "Holdings",
+        "unit": "count",
+        "mine": 5,
+        "theirs": 3,
+        "delta": 2,
+        "betterIs": "neutral",
+        "leader": null
+      },
+      {
+        "key": "gainPct",
+        "group": "investments",
+        "label": "Unrealised gain",
+        "unit": "percent",
+        "mine": 0.2175,
+        "theirs": 0.1865,
+        "delta": 0.031,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "topHoldingShare",
+        "group": "investments",
+        "label": "Largest holding (share of portfolio)",
+        "unit": "percent",
+        "mine": 0.4831,
+        "theirs": 0.5928,
+        "delta": -0.1097,
+        "betterIs": "lower",
+        "leader": "mine"
+      },
+      {
+        "key": "goalsCount",
+        "group": "goals",
+        "label": "Goals",
+        "unit": "count",
+        "mine": 4,
+        "theirs": 4,
+        "delta": 0,
+        "betterIs": "neutral",
+        "leader": null
+      },
+      {
+        "key": "goalsOnTrack",
+        "group": "goals",
+        "label": "Goals on track or funded",
+        "unit": "count",
+        "mine": 1,
+        "theirs": 4,
+        "delta": -3,
+        "betterIs": "higher",
+        "leader": "theirs"
+      },
+      {
+        "key": "goalsProgress",
+        "group": "goals",
+        "label": "Progress towards all goals",
+        "unit": "percent",
+        "mine": 0.0257,
+        "theirs": 0.2872,
+        "delta": -0.2615,
+        "betterIs": "higher",
+        "leader": "theirs"
+      },
+      {
+        "key": "habits",
+        "group": "motivation",
+        "label": "Habits",
+        "unit": "count",
+        "mine": 3,
+        "theirs": 2,
+        "delta": 1,
+        "betterIs": "neutral",
+        "leader": null
+      },
+      {
+        "key": "pointsEarned",
+        "group": "motivation",
+        "label": "Points earned all-time",
+        "unit": "points",
+        "mine": 995,
+        "theirs": 780,
+        "delta": 215,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "bestStreak",
+        "group": "motivation",
+        "label": "Best streak",
+        "unit": "count",
+        "mine": 10,
+        "theirs": 26,
+        "delta": -16,
+        "betterIs": "higher",
+        "leader": "theirs"
+      },
+      {
+        "key": "badgesUnlocked",
+        "group": "motivation",
+        "label": "Badges unlocked",
+        "unit": "count",
+        "mine": 6,
+        "theirs": 5,
+        "delta": 1,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "rewardsClaimed",
+        "group": "motivation",
+        "label": "Rewards enjoyed",
+        "unit": "count",
+        "mine": 4,
+        "theirs": 3,
+        "delta": 1,
+        "betterIs": "neutral",
+        "leader": null
+      },
+      {
+        "key": "fiNumber",
+        "group": "outlook",
+        "label": "FI number",
+        "unit": "money",
+        "mine": 1185234,
+        "theirs": 1054491.43,
+        "delta": 130742.57,
+        "betterIs": "neutral",
+        "leader": null,
+        "note": "depends on spending, not scored"
+      },
+      {
+        "key": "fiProgress",
+        "group": "outlook",
+        "label": "Progress to FI",
+        "unit": "percent",
+        "mine": 0.0893,
+        "theirs": 0.0253,
+        "delta": 0.064,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "fiDate",
+        "group": "outlook",
+        "label": "FI date",
+        "unit": "month",
+        "mine": "2043-05",
+        "theirs": "2050-04",
+        "delta": -83,
+        "betterIs": "lower",
+        "leader": "mine"
+      },
+      {
+        "key": "fiAge",
+        "group": "outlook",
+        "label": "Age at FI",
+        "unit": "age",
+        "mine": 56.83,
+        "theirs": 57.08,
+        "delta": -0.25,
+        "betterIs": "lower",
+        "leader": "mine"
+      },
+      {
+        "key": "yearsToFi",
+        "group": "outlook",
+        "label": "Years to FI",
+        "unit": "years",
+        "mine": 16.58,
+        "theirs": 23.5,
+        "delta": -6.92,
+        "betterIs": "lower",
+        "leader": "mine"
+      },
+      {
+        "key": "fiByRetirement",
+        "group": "outlook",
+        "label": "FI before planned retirement",
+        "unit": "bool",
+        "mine": 1,
+        "theirs": 1,
+        "delta": 0,
+        "betterIs": "higher",
+        "leader": "tie"
+      },
+      {
+        "key": "totalRunway",
+        "group": "outlook",
+        "label": "Runway (months all assets would last)",
+        "unit": "months",
+        "mine": 26.8,
+        "theirs": 8.66,
+        "delta": 18.14,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "netWorthAtRetirement",
+        "group": "outlook",
+        "label": "Projected net worth at retirement",
+        "unit": "money",
+        "mine": 3911741.41,
+        "theirs": 2461012.14,
+        "delta": 1450729.27,
+        "betterIs": "higher",
+        "leader": "mine"
+      },
+      {
+        "key": "successProbability",
+        "group": "outlook",
+        "label": "Chance of never running out (Monte Carlo)",
+        "unit": "percent",
+        "mine": 0.89,
+        "theirs": 0.76,
+        "delta": 0.13,
+        "betterIs": "higher",
+        "leader": "mine"
+      }
+    ],
+    "spending": [
+      {
+        "category": "Housing",
+        "mine": {
+          "monthly": 1981.67,
+          "share": 0.5016
+        },
+        "theirs": {
+          "monthly": 1482.5,
+          "share": 0.482
+        },
+        "shareDelta": 0.0196
+      },
+      {
+        "category": "Food & Dining",
+        "mine": {
+          "monthly": 734.71,
+          "share": 0.186
+        },
+        "theirs": {
+          "monthly": 564.91,
+          "share": 0.1837
+        },
+        "shareDelta": 0.0023
+      },
+      {
+        "category": "Utilities",
+        "mine": {
+          "monthly": 287.03,
+          "share": 0.0727
+        },
+        "theirs": {
+          "monthly": 171.43,
+          "share": 0.0557
+        },
+        "shareDelta": 0.017
+      },
+      {
+        "category": "Entertainment",
+        "mine": {
+          "monthly": 271.08,
+          "share": 0.0686
+        },
+        "theirs": {
+          "monthly": 150.27,
+          "share": 0.0489
+        },
+        "shareDelta": 0.0197
+      },
+      {
+        "category": "Transportation",
+        "mine": {
+          "monthly": 226.97,
+          "share": 0.0574
+        },
+        "theirs": {
+          "monthly": 156.06,
+          "share": 0.0507
+        },
+        "shareDelta": 0.0067
+      },
+      {
+        "category": "Gift",
+        "mine": {
+          "monthly": 38.75,
+          "share": 0.0098
+        },
+        "theirs": {
+          "monthly": 168.33,
+          "share": 0.0547
+        },
+        "shareDelta": -0.0449
+      },
+      {
+        "category": "Healthcare",
+        "mine": {
+          "monthly": 68.94,
+          "share": 0.0174
+        },
+        "theirs": {
+          "monthly": 153.56,
+          "share": 0.0499
+        },
+        "shareDelta": -0.0325
+      },
+      {
+        "category": "Shopping",
+        "mine": {
+          "monthly": 184.55,
+          "share": 0.0467
+        },
+        "theirs": {
+          "monthly": 123.81,
+          "share": 0.0403
+        },
+        "shareDelta": 0.0064
+      },
+      {
+        "category": "Other",
+        "mine": {
+          "monthly": 128,
+          "share": 0.0324
+        },
+        "theirs": {
+          "monthly": 81,
+          "share": 0.0263
+        },
+        "shareDelta": 0.0061
+      },
+      {
+        "category": "Education",
+        "mine": {
+          "monthly": 29.08,
+          "share": 0.0074
+        },
+        "theirs": {
+          "monthly": 23.74,
+          "share": 0.0077
+        },
+        "shareDelta": -0.0003
+      }
+    ],
+    "series": [
+      {
+        "month": "2024-10",
+        "mine": {
+          "month": "2024-10",
+          "income": 6175.34,
+          "spending": 3354.78,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2820.56
+        },
+        "theirs": null
+      },
+      {
+        "month": "2024-11",
+        "mine": {
+          "month": "2024-11",
+          "income": 7342.73,
+          "spending": 4954.86,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2387.87
+        },
+        "theirs": null
+      },
+      {
+        "month": "2024-12",
+        "mine": {
+          "month": "2024-12",
+          "income": 6162.32,
+          "spending": 3896.2,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2266.12
+        },
+        "theirs": null
+      },
+      {
+        "month": "2025-01",
+        "mine": {
+          "month": "2025-01",
+          "income": 6182.22,
+          "spending": 3512.64,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2669.58
+        },
+        "theirs": null
+      },
+      {
+        "month": "2025-02",
+        "mine": {
+          "month": "2025-02",
+          "income": 6886.87,
+          "spending": 3358.29,
+          "invested": 1200,
+          "saved": 900,
+          "net": 3528.58
+        },
+        "theirs": null
+      },
+      {
+        "month": "2025-03",
+        "mine": {
+          "month": "2025-03",
+          "income": 6171.08,
+          "spending": 3671.09,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2499.99
+        },
+        "theirs": null
+      },
+      {
+        "month": "2025-04",
+        "mine": {
+          "month": "2025-04",
+          "income": 6172.51,
+          "spending": 3374.23,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2798.28
+        },
+        "theirs": {
+          "month": "2025-04",
+          "income": 4676.24,
+          "spending": 3047.71,
+          "invested": 350,
+          "saved": 600,
+          "net": 1628.53
+        }
+      },
+      {
+        "month": "2025-05",
+        "mine": {
+          "month": "2025-05",
+          "income": 7494.96,
+          "spending": 3976.27,
+          "invested": 1200,
+          "saved": 900,
+          "net": 3518.69
+        },
+        "theirs": {
+          "month": "2025-05",
+          "income": 5053.61,
+          "spending": 3841.51,
+          "invested": 350,
+          "saved": 600,
+          "net": 1212.1
+        }
+      },
+      {
+        "month": "2025-06",
+        "mine": {
+          "month": "2025-06",
+          "income": 6177.55,
+          "spending": 3430.06,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2747.49
+        },
+        "theirs": {
+          "month": "2025-06",
+          "income": 4668.67,
+          "spending": 2993.46,
+          "invested": 350,
+          "saved": 750,
+          "net": 1675.21
+        }
+      },
+      {
+        "month": "2025-07",
+        "mine": {
+          "month": "2025-07",
+          "income": 6466.69,
+          "spending": 3487.99,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2978.7
+        },
+        "theirs": {
+          "month": "2025-07",
+          "income": 4865.84,
+          "spending": 2892.63,
+          "invested": 350,
+          "saved": 600,
+          "net": 1973.21
+        }
+      },
+      {
+        "month": "2025-08",
+        "mine": {
+          "month": "2025-08",
+          "income": 7643.23,
+          "spending": 3383.47,
+          "invested": 1200,
+          "saved": 900,
+          "net": 4259.76
+        },
+        "theirs": {
+          "month": "2025-08",
+          "income": 4667.35,
+          "spending": 3280.11,
+          "invested": 350,
+          "saved": 600,
+          "net": 1387.24
+        }
+      },
+      {
+        "month": "2025-09",
+        "mine": {
+          "month": "2025-09",
+          "income": 6162.92,
+          "spending": 3835.24,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2327.68
+        },
+        "theirs": {
+          "month": "2025-09",
+          "income": 4911.12,
+          "spending": 2927.4,
+          "invested": 350,
+          "saved": 750,
+          "net": 1983.72
+        }
+      },
+      {
+        "month": "2025-10",
+        "mine": {
+          "month": "2025-10",
+          "income": 6166.58,
+          "spending": 3603.05,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2563.53
+        },
+        "theirs": {
+          "month": "2025-10",
+          "income": 4674.92,
+          "spending": 2955.91,
+          "invested": 350,
+          "saved": 600,
+          "net": 1719.01
+        }
+      },
+      {
+        "month": "2025-11",
+        "mine": {
+          "month": "2025-11",
+          "income": 7113.86,
+          "spending": 3490.07,
+          "invested": 1200,
+          "saved": 900,
+          "net": 3623.79
+        },
+        "theirs": {
+          "month": "2025-11",
+          "income": 4903.47,
+          "spending": 3111.42,
+          "invested": 350,
+          "saved": 600,
+          "net": 1792.05
+        }
+      },
+      {
+        "month": "2025-12",
+        "mine": {
+          "month": "2025-12",
+          "income": 9365.63,
+          "spending": 4153.99,
+          "invested": 1200,
+          "saved": 3900,
+          "net": 5211.64
+        },
+        "theirs": {
+          "month": "2025-12",
+          "income": 4671.06,
+          "spending": 3195.9,
+          "invested": 350,
+          "saved": 750,
+          "net": 1475.16
+        }
+      },
+      {
+        "month": "2026-01",
+        "mine": {
+          "month": "2026-01",
+          "income": 6474.94,
+          "spending": 3736.79,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2738.15
+        },
+        "theirs": {
+          "month": "2026-01",
+          "income": 5056.07,
+          "spending": 3155.42,
+          "invested": 350,
+          "saved": 600,
+          "net": 1900.65
+        }
+      },
+      {
+        "month": "2026-02",
+        "mine": {
+          "month": "2026-02",
+          "income": 7654.49,
+          "spending": 3428.48,
+          "invested": 1200,
+          "saved": 900,
+          "net": 4226.01
+        },
+        "theirs": {
+          "month": "2026-02",
+          "income": 4666.06,
+          "spending": 3195.34,
+          "invested": 350,
+          "saved": 600,
+          "net": 1470.72
+        }
+      },
+      {
+        "month": "2026-03",
+        "mine": {
+          "month": "2026-03",
+          "income": 6493.94,
+          "spending": 4351.1,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2142.84
+        },
+        "theirs": {
+          "month": "2026-03",
+          "income": 5123.19,
+          "spending": 3003.75,
+          "invested": 350,
+          "saved": 750,
+          "net": 2119.44
+        }
+      },
+      {
+        "month": "2026-04",
+        "mine": {
+          "month": "2026-04",
+          "income": 6479.51,
+          "spending": 3881.65,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2597.86
+        },
+        "theirs": {
+          "month": "2026-04",
+          "income": 4679.24,
+          "spending": 3037.65,
+          "invested": 350,
+          "saved": 300,
+          "net": 1641.59
+        }
+      },
+      {
+        "month": "2026-05",
+        "mine": {
+          "month": "2026-05",
+          "income": 7740.6,
+          "spending": 3606.14,
+          "invested": 1200,
+          "saved": 900,
+          "net": 4134.46
+        },
+        "theirs": {
+          "month": "2026-05",
+          "income": 5088.83,
+          "spending": 2952.47,
+          "invested": 350,
+          "saved": 600,
+          "net": 2136.36
+        }
+      },
+      {
+        "month": "2026-06",
+        "mine": {
+          "month": "2026-06",
+          "income": 6487.58,
+          "spending": 3577.81,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2909.77
+        },
+        "theirs": {
+          "month": "2026-06",
+          "income": 4677.44,
+          "spending": 3595.3,
+          "invested": 350,
+          "saved": 750,
+          "net": 1082.14
+        }
+      },
+      {
+        "month": "2026-07",
+        "mine": {
+          "month": "2026-07",
+          "income": 6769.7,
+          "spending": 6261.93,
+          "invested": 1200,
+          "saved": 900,
+          "net": 507.77
+        },
+        "theirs": {
+          "month": "2026-07",
+          "income": 5114.81,
+          "spending": 2820.53,
+          "invested": 350,
+          "saved": 600,
+          "net": 2294.28
+        }
+      },
+      {
+        "month": "2026-08",
+        "mine": {
+          "month": "2026-08",
+          "income": 7856.72,
+          "spending": 3613.61,
+          "invested": 1200,
+          "saved": 900,
+          "net": 4243.11
+        },
+        "theirs": {
+          "month": "2026-08",
+          "income": 4919.02,
+          "spending": 2954.88,
+          "invested": 350,
+          "saved": 750,
+          "net": 1964.14
+        }
+      },
+      {
+        "month": "2026-09",
+        "mine": {
+          "month": "2026-09",
+          "income": 6469.67,
+          "spending": 3704.69,
+          "invested": 1200,
+          "saved": 900,
+          "net": 2764.98
+        },
+        "theirs": {
+          "month": "2026-09",
+          "income": 5276.3,
+          "spending": 2928.63,
+          "invested": 350,
+          "saved": 600,
+          "net": 2347.67
+        }
+      }
+    ],
+    "projection": [
+      {
+        "age": 34,
+        "mine": null,
+        "theirs": 51072.9,
+        "mineReal": null,
+        "theirsReal": 49929.85
+      },
+      {
+        "age": 35,
+        "mine": null,
+        "theirs": 77749.35,
+        "mineReal": null,
+        "theirsReal": 74155.38
+      },
+      {
+        "age": 36,
+        "mine": null,
+        "theirs": 107188.58,
+        "mineReal": null,
+        "theirsReal": 99740.28
+      },
+      {
+        "age": 37,
+        "mine": null,
+        "theirs": 139616.73,
+        "mineReal": null,
+        "theirsReal": 126746.41
+      },
+      {
+        "age": 38,
+        "mine": null,
+        "theirs": 175276.09,
+        "mineReal": null,
+        "theirsReal": 155237.63
+      },
+      {
+        "age": 39,
+        "mine": null,
+        "theirs": 214427.02,
+        "mineReal": null,
+        "theirsReal": 185280.61
+      },
+      {
+        "age": 40,
+        "mine": null,
+        "theirs": 257349.24,
+        "mineReal": null,
+        "theirsReal": 216944.92
+      },
+      {
+        "age": 41,
+        "mine": 151825.36,
+        "theirs": 304343.3,
+        "mineReal": 148427.41,
+        "theirsReal": 250303.24
+      },
+      {
+        "age": 42,
+        "mine": 202391.14,
+        "theirs": 355731.97,
+        "mineReal": 193035.6,
+        "theirsReal": 285431.41
+      },
+      {
+        "age": 43,
+        "mine": 257955.67,
+        "theirs": 411861.92,
+        "mineReal": 240030.89,
+        "theirsReal": 322408.62
+      },
+      {
+        "age": 44,
+        "mine": 318919.19,
+        "theirs": 473105.42,
+        "mineReal": 289520.18,
+        "theirsReal": 361317.55
+      },
+      {
+        "age": 45,
+        "mine": 385711.58,
+        "theirs": 539862.11,
+        "mineReal": 341615.06,
+        "theirsReal": 402244.51
+      },
+      {
+        "age": 46,
+        "mine": 458794.56,
+        "theirs": 612561.07,
+        "mineReal": 396432.02,
+        "theirsReal": 445279.6
+      },
+      {
+        "age": 47,
+        "mine": 538663.97,
+        "theirs": 691662.82,
+        "mineReal": 454092.71,
+        "theirsReal": 490516.9
+      },
+      {
+        "age": 48,
+        "mine": 625852.17,
+        "theirs": 777661.65,
+        "mineReal": 514724.09,
+        "theirsReal": 538054.61
+      },
+      {
+        "age": 49,
+        "mine": 720930.7,
+        "theirs": 871087.98,
+        "mineReal": 578458.74,
+        "theirsReal": 587995.26
+      },
+      {
+        "age": 50,
+        "mine": 824513.06,
+        "theirs": 972510.96,
+        "mineReal": 645435.04,
+        "theirsReal": 640445.9
+      },
+      {
+        "age": 51,
+        "mine": 937257.72,
+        "theirs": 1082541.25,
+        "mineReal": 715797.48,
+        "theirsReal": 695518.26
+      },
+      {
+        "age": 52,
+        "mine": 1059871.35,
+        "theirs": 1201833.95,
+        "mineReal": 789696.89,
+        "theirsReal": 753328.99
+      },
+      {
+        "age": 53,
+        "mine": 1193112.23,
+        "theirs": 1331091.76,
+        "mineReal": 867290.73,
+        "theirsReal": 813999.88
+      },
+      {
+        "age": 54,
+        "mine": 1337793.95,
+        "theirs": 1471068.43,
+        "mineReal": 948743.4,
+        "theirsReal": 877658.08
+      },
+      {
+        "age": 55,
+        "mine": 1494789.35,
+        "theirs": 1622572.31,
+        "mineReal": 1034226.52,
+        "theirsReal": 944436.31
+      },
+      {
+        "age": 56,
+        "mine": 1665034.73,
+        "theirs": 1786470.3,
+        "mineReal": 1123919.24,
+        "theirsReal": 1014473.14
+      },
+      {
+        "age": 57,
+        "mine": 1849534.41,
+        "theirs": 1963691.97,
+        "mineReal": 1218008.61,
+        "theirsReal": 1087913.21
+      },
+      {
+        "age": 58,
+        "mine": 2049365.51,
+        "theirs": 2155234.04,
+        "mineReal": 1316689.89,
+        "theirsReal": 1164907.55
+      },
+      {
+        "age": 59,
+        "mine": 2265683.19,
+        "theirs": 2362165.13,
+        "mineReal": 1420166.93,
+        "theirsReal": 1245613.8
+      },
+      {
+        "age": 60,
+        "mine": 2499726.14,
+        "theirs": 2509050.77,
+        "mineReal": 1528652.53,
+        "theirsReal": 1290799.35
+      },
+      {
+        "age": 61,
+        "mine": 2752822.55,
+        "theirs": 2609258.52,
+        "mineReal": 1642368.85,
+        "theirsReal": 1309611.66
+      },
+      {
+        "age": 62,
+        "mine": 3026396.45,
+        "theirs": 2714595.16,
+        "mineReal": 1761547.81,
+        "theirsReal": 1329249.88
+      },
+      {
+        "age": 63,
+        "mine": 3321974.52,
+        "theirs": 2825372.59,
+        "mineReal": 1886431.54,
+        "theirsReal": 1349750.26
+      },
+      {
+        "age": 64,
+        "mine": 3641193.37,
+        "theirs": 2941923.33,
+        "mineReal": 2017272.79,
+        "theirsReal": 1371150.66
+      },
+      {
+        "age": 65,
+        "mine": 3941168.71,
+        "theirs": 3064601.98,
+        "mineReal": 2130208.17,
+        "theirsReal": 1393490.59
+      },
+      {
+        "age": 66,
+        "mine": 4124737.51,
+        "theirs": 3193786.75,
+        "mineReal": 2175051.13,
+        "theirsReal": 1416811.3
+      },
+      {
+        "age": 67,
+        "mine": 4318943.61,
+        "theirs": 3329881.01,
+        "mineReal": 2221911.84,
+        "theirsReal": 1441155.84
+      },
+      {
+        "age": 68,
+        "mine": 4524381.01,
+        "theirs": 3473315.1,
+        "mineReal": 2270829.85,
+        "theirsReal": 1466569.17
+      },
+      {
+        "age": 69,
+        "mine": 4741776.8,
+        "theirs": 3624548.14,
+        "mineReal": 2321895.48,
+        "theirsReal": 1493098.2
+      },
+      {
+        "age": 70,
+        "mine": 4971907.53,
+        "theirs": 3784070.01,
+        "mineReal": 2375203.02,
+        "theirsReal": 1520791.93
+      },
+      {
+        "age": 71,
+        "mine": 5215602.56,
+        "theirs": 3952403.51,
+        "mineReal": 2430850.88,
+        "theirsReal": 1549701.47
+      },
+      {
+        "age": 72,
+        "mine": 5473747.79,
+        "theirs": 4130106.56,
+        "mineReal": 2488941.83,
+        "theirsReal": 1579880.22
+      },
+      {
+        "age": 73,
+        "mine": 5747289.51,
+        "theirs": 4317774.69,
+        "mineReal": 2549583.1,
+        "theirsReal": 1611383.89
+      },
+      {
+        "age": 74,
+        "mine": 6037238.64,
+        "theirs": 4516043.62,
+        "mineReal": 2612886.68,
+        "theirsReal": 1644270.64
+      },
+      {
+        "age": 75,
+        "mine": 6344675.17,
+        "theirs": 4725591.98,
+        "mineReal": 2678969.44,
+        "theirsReal": 1678601.2
+      },
+      {
+        "age": 76,
+        "mine": 6670753.01,
+        "theirs": 4947144.37,
+        "mineReal": 2747953.39,
+        "theirsReal": 1714438.96
+      },
+      {
+        "age": 77,
+        "mine": 7016705.06,
+        "theirs": 5181474.44,
+        "mineReal": 2819965.91,
+        "theirsReal": 1751850.08
+      },
+      {
+        "age": 78,
+        "mine": 7383848.74,
+        "theirs": 5429408.37,
+        "mineReal": 2895139.95,
+        "theirsReal": 1790903.65
+      },
+      {
+        "age": 79,
+        "mine": 7773591.83,
+        "theirs": 5691828.44,
+        "mineReal": 2973614.31,
+        "theirsReal": 1831671.76
+      },
+      {
+        "age": 80,
+        "mine": 8187438.78,
+        "theirs": 5969676.95,
+        "mineReal": 3055533.89,
+        "theirsReal": 1874229.68
+      },
+      {
+        "age": 81,
+        "mine": 8626997.41,
+        "theirs": 6263960.38,
+        "mineReal": 3141049.95,
+        "theirsReal": 1918656.01
+      },
+      {
+        "age": 82,
+        "mine": 9093986.09,
+        "theirs": 6575753.79,
+        "mineReal": 3230320.36,
+        "theirsReal": 1965032.76
+      },
+      {
+        "age": 83,
+        "mine": 9590241.45,
+        "theirs": 6906205.64,
+        "mineReal": 3323509.96,
+        "theirsReal": 2013445.56
+      },
+      {
+        "age": 84,
+        "mine": 10117726.59,
+        "theirs": 7256542.86,
+        "mineReal": 3420790.82,
+        "theirsReal": 2063983.8
+      },
+      {
+        "age": 85,
+        "mine": 10678539.9,
+        "theirs": 7628076.25,
+        "mineReal": 3522342.54,
+        "theirsReal": 2116740.8
+      },
+      {
+        "age": 86,
+        "mine": 11274924.45,
+        "theirs": 8022206.36,
+        "mineReal": 3628352.62,
+        "theirsReal": 2171813.95
+      },
+      {
+        "age": 87,
+        "mine": 11909278.08,
+        "theirs": 8440429.7,
+        "mineReal": 3739016.81,
+        "theirsReal": 2229304.95
+      },
+      {
+        "age": 88,
+        "mine": 12584164.2,
+        "theirs": 8884345.39,
+        "mineReal": 3854539.43,
+        "theirsReal": 2289319.95
+      },
+      {
+        "age": 89,
+        "mine": 13302323.26,
+        "theirs": 9355662.32,
+        "mineReal": 3975133.78,
+        "theirsReal": 2351969.75
+      }
+    ],
+    "goals": {
+      "mine": [
+        {
+          "name": "Emergency fund (6 months)",
+          "category": "Emergency",
+          "priority": "high",
+          "target": 25000,
+          "current": 18500,
+          "deadline": "2027-06-30",
+          "progress": 0.74,
+          "status": "on_track",
+          "fundedBy": "2027-06"
+        },
+        {
+          "name": "Flat deposit",
+          "category": "House",
+          "priority": "medium",
+          "target": 84000,
+          "current": 22000,
+          "deadline": "2029-12-31",
+          "progress": 0.2619,
+          "status": "at_risk",
+          "fundedBy": "2031-06"
+        },
+        {
+          "name": "Japan trip",
+          "category": "Travel",
+          "priority": "low",
+          "target": 4500,
+          "current": 900,
+          "deadline": "2027-10-01",
+          "progress": 0.2,
+          "status": "unreachable",
+          "fundedBy": null
+        },
+        {
+          "name": "Retire at 65",
+          "category": "Retirement",
+          "priority": "medium",
+          "target": 1500000,
+          "current": 0,
+          "deadline": "2051-07-10",
+          "progress": 0,
+          "status": "unreachable",
+          "fundedBy": null
+        }
+      ],
+      "theirs": [
+        {
+          "name": "Student loan gone",
+          "category": "Debt",
+          "priority": "high",
+          "target": 12000,
+          "current": 2220,
+          "deadline": "2029-12-31",
+          "progress": 0.185,
+          "status": "on_track",
+          "fundedBy": "2029-12"
+        },
+        {
+          "name": "Emergency fund (3 months)",
+          "category": "Emergency",
+          "priority": "high",
+          "target": 8500,
+          "current": 8200,
+          "deadline": "2026-12-31",
+          "progress": 0.9647,
+          "status": "on_track",
+          "fundedBy": "2026-12"
+        },
+        {
+          "name": "Deposit for my own place",
+          "category": "House",
+          "priority": "medium",
+          "target": 30000,
+          "current": 4000,
+          "deadline": "2030-06-30",
+          "progress": 0.1333,
+          "status": "on_track",
+          "fundedBy": "2030-06"
+        },
+        {
+          "name": "Cycling trip — Norway",
+          "category": "Travel",
+          "priority": "low",
+          "target": 1800,
+          "current": 600,
+          "deadline": "2027-07-01",
+          "progress": 0.3333,
+          "status": "on_track",
+          "fundedBy": "2027-07"
+        }
+      ],
+      "summary": {
+        "mine": {
+          "count": 4,
+          "onTrack": 1,
+          "funded": 0,
+          "weightedProgress": 0.0257
+        },
+        "theirs": {
+          "count": 4,
+          "onTrack": 4,
+          "funded": 0,
+          "weightedProgress": 0.2872
+        }
+      }
+    },
+    "habits": {
+      "mine": [
+        {
+          "kind": "save",
+          "name": "Monthly saving",
+          "cadence": "monthly",
+          "amount": 900,
+          "streak": 10,
+          "bestStreak": 10,
+          "periodsMet": 10,
+          "periodsScored": 10,
+          "hitRate": 1,
+          "pointsEarned": 425
+        },
+        {
+          "kind": "invest",
+          "name": "Monthly investing",
+          "cadence": "monthly",
+          "amount": 1200,
+          "streak": 10,
+          "bestStreak": 10,
+          "periodsMet": 10,
+          "periodsScored": 10,
+          "hitRate": 1,
+          "pointsEarned": 425
+        },
+        {
+          "kind": "swap",
+          "name": "Eating-out swap",
+          "cadence": "weekly",
+          "amount": 175,
+          "category": "Food & Dining",
+          "streak": 0,
+          "bestStreak": 7,
+          "periodsMet": 24,
+          "periodsScored": 41,
+          "hitRate": 0.5854,
+          "pointsEarned": 145
+        }
+      ],
+      "theirs": [
+        {
+          "kind": "save",
+          "name": "Weekly saving",
+          "cadence": "weekly",
+          "amount": 150,
+          "streak": 26,
+          "bestStreak": 26,
+          "periodsMet": 32,
+          "periodsScored": 34,
+          "hitRate": 0.9412,
+          "pointsEarned": 580
+        },
+        {
+          "kind": "swap",
+          "name": "Shopping swap",
+          "cadence": "weekly",
+          "amount": 60,
+          "streak": 8,
+          "bestStreak": 8,
+          "periodsMet": 28,
+          "periodsScored": 33,
+          "hitRate": 0.8485,
+          "pointsEarned": 200,
+          "category": "Shopping"
+        }
+      ]
+    },
+    "badges": [
+      {
+        "key": "first-step",
+        "name": "First step",
+        "mine": "2026-01-05",
+        "theirs": "2026-03-02"
+      },
+      {
+        "key": "century",
+        "name": "Century",
+        "mine": "2026-02-05",
+        "theirs": "2026-04-06"
+      },
+      {
+        "key": "thousand",
+        "name": "Thousand",
+        "mine": null,
+        "theirs": null
+      },
+      {
+        "key": "on-fire",
+        "name": "On fire",
+        "mine": "2026-03-15",
+        "theirs": "2026-03-23"
+      },
+      {
+        "key": "unstoppable",
+        "name": "Unstoppable",
+        "mine": null,
+        "theirs": "2026-07-13"
+      },
+      {
+        "key": "treat",
+        "name": "Treat yourself",
+        "mine": "2026-03-07",
+        "theirs": "2026-06-13"
+      },
+      {
+        "key": "fi-5",
+        "name": "First brick",
+        "mine": "2025-11-20",
+        "theirs": null
+      },
+      {
+        "key": "fi-10",
+        "name": "Seedling",
+        "mine": null,
+        "theirs": null
+      },
+      {
+        "key": "fi-25",
+        "name": "Sprout",
+        "mine": null,
+        "theirs": null
+      },
+      {
+        "key": "fi-50",
+        "name": "Halfway tree",
+        "mine": null,
+        "theirs": null
+      },
+      {
+        "key": "fi-75",
+        "name": "Summit in sight",
+        "mine": null,
+        "theirs": null
+      },
+      {
+        "key": "fi-100",
+        "name": "Free",
+        "mine": null,
+        "theirs": null
+      },
+      {
+        "key": "closer",
+        "name": "Closer",
+        "mine": "2026-07-25",
+        "theirs": null
+      }
+    ],
+    "insights": [
+      {
+        "tone": "lead",
+        "text": "You save 44% of your income; Penny saves 37% — you are 7 percentage points ahead."
+      },
+      {
+        "tone": "lead",
+        "text": "You put 17% of your income into investments every month; Penny puts in 7%."
+      },
+      {
+        "tone": "lead",
+        "text": "Your cash would cover 9.2 months of spending; Penny's covers 3.5."
+      },
+      {
+        "tone": "lead",
+        "text": "Your debt is 1% of your assets; Penny's is 31%."
+      },
+      {
+        "tone": "lead",
+        "text": "On current habits you reach financial independence in May 2043 at 56, 6.9 years before Penny (April 2050 at 57)."
+      },
+      {
+        "tone": "neutral",
+        "text": "At 40, your net worth is 106k USD; on current habits Penny's is projected to be 217k USD at that age, in today's money."
+      },
+      {
+        "tone": "behind",
+        "text": "Penny's longest streak is 26 in a row (Weekly saving); yours is 10. Four in a row doubles the points."
+      },
+      {
+        "tone": "lead",
+        "text": "Badges only you have: First brick, Closer."
+      },
+      {
+        "tone": "behind",
+        "text": "Badges Penny has that you do not yet: Unstoppable."
+      }
+    ]
+  }
+}

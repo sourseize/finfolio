@@ -94,6 +94,29 @@ const API = {
   updateScenario(id, data) { return this.request('PUT', `/api/scenarios/${id}`, data); },
   deleteScenario(id) { return this.request('DELETE', `/api/scenarios/${id}`); },
 
+  // ── Compare (snapshots) ──
+  getCompareFormat() { return this.request('GET', '/api/compare/format'); },
+  getCompareSnapshot(label) { return this.request('GET', `/api/compare/snapshot${label ? `?label=${encodeURIComponent(label)}` : ''}`); },
+  compare(snapshot, label) { return this.request('POST', '/api/compare', label ? { snapshot, label } : { snapshot }); },
+  compareWhatIf(extraSaving, extraInvesting) { return this.request('POST', '/api/compare/whatif', { extraSaving, extraInvesting }); },
+  /** The report as a PDF: resolves to { blob, filename }. */
+  async comparePdf(snapshot, label, whatIf) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (this._token) headers['Authorization'] = `Bearer ${this._token}`;
+    const res = await fetch('/api/compare/pdf', { method: 'POST', headers, body: JSON.stringify({ snapshot, label, whatIf }) });
+    if (!res.ok) {
+      let data = {};
+      try { data = await res.json(); } catch { /* not JSON */ }
+      if (res.status === 401 && this._token) this._sessionLost();
+      const err = new Error(data.error || 'Could not build the PDF');
+      err.status = res.status;
+      throw err;
+    }
+    const disposition = res.headers.get('content-disposition') || '';
+    const m = /filename="([^"]+)"/.exec(disposition);
+    return { blob: await res.blob(), filename: m ? m[1] : 'finfolio-compare.pdf' };
+  },
+
   // ── Statement import ──
   getImportFormats() { return this.request('GET', '/api/import/formats'); },
   importPreview(payload) { return this.request('POST', '/api/import/preview', payload); },

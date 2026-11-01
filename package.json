@@ -23,6 +23,8 @@
     "test:update-golden": "tsc -p tsconfig.test.json && UPDATE_GOLDEN=1 node --test \".test-build/tests/golden/**/*.test.js\" && echo 'Golden snapshot updated: review git diff tests/golden/'",
     "gen:statements": "tsc && node dist/testing/statements/cli.js",
     "import:file": "tsc && node dist/testing/import-cli.js",
+    "export:snapshot": "tsc && node dist/testing/export-cli.js",
+    "test:compare": "tsc && node dist/testing/compare-cli.js",
     "test:smoke": "tsc -p tsconfig.test.json && node --test --test-reporter=spec \".test-build/tests/ui/import.test.js\" \".test-build/tests/ui/pages.test.js\""
   },
   "keywords": [

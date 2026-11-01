@@ -105,6 +105,19 @@ Track your accounts, transactions, budgets, investments, and financial goals —
 - **Top expense categories** — this month's breakdown
 - **Goal completion** — progress overview
 
+### ⚖️ Compare — share a snapshot, import a friend's, see the two side by side
+- **Export a snapshot** of your finances as a small JSON file (`<label>.finfolio-compare.json`, a few tens of KB). It holds *derived figures*, never records: age (not birth date), net worth / cash / investments / debt and balances by account **type**, 12-month averages (income, spending, saving, investing, savings rate), spending by category, a 24-month monthly series, this month's budgets, holdings (symbol, type, value, weight), goals with their on-track status, habits / streaks / points / badges, and the outlook on current habits (FI number and date, runway, projection by age, Monte Carlo odds)
+- **Nothing identifying**: no username, no ids of any kind, no transaction descriptions, no account names, no notes. You choose a **label** ("Fin") for how you appear in the other person's report
+- Integrity: a `sha256` checksum over the data; a file edited after export does not import
+- Every number is produced by the same pure engines as the dashboard, the simulator and the rewards page — and exporting **writes nothing** (not even the FI milestones the rewards page would record)
+- **Import a friend's snapshot** and get a side-by-side report: a scoreboard of 33 metrics (who leads on net worth, debt share, savings and investing rate, emergency fund, diversification, goals on track, points, streaks, badges, FI progress and date, runway, projected net worth at retirement, Monte Carlo odds — income, spending and portfolio *levels* are shown but never scored), spending mix by category with share deltas, the monthly cash-flow series aligned by calendar month, the net-worth projection aligned **by age** (nominal and in today's money), goals, habits and badges side by side, and plain-English insights in a motivational tone ("Penny's longest streak is 26 in a row; yours is 10 — four in a row doubles the points")
+- **Transient by construction**: the imported file is validated, compared and forgotten — never stored, cached or logged; your own snapshot is refused; snapshots in another currency compare on rates and shares only; a snapshot more than 90 days away from yours is flagged
+- Two **anonymous personas** ship with the seed (`samples/compare/anonymous-a…`, `…-b…`) so either demo user has three people to compare with: *Anonymous A* (47, high earner and high spender, car loan, growth-heavy portfolio, FI never in sight) and *Anonymous B* (52, frugal late starter, no debt, a 73-week saving streak, *Thousand* and two FI rungs)
+- **The Compare page** (⚖️ in the sidebar): a *Share* panel (your label, the includes / never-included lists, a preview of the figures, ⬇ Download) and a *Compare* panel (drop zone for one `.finfolio-compare.json`). The report: a banner that says where the data lives (this tab only) with *Rename* and *Discard*, the scoreboard with a lead bar and six headline figures, the insights, the **what-if sliders**, every metric grouped with the leader marked, spending-and-income lines by month, net worth by age with both retirement markers, two spending-mix doughnuts with a share table, goals and habits in two columns, and the badge wall showing who has which
+- **What if you did a bit more?** Two sliders — *save +X a month* (spend less, keep it) and *invest +Y a month* (spend less, invest it), up to half of your current spending in steps of 25 — re-run your own outlook on the spot (`POST /api/compare/whatif`) and show the fixed points next to the other side: savings rate, FI date and age, months of spending in cash, net worth at retirement, plus how much earlier FI lands. Nothing is saved
+- **Export PDF**: the report as a five-page A4 document — cover with scoreboard, headline figures and insights · all metrics · cash flow and spending mix · outlook with the projection by age and, if the sliders were moved, the what-if box · goals, habits and badges. Built on the server by a ~300-line **dependency-free PDF writer** (`src/pdf/writer.ts`: Helvetica, WinAnsi text, vector charts from Bézier arcs, Flate via `node:zlib`); the browser posts the in-memory snapshot once more and downloads the bytes — still nothing stored
+- `npm run test:compare` prints every comparison the demo users can make (fin vs penny / A / B, penny vs fin / A / B) as plain-ASCII tables with the insights — `--brief` packs each comparison into one line of at most 300 characters, `--spending` adds the mix table, `--mine fin|penny` keeps one side (`npm run test:compare --brief --mine penny` works as well as `npm run test:compare -- --brief`)
+
 ### 🎨 UI / UX
 - Dark cyberpunk theme with custom CSS variables
 - Responsive layout — sidebar collapses on mobile
@@ -182,11 +195,13 @@ npm start
 
 Open **http://localhost:3000** in your browser. Register a new account and start managing your finances.
 
-### Demo user `fin`
+### Demo users `fin` and `penny`
 
 ```bash
-npm run seed                          # creates (or resets) the demo user
-npm start                             # sign in as  fin / folio
+npm run seed                          # creates (or resets) both demo users (--only=fin / --only=penny for one) and writes
+                                      # four comparison snapshots to samples/compare/: fin, penny and two anonymous
+                                      # personas that exist only as files (--no-snapshots to skip, --snapshots DIR to choose)
+npm start                             # sign in as  fin / folio  or  penny / wise
 npm start -- --now=2026-10-25         # optional: freeze the clock on the seed date (works in every shell)
 FINFOLIO_NOW=2026-10-25 npm start     # the same via the environment (Unix shells; on PowerShell use $env:FINFOLIO_NOW="2026-10-25" first)
 ```
@@ -194,6 +209,8 @@ FINFOLIO_NOW=2026-10-25 npm start     # the same via the environment (Unix shell
 Time-based features (which week/month is "current", streaks, the 30-day reward nudge, FI milestones) are all judged on the server's "today", so `--now` lets you walk the demo user through time: `--now=2026-09-20` → no nudge yet, `--now=2026-10-05` → the nudge fires on day 30, `--now=2026-11-30` → 86 days, 1,040 points earned all-time (balance 340) and the *Thousand* badge. The sidebar shows ⏰ and the date while the clock is frozen. Re-seed before hopping *backwards* in time, since milestones observed on a later date are persisted.
 
 `fin` is a 40-year-old (born 1986-07-10) planning to retire at 65, with 24 months of realistic history ending on **2026-10-25**: salary and freelance income, rent, utilities, groceries, card spending with monthly pay-offs, transfers to savings and a brokerage with monthly ETF purchases, a few one-offs (laptop, car repair, Lisbon holiday), current-month budgets (one over), four goals, a profile, five saved scenarios (*Keep going*, *Buy a flat in 2028*, *Sabbatical + crash*, *Retire at 58*, *Family of four*) three habits started as a New Year's resolution on 2026-01-01 (*Monthly saving* $900, *Monthly investing* $1,200 — both on a 10-month streak — and an *Eating-out swap* keeping Food & Dining under $175 a week, hit-and-miss with the Lisbon holiday week breaking a streak), the four suggested rewards, four rewards enjoyed so far (two brunches, two dinners — one in Lisbon) leaving 295 points (brunch and dinner ready, the bar fills towards the family dinner; brunch has been affordable since 5 Sep, so the sign-in nudge fires on the seed date), and three observed FI milestones (5 % reached, FI date first sighted, then moved four months earlier) — six of thirteen badges unlocked. The seed is deterministic and re-runnable; the regression suite's golden snapshot is taken from it.
+
+`penny` is the second persona, built to be *compared* with `fin` (see Compare): a 33-year-old (born 1993-03-22) planning to retire at 60, with 18 months of history ending on the same date. Lower income (4 650, a rise to 4 900 in July 2026, tutoring on the side), a flat-share rent, no car, a credit card she only partly pays off and a student loan repaid 260 a month (both liabilities), a modest portfolio of two index ETFs and a bond fund with monthly purchases, six budgets (two over), four goals (*Student loan gone*, a nearly complete emergency fund, a deposit for her own place, a cycling trip), three saved scenarios (*Keep going*, *Loan gone by 2027*, *Move out in 2028*) and two **weekly** habits from 2 March 2026: *Weekly saving* (150 every Monday — a 26-week streak after two camping weeks broke the first one, so *On fire* and *Unstoppable* are unlocked) and a hit-and-miss *Shopping swap* (under 60 a week). Three rewards enjoyed, the last one recently, so no nudge fires; FI progress is under 5 %, so the FI rungs stay locked. Savings rate ~37 % against fin's ~44 %, net worth ~27k against ~106k — the comparison has something to say in both directions.
 
 ### Development Mode
 
@@ -222,6 +239,7 @@ npm run test:update-golden  # re-baseline the snapshot after an intentional chan
 npm run test:watch        # re-run on change
 npm run gen:statements    # write the test bank statements to samples/statements/ (see below)
 npm run test:smoke        # hotfix gate: the two import journeys through the real UI + page smoke (~10 s incl. compile)
+npm run test:compare      # the six demo comparisons (fin / penny vs the other three) as ASCII tables + insights (--brief, --spending, --mine fin|penny)
 npm run typecheck         # tsc --noEmit for app and tests (strict for tests)
 ```
 
@@ -233,11 +251,13 @@ tests/
 │   ├── server.ts    # launch() → in-process server on a random port, temp data dir, frozen clock
 │   ├── sim.ts       # builders for engine inputs with "flat" economies so results are hand-checkable
 │   ├── dom.ts       # dependency-free mini-DOM (parser, selectors, events, canvas stubs)
-│   └── browser.ts   # loads public/js/*.js into node:vm against the in-process server
-├── unit/            # clock, database, sim/*, motivation engine (periods, streaks, points, rewards, trail), milestones + badges, statement generator, import parsers, dedupe engine, categoriser
-├── api/             # auth, CRUD, simulation routes, seed, statement import (every scenario over HTTP), habits, rewards, claims, live FI milestones, motivation
-├── ui/              # headless page smoke + interactions (modals, builder, save/compare, rewards card/page, claim flow, habit & reward forms, badges, sign-in nudge), import wizard smoke (SMOKE-1/2)
-└── golden/          # fin.snapshot.json (dashboard, baseline, outlook, scenarios, motivation: points, rewards, trail) + the test that diffs against it
+│   ├── browser.ts   # loads public/js/*.js into node:vm against the in-process server
+│   ├── privacy.ts   # recursive scan of an export for ids, usernames, free text that must never leave
+│   └── pdf.ts       # minimal PDF reader: header / xref / trailer checks, decompressed streams, the Tj strings
+├── unit/            # clock, database, sim/*, motivation engine (periods, streaks, points, rewards, trail), milestones + badges, statement generator, import parsers, dedupe engine, categoriser, compare (snapshot builder, schema, engine, anonymous personas, CLI, PDF writer + report)
+├── api/             # auth, CRUD, simulation routes, seed (fin + penny), statement import (every scenario over HTTP), habits, rewards, claims, live FI milestones, motivation, compare (export, import both ways, what-if, PDF — with the database hashed before and after)
+├── ui/              # headless page smoke + interactions (modals, builder, save/compare, rewards card/page, claim flow, habit & reward forms, badges, sign-in nudge), import wizard smoke (SMOKE-1/2), Compare page (share, import, report, sliders, rename, discard, crafted files)
+└── golden/          # fin.snapshot.json (dashboard, baseline, outlook, scenarios, motivation) · compare.snapshot.json (the four comparison snapshots + the fin-vs-penny report) + the tests that diff against them
 ```
 
 The headless UI harness is not a browser (no CSS or layout); it catches runtime errors and checks that API data lands in the HTML.
@@ -261,6 +281,19 @@ The headless UI harness is not a browser (no CSS or layout); it catches runtime 
 Every file ships with its expected import outcome in `samples/statements/README.md`. The
 generator (`src/testing/statements/`) is also what the round-trip tests use: each file is
 parsed back by `src/import/` and compared field by field with the statement it was written from.
+
+### Manual walkthrough — Compare
+
+```bash
+npm run seed                          # fin, penny, and samples/compare/{fin,penny,anonymous-a,anonymous-b}.finfolio-compare.json
+npm start -- --now=2026-10-25
+```
+
+1. Sign in as **penny / wise** → ⚖️ Compare → type *Penny* under *Shown to them as* → *Preview figures* (age 33, savings rate 37 %, FI Apr 2050 …) → *Download snapshot* → `penny.finfolio-compare.json`. Open the file: no username, no ids, no descriptions — only figures.
+2. Sign out, sign in as **fin / folio** → ⚖️ Compare → drop the file (or `samples/compare/penny.finfolio-compare.json`). Expect *You lead on 21 · 1 tie · Penny leads on 3*, the insight about Penny's 26-week streak, the what-if card.
+3. Move *Save +500* and *Invest +300*: FI moves from May 2043 to Oct 2038 ("FI 4 years 7 months earlier"); *Export PDF* → a five-page PDF with the what-if box on page 4.
+4. Drop `anonymous-a…` (no FI date, FI rows show "not in sight") and `anonymous-b…` (B leads 13–8 on habits). *Rename* to change the label, *Discard* to clear. Reload the page: the comparison is gone; `data/database.json` never changed.
+5. Negative paths: drop your own `fin…` file (refused), a non-snapshot JSON (refused with the reason), an edited snapshot (checksum mismatch). `npm run test:compare --brief` prints the six comparisons as one-liners.
 
 ### Manual API walkthrough
 
@@ -373,8 +406,6 @@ npm run import:file -- --user qa --password qa-pass --account "QA Checking" --fi
 
 Categorisation and the dedupe windows are data, not code: edit `config/import-categories.json` (or point `FINFOLIO_IMPORT_CONFIG` at your own copy). The server validates it at startup and refuses to start on an unknown category or a broken pattern.
 
-The step-by-step manual validation suite is in `docs/IMPORT_TEST_SUITE.md`.
-
 ### Motivation API (habits → points → rewards)
 
 All routes require a bearer token. Points are computed on every call from the user's transactions.
@@ -397,7 +428,22 @@ curl -X POST http://localhost:3000/api/rewards/<id>/claim -H 'Authorization: Bea
 curl http://localhost:3000/api/motivation -H 'Authorization: Bearer <token>' | python3 -m json.tool
 ```
 
-The manual walkthrough is in `docs/MOTIVATION_TEST_SUITE.md`.
+### Compare API (snapshots)
+
+| Method | Route | Purpose |
+|---|---|---|
+| `GET` | `/api/compare/format` | Format name and version, limits, and the plain-language lists of what a snapshot includes / leaves out (public) |
+| `GET` | `/api/compare/snapshot?label=Fin` | Your snapshot as of the server's "today", served as a download (`Content-Disposition: attachment; filename="fin.finfolio-compare.json"`). `label` is how you want to be shown in the other person's report (trimmed, 40 chars, empty → "A friend") |
+| `POST` | `/api/compare/whatif` | `{ extraSaving, extraInvesting }` (per month, clamped to `max` = half of current spending, snapped to 25) → `{ max, base, saving, investing, both }`, each with `monthlyExpenses, monthlyContribution, savingsRate, fiNumber, progress, fiDate, fiAge, yearsToFi, cashMonths, netWorthAtRetirement, endRealNetWorth` from a fresh baseline run with overrides |
+| `POST` | `/api/compare/pdf` | `{ snapshot, label?, whatIf?: { extraSaving, extraInvesting } }` → `application/pdf` (`Content-Disposition: attachment; filename="finfolio-compare-<label>-<date>.pdf"`), five A4 pages; same validation and refusals as `/api/compare` |
+| `POST` | `/api/compare` | `{ snapshot, label? }` — the parsed contents of a `.finfolio-compare.json` file (and an optional label override) → `{ report, mine, theirs }`. `report` has `labels`, `asOf`, `currency`, `profile`, `warnings[]`, `score`, `metrics[]` (`key, group, label, unit, mine, theirs, delta = mine − theirs, betterIs, leader, note?`), `spending[]`, `series[]` (by month), `projection[]` (by age), `goals`, `habits`, `badges[]`, `insights[]` (`tone: lead | behind | neutral`). `400` with a readable reason for a file that is not a snapshot, was edited after export, comes from a newer version, or is your own |
+
+Snapshots are computed on request from pure engines; an imported snapshot is validated, compared and forgotten — nothing is written, cached or logged (the regression suite checks the database bytes before and after). Black-box export from the command line (signs in over HTTP like the browser):
+
+```bash
+npm run export:snapshot -- --user penny --password wise                      # → samples/compare/penny.finfolio-compare.json
+npm run export:snapshot -- --user fin --password folio --label Fin --out /tmp/fin.json --server http://localhost:3000
+```
 
 ### Build Verification
 
@@ -488,15 +534,17 @@ finfolio/
 │   │   └── simulate.ts      # profile, scenarios, simulation routes
 │   ├── sim/                 # simulation engine (pure, deterministic)
 │   ├── motivation/          # points engine: habits × transactions → periods, streaks, points, rewards, trail; FI milestones, badges (pure, deterministic)
-│   ├── seed/                # demo user "fin" generator + CLI
+│   ├── seed/                # demo users "fin" and "penny" — generators + CLI; anonymous.ts: two snapshot-only personas
 │   └── util/clock.ts        # frozen-clock support (FINFOLIO_NOW)
 │   ├── import/              # statement import: parsers (CSV, OFX/QFX, QIF, Open Banking JSON), dedupe engine, categoriser, config, sessions
-│   ├── testing/             # test-statement generator (statements/), gen:statements and import:file CLIs
+│   ├── compare/             # comparison snapshots: types + what is shared, builder (pure), schema validation + checksum, comparison engine + insights, PDF report layout
+│   ├── pdf/writer.ts        # dependency-free PDF 1.4 writer: Helvetica metrics, WinAnsi text, rects / lines / Bézier ring slices, Flate streams
+│   ├── testing/             # test-statement generator (statements/), gen:statements, import:file, export:snapshot and test:compare CLIs
 │   ├── routes/import.ts     # preview / commit / profiles routes
-│   └── routes/motivation.ts # habits + rewards CRUD, claims, GET /api/motivation
+│   ├── routes/motivation.ts # habits + rewards CRUD, claims, GET /api/motivation
+│   └── routes/compare.ts    # GET /api/compare/format, GET /api/compare/snapshot, POST /api/compare (transient), POST /api/compare/whatif, POST /api/compare/pdf
 ├── config/
 │   └── import-categories.json  # categorisation rules, MCC ranges, aliases, dedupe windows (editable)
-├── docs/                    # IMPORT_WORKBOOK.md (design, work packages) · IMPORT_TEST_SUITE.md · MOTIVATION_TEST_SUITE.md (manual validation)
 ├── public/
 │   ├── index.html           # SPA shell
 │   ├── css/
@@ -512,9 +560,10 @@ finfolio/
 │       ├── pages-3.js       # Goals, Reports
 │       ├── badges.js        # Inline SVG badge icons + tiles
 │       ├── page-rewards.js  # Rewards: dashboard card, reward list + claim, habits, badges, trail, forms, sign-in nudge
-│       └── page-simulate.js # Simulate
+│       ├── page-simulate.js # Simulate
+│       └── page-compare.js  # Compare: share panel, import drop zone, side-by-side report, what-if sliders
 ├── tests/                   # regression suite (node:test, zero dependencies)
-├── samples/                 # Created by gen:statements — test bank statements (git-ignored)
+├── samples/                 # Created by gen:statements (test bank statements) and npm run seed (compare/ snapshots) — git-ignored
 ├── data/                    # Created at runtime — JSON database
 ├── dist/                    # Compiled JavaScript output
 ├── Dockerfile

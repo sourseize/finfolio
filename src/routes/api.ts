@@ -28,6 +28,7 @@ router.post('/api/auth/register', async (req, res, _match, body) => {
   }
   const user = db.createUser(body.username, body.password);
   if (!user) return json(res, { error: 'Username already exists' }, 409);
+  await db.persist(); // a new user must survive a restart even before their first account or transaction
   const token = router.createSessionToken(user.id);
   json(res, { token, user: { id: user.id, username: user.username } });
 }, false);

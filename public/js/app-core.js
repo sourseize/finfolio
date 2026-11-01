@@ -33,6 +33,8 @@ const App = {
   },
 
   showAuth() {
+    // Anything imported for a comparison lives in memory only and ends with the session.
+    if (this.compareReset) this.compareReset();
     document.getElementById('app').innerHTML = `
       <div class="auth-page">
         <div class="auth-card" id="auth-card">
@@ -128,6 +130,7 @@ const App = {
             <div class="sidebar-link" data-page="rewards">🏅 <span>Rewards</span></div>
             <div class="sidebar-link" data-page="reports">📑 <span>Reports</span></div>
             <div class="sidebar-link" data-page="simulate">🔮 <span>Simulate</span></div>
+            <div class="sidebar-link" data-page="compare">⚖️ <span>Compare</span></div>
           </nav>
           <div class="sidebar-footer">
             ${this.clockFrozen ? `<div class="text-xs" style="color:var(--orange);margin-bottom:6px" id="clock-frozen" title="Server clock frozen with --now / FINFOLIO_NOW">⏰ Today is ${this.today}</div>` : ''}
@@ -181,6 +184,7 @@ const App = {
       case 'rewards': this.renderRewards(content); break;
       case 'reports': this.renderReports(content); break;
       case 'simulate': this.renderSimulate(content); break;
+      case 'compare': this.renderCompare(content); break;
       default: content.innerHTML = '<div class="text-center text-muted mt-2">Page not found</div>';
     }
   },

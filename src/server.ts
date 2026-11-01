@@ -8,6 +8,7 @@ import './routes/api.js'; // Side-effect: registers routes
 import './routes/simulate.js';
 import './routes/import.js';
 import './routes/motivation.js';
+import './routes/compare.js';
 
 export interface StartOptions {
   /** TCP port. Use 0 to let the OS pick a free port (tests). Default: $PORT or 3000. */
